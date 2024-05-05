@@ -39,19 +39,3 @@ export const postInputValidator = [
     postContentInputValidator,
     postBlogIdInputValidator
 ]
-
-
-//.exists({checkFalsy: true}).trim().isLength({ min: 1}).withMessage('title is required')
-//.isString().withMessage('title is not a string')
-
-
-
-
-
-// title*	string
-// maxLength: 30
-// shortDescription*	string
-// maxLength: 100
-// content*	string
-// maxLength: 1000
-// blogId*	string
