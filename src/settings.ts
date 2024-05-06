@@ -8,7 +8,11 @@ export const SETTINGS = {
         BLOGS: '/blogs',
         POSTS: '/posts',
         TESTING: '/testing',
-    }
+    },
+    MONGO_URL: 'mongodb+srv://vladimir777:<4kuughy1HAimmtzO>@cluster0.fgdxrtr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
+    DB_NAME: 'blog_db',
+    BLOG_COLLECTION_NAME: 'blogs',
+    POSTS_COLLECTION_NAME: 'posts',
 }
 
 export const HTTP_CODES = {
