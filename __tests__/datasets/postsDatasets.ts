@@ -1,5 +1,5 @@
 import {generateUniqueId} from "../../src/helpers/id-helper";
-import {PostDbType} from "../../src/db/db-types/posts-db-types";
+import {PostDbType} from "../../src/db/db-types/post-db-types";
 import {DBType} from "../../src/db/db";
 
 export const post1: PostDbType = {

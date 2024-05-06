@@ -1,5 +1,5 @@
 import {db} from "../../db/db"
-import {PostDbType} from "../../db/db-types/posts-db-types"
+import {PostDbType} from "../../db/db-types/post-db-types"
 import {generateUniqueId} from "../../helpers/id-helper";
 import {blogRepository} from "../../blogs/repository/blogRepository";
 import {InputPostType} from "../../input-output-types/post-types";
