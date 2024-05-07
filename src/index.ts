@@ -1,9 +1,10 @@
 import app from "./app"
 import {SETTINGS} from "./settings"
 import {connectToDB, postCollection} from "./db/mongo-db";
+import * as string_decoder from "node:string_decoder";
 
 const start = async () => {
-    if(!await connectToDB(SETTINGS.MONGO_URL)) {
+    if(!await connectToDB(SETTINGS.MONGO_URL as string)) {
         console.log('stop')
         process.exit(1)
         //return

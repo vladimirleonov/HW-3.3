@@ -7,6 +7,7 @@ export const blogMongoRepository = {
     async find() {
         try {
             const foundBlogs = postCollection.find()
+            console.log(foundBlogs)
             // return {blogs: foundBlogs}
         } catch (err) {
             // return {error: 'Failed to get blogs'}
