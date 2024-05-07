@@ -3,15 +3,15 @@ import {SETTINGS} from "../settings";
 import {BlogDBType} from "./db-types/blog-db-types";
 import {PostDbType} from "./db-types/post-db-types";
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
 let client: MongoClient = {} as MongoClient;
-export let db = {} as Db;
+export let db: Db = {} as Db;
 
 export let blogCollection: Collection<BlogDBType> = {} as Collection<BlogDBType>;
 export let postCollection: Collection<PostDbType> = {} as Collection<PostDbType>;
 
 export const connectToDB = async (MONGO_URL: string) => {
     try {
+        // Create a MongoClient with a MongoClientOptions object to set the Stable API version
         client = new MongoClient(MONGO_URL, {
             serverApi: {
                 version: ServerApiVersion.v1,
@@ -20,7 +20,7 @@ export const connectToDB = async (MONGO_URL: string) => {
             }
         });
 
-        const db = client.db(SETTINGS.DB_NAME);
+        const db: Db = client.db(SETTINGS.DB_NAME);
 
         blogCollection = db.collection(SETTINGS.BLOG_COLLECTION_NAME);
         postCollection = db.collection(SETTINGS.POSTS_COLLECTION_NAME);
@@ -38,5 +38,3 @@ export const connectToDB = async (MONGO_URL: string) => {
         return false
     }
 }
-
-// run().catch(console.dir);
