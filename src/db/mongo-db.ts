@@ -22,8 +22,8 @@ export const connectToDB = async (MONGO_URL: string) => {
 
         const db: Db = client.db(SETTINGS.DB_NAME);
 
-        blogCollection = db.collection(SETTINGS.BLOG_COLLECTION_NAME);
-        postCollection = db.collection(SETTINGS.POSTS_COLLECTION_NAME);
+        blogCollection = db.collection(SETTINGS.BLOG_COLLECTION_NAME as string);
+        postCollection = db.collection(SETTINGS.POSTS_COLLECTION_NAME as string);
 
         // Connect the client to the server (optional starting in v4.7)
         await client.connect();
