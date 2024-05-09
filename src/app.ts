@@ -1,8 +1,8 @@
 import express, {Express, Request, Response} from "express"
 import cors from "cors"
 import {HTTP_CODES, SETTINGS} from "./settings";
-import {postsRouter} from "./posts";
-import {blogsRouter} from "./blogs";
+import {postsRouter} from "./features/posts";
+import {blogsRouter} from "./features/blogs";
 import {testingRouter} from "./testing";
 
 const app: Express = express()
