@@ -1,5 +1,4 @@
 import {Request, Response} from 'express'
-import {blogRepository} from '../repository/blogRepository'
 import {InputBlogType, InputIdType, OutputBlogType} from '../../../input-output-types/blog-types';
 import {HTTP_CODES} from '../../../settings';
 import {blogMongoRepository} from "../repository/blogMongoRepository";

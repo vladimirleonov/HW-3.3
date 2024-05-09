@@ -10,13 +10,14 @@ export const findBlogController = async (req: Request<InputIdType>, res: Respons
     try {
         const foundInfo = await blogMongoRepository.findForOutputById(new ObjectId(req.params.id))
 
-        if(!foundInfo?.blog) {
+        if(foundInfo.error) {
             res.status(HTTP_CODES.NOT_FOUND).send()
             return
         }
 
         res.status(HTTP_CODES.OK).send(foundInfo.blog)
     } catch (err) {
+        console.error(err)
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
     }
 }

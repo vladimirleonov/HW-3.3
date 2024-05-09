@@ -1,11 +1,11 @@
 import {blogCollection} from "../../../db/mongo-db"
 import {BlogDBType} from "../../../db/db-types/blog-db-types";
 import {InputBlogType, OutputBlogType} from "../../../input-output-types/blog-types";
-import {InsertOneResult, ObjectId} from "mongodb";
+import {DeleteResult, InsertOneResult, ObjectId, UpdateResult} from "mongodb";
 
 export const blogMongoRepository = {
-    async find(): Promise<BlogDBType[]>
-    {
+
+    async find(): Promise<BlogDBType[]> {
         try {
             return await blogCollection.find({}).toArray()
         } catch (err) {
@@ -20,7 +20,7 @@ export const blogMongoRepository = {
         }
     },
     async create(input: InputBlogType): Promise<{id?: string, error?: string}> {
-        const newBlog = {
+        const newBlog: BlogDBType = {
             _id: new ObjectId(),
             ...input,
             createdAt: new Date().toISOString(),
@@ -40,9 +40,9 @@ export const blogMongoRepository = {
             throw new Error("Failed to create blog")
         }
     },
-    async update(id: ObjectId, input: InputBlogType) {
+    async update(id: ObjectId, input: InputBlogType): Promise<{id?: string, error?: string}> {
         try {
-            const updatedInfo = await blogCollection.updateOne(
+            const updatedInfo: UpdateResult<BlogDBType> = await blogCollection.updateOne(
                 {_id: new ObjectId(id)},
                 {$set: {...input}})
 
@@ -55,27 +55,24 @@ export const blogMongoRepository = {
             throw new Error('Error updating blog')
         }
     },
-    async delete(id: string)
-    {
-        //: Promise<{ error?: string, success?: boolean }>
-        // const blogIndex = db.blogs.findIndex((blog) => blog.id === id)
-        // if (blogIndex === -1) {
-        //     return {error: 'Blog not found'}
-        // }
-        //
-        // try {
-        //     db.blogs.splice(blogIndex, 1)
-        // } catch (err) {
-        //     return {error: 'Error deleting blog'}
-        // }
-        //
-        // return {success: true}
+    async delete(id: ObjectId): Promise<{ success?: boolean, error?: string }> {
+        try {
+            const deletedInfo: DeleteResult = await blogCollection.deleteOne({_id: id})
+
+            if(deletedInfo.deletedCount === 0) {
+                return {error: 'Blog not found'}
+            }
+
+            return {success: true}
+        } catch (err) {
+            throw new Error ('Error deleting blog')
+        }
     },
-    async findAllForOutput() {
+    async findAllForOutput(): Promise<OutputBlogType[]> {
         const blogs: BlogDBType[] = await this.find()
         return blogs.map((blog: BlogDBType): OutputBlogType => this.mapToOutput(blog))
     },
-    async findForOutputById(id: ObjectId) {
+    async findForOutputById(id: ObjectId): Promise<{blog?: OutputBlogType, error?: string}> {
       const blog: BlogDBType | null = await this.findById(id)
         if (!blog) {
             return {error: 'Blog not found'}
