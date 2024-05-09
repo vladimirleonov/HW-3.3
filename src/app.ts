@@ -1,6 +1,6 @@
 import express, {Express, Request, Response} from "express"
 import cors from "cors"
-import {SETTINGS, HTTP_CODES} from "./settings";
+import {HTTP_CODES, SETTINGS} from "./settings";
 import {postsRouter} from "./posts";
 import {blogsRouter} from "./blogs";
 import {testingRouter} from "./testing";

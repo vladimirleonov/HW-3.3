@@ -1,4 +1,4 @@
-import {MongoClient, ServerApiVersion, Collection, Db} from 'mongodb';
+import {Collection, Db, MongoClient, ServerApiVersion} from 'mongodb';
 import {SETTINGS} from "../settings";
 import {BlogDBType} from "./db-types/blog-db-types";
 import {PostDbType} from "./db-types/post-db-types";

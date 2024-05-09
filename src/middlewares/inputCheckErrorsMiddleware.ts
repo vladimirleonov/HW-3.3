@@ -1,5 +1,5 @@
-import {Request, Response, NextFunction} from "express";
-import {ValidationError, validationResult} from "express-validator";
+import {NextFunction, Request, Response} from "express";
+import {validationResult} from "express-validator";
 import {HTTP_CODES} from "../settings";
 
 export const inputCheckErrorsMiddleware = (req: Request, res: Response, next: NextFunction) => {
