@@ -3,7 +3,7 @@ import {SETTINGS} from "../settings";
 import {BlogDBType} from "./db-types/blog-db-types";
 import {PostDbType} from "./db-types/post-db-types";
 
-let client: MongoClient = {} as MongoClient;
+export let client: MongoClient = {} as MongoClient;
 export let db: Db = {} as Db;
 
 export let blogCollection: Collection<BlogDBType> = {} as Collection<BlogDBType>;
@@ -20,7 +20,7 @@ export const connectToDB = async (MONGO_URL: string) => {
             }
         });
 
-        const db: Db = client.db(SETTINGS.DB_NAME);
+        db = client.db(SETTINGS.DB_NAME);
 
         blogCollection = db.collection(SETTINGS.BLOG_COLLECTION_NAME as string);
         postCollection = db.collection(SETTINGS.POSTS_COLLECTION_NAME as string);
@@ -32,8 +32,8 @@ export const connectToDB = async (MONGO_URL: string) => {
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
         return true;
-    } catch(e) {
-        console.log(e)
+    } catch(err) {
+        console.log(err)
         await client.close()
         return false
     }
