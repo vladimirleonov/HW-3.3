@@ -1,13 +1,14 @@
-import {setDB} from "../../db/db";
+import {blogCollection, postCollection} from "../../db/mongo-db";
 
 export const testingRepository = {
-    async deleteAllData(): Promise<{ error?: string, success?: boolean }> {
+    async deleteAllData(): Promise<{ success?: boolean }> {
         try {
-            setDB()
-        } catch (err) {
-            return {error: "Failed to delete all data"};
-        }
+            await blogCollection.deleteMany({})
+            await postCollection.deleteMany({})
 
-        return {success: true}
+            return {success: true}
+        } catch (err) {
+            throw new Error('Failed to delete all data')
+        }
     }
 }
