@@ -12,6 +12,7 @@ export type OutputPostType = {
     content: string
     blogId: string
     blogName: string
+    createdAt: string
 }
 
 export type InputIdType = {

@@ -14,7 +14,7 @@ export const blogMongoRepository = {
     },
     async findById(id: ObjectId): Promise<BlogDBType | null> {
         try {
-            return await blogCollection.findOne({_id: new ObjectId((id))})
+            return await blogCollection.findOne({_id: id})
         } catch (err) {
             throw new Error ('Failed to get blog')
         }
@@ -22,14 +22,13 @@ export const blogMongoRepository = {
     async create(input: InputBlogType): Promise<{id?: string, error?: string}> {
         const newBlog: BlogDBType = {
             _id: new ObjectId(),
-            ...input,
             createdAt: new Date().toISOString(),
             isMembership: false,
+            ...input,
         }
 
         try {
             const insertedInfo: InsertOneResult<BlogDBType> = await blogCollection.insertOne(newBlog)
-            console.log(insertedInfo)
 
             if (!insertedInfo.acknowledged) {
                 return {error: 'Insert operation was not acknowledged'}
@@ -43,7 +42,7 @@ export const blogMongoRepository = {
     async update(id: ObjectId, input: InputBlogType): Promise<{id?: string, error?: string}> {
         try {
             const updatedInfo: UpdateResult<BlogDBType> = await blogCollection.updateOne(
-                {_id: new ObjectId(id)},
+                {_id: id},
                 {$set: {...input}})
 
             if (updatedInfo.matchedCount === 0) {

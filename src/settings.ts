@@ -12,7 +12,7 @@ export const SETTINGS = {
     MONGO_URL: process.env.MONGO_URL,
     DB_NAME: process.env.DB_NAME,
     BLOG_COLLECTION_NAME: process.env.BLOG_COLLECTION_NAME,
-    POSTS_COLLECTION_NAME: process.env.POSTS_COLLECTION_NAME,
+    POSTS_COLLECTION_NAME: process.env.POST_COLLECTION_NAME,
 }
 
 export const HTTP_CODES = {
