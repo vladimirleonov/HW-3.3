@@ -1,4 +1,4 @@
-import app from "../src/app";
+import app from "../../src/app";
 import {agent} from "supertest";
 import TestAgent = require("supertest/lib/agent");
 import { Test } from 'supertest';

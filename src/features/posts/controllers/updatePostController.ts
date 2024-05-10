@@ -8,7 +8,7 @@ export const updatePostController = async (req: Request<InputIdType, OutputPostT
     try {
         const updatedInfo = await postMongoRepository.update(new ObjectId(req.params.id), req.body)
         
-        if (!updatedInfo?.id && updatedInfo?.error) {
+        if (!updatedInfo.id && updatedInfo.error) {
             res.status(HTTP_CODES.NOT_FOUND).send()
             return 
         }

@@ -1,4 +1,4 @@
-import {req} from "../../test-helpers/req";
+import {req} from "../../test-helpers/test-helpers";
 import {SETTINGS} from "../../../src/settings";
 import {HTTP_CODES} from "../../../src/settings";
 import {setDB} from "../../../src/db/db";
