@@ -1,5 +1,5 @@
 import {MongoMemoryServer} from 'mongodb-memory-server'
-import { connectToDB, client, db, blogCollection, postCollection } from '../../src/db/mongo-db'
+import {connectToDB, client, blogCollection, postCollection} from '../../src/db/mongo-db'
 
 let mongoServer: MongoMemoryServer;
 

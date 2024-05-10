@@ -1,11 +1,9 @@
 import {req} from "../../test-helpers/req";
 import {HTTP_CODES, SETTINGS} from "../../../src/settings";
-import {setDB} from "../../../src/db/db";
 import {InputBlogType} from "../../../src/input-output-types/blog-types";
 import {encodeToBase64} from "../../../src/helpers/auth-helper";
 import {AUTH_DATA} from "../../../src/settings";
-import { connectToTestDB, clearTestDB, closeTestDB } from "../../test-helpers/test-db";
-
+import {clearTestDB, closeTestDB, connectToTestDB} from "../../test-helpers/test-db";
 
 describe('POST /blogs', () => {
     beforeAll(async () => {
@@ -18,7 +16,6 @@ describe('POST /blogs', () => {
         await clearTestDB()
     })
     it('- POST blogs unauthorized', async () => {
-        setDB()
         const newBlog: InputBlogType = {
             name: 'name1',
             description: 'description1',
@@ -32,7 +29,6 @@ describe('POST /blogs', () => {
             .expect(HTTP_CODES.UNAUTHORIZED)
     })
     it('+ POST blogs with correct input data', async () => {
-        setDB()
         const newBlog: InputBlogType = {
             name: 'name1',
             description: 'description1',
@@ -51,7 +47,6 @@ describe('POST /blogs', () => {
         expect(res.body.websiteUrl).toEqual(newBlog.websiteUrl)
     })
     it('- POST blogs when name not passed', async () => {
-        setDB()
         const newBlog: any = {
             description: 'description1',
             websiteUrl: 'https://youtube.com'
@@ -71,7 +66,6 @@ describe('POST /blogs', () => {
         );
     })
     it('- POST blogs when name is not a string', async () => {
-        setDB()
         const newBlog: InputBlogType = {
             name: 123 as any,
             description: 'description1',
@@ -92,7 +86,6 @@ describe('POST /blogs', () => {
         );
     })
     it('- POST blogs with incorrect name length', async () => {
-        setDB()
         const newBlog: InputBlogType = {
             name: 'name1'.repeat(5),
             description: 'description1',
@@ -114,7 +107,6 @@ describe('POST /blogs', () => {
         );
     })
     it('- POST blogs when description not passed', async () => {
-        setDB()
         const newBlog: any = {
             name: 'name1',
             websiteUrl: 'https://youtube.com'
@@ -134,7 +126,6 @@ describe('POST /blogs', () => {
         );
     })
     it('- POST blogs when description is not a string', async () => {
-        setDB()
         const newBlog: InputBlogType = {
             name: 'name1',
             description: 123 as any,
@@ -155,7 +146,6 @@ describe('POST /blogs', () => {
         );
     })
     it('- POST blogs with incorrect description length', async () => {
-        setDB()
         const newBlog: InputBlogType = {
             name: 'name1',
             description: 'description1'.repeat(50),
@@ -177,7 +167,6 @@ describe('POST /blogs', () => {
         );
     })
     it('- POST blogs when websiteUrl not passed', async () => {
-        setDB()
         const newBlog: any = {
             name: 'name1',
             description: 'description1',
@@ -197,7 +186,6 @@ describe('POST /blogs', () => {
         );
     })
     it('- POST blogs when websiteUrl is not a string', async () => {
-        setDB()
         const newBlog: InputBlogType = {
             name: 'name1',
             description: 'description1',
@@ -218,7 +206,6 @@ describe('POST /blogs', () => {
         );
     })
     it('- POST blogs with incorrect websiteUrl length', async () => {
-        setDB()
         const newBlog: InputBlogType = {
             name: 'name1',
             description: 'description1',
@@ -240,7 +227,6 @@ describe('POST /blogs', () => {
         );
     })
     it('- POST blogs with incorrect websiteUrl', async () => {
-        setDB()
         const newBlog: InputBlogType = {
             name: 'name1',
             description: 'description1',
@@ -262,7 +248,6 @@ describe('POST /blogs', () => {
         );
     })
     it('- POST blogs with incorrect data (first errors)', async () => {
-        setDB()
         const newBlog: InputBlogType = {
             name: "",
             description: null as any,

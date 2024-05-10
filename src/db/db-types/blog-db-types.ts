@@ -1,5 +1,3 @@
-//import {ObjectId, WithId} from "mongodb";
-
 import {ObjectId} from "mongodb";
 
 export type BlogDBType = {
@@ -10,6 +8,3 @@ export type BlogDBType = {
     createdAt: string
     isMembership: boolean
 }
-
-// const BlogDBTypeWithID = ObjectId<BlogDBType>
-

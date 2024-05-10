@@ -8,7 +8,7 @@ export const deletePostController = async (req: Request<InputIdType>, res: Respo
     try {
         const deletedInfo = await postMongoRepository.delete(new ObjectId(req.params.id))
         if (deletedInfo.error) {
-            res.status(HTTP_CODES.NOT_FOUND)
+            res.status(HTTP_CODES.NOT_FOUND).send()
             return
         }   
         

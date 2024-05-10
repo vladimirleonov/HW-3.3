@@ -1,7 +1,6 @@
-import {req} from "../../test-helpers"
+import {req} from "../../test-helpers/req"
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings"
 import {setDB} from "../../../src/db/db"
-import {postsDataset} from "../../datasets/postsDatasets"
 import {encodeToBase64} from "../../../src/helpers/auth-helper";
 
 describe('DELETE /posts', () => {
@@ -12,7 +11,7 @@ describe('DELETE /posts', () => {
         setDB()
     })
     it('- DELETE posts unauthorized', async () => {
-        setDB(postsDataset)
+        
 
         await req
             .delete(`${SETTINGS.PATH.POSTS}/${postsDataset.posts[0].id}`)
@@ -20,7 +19,7 @@ describe('DELETE /posts', () => {
             .expect(HTTP_CODES.UNAUTHORIZED)
     })
     it('- DELETE posts with incorrect input id', async () => {
-        setDB(postsDataset)
+        
 
         await req
             .delete(`${SETTINGS.PATH.POSTS}/-123`)
@@ -28,7 +27,7 @@ describe('DELETE /posts', () => {
             .expect(HTTP_CODES.NOT_FOUND)
     })
     it('+ DELETE posts with correct input data', async () => {
-        setDB(postsDataset)
+        
 
         await req
             .delete(`${SETTINGS.PATH.POSTS}/${postsDataset.posts[0].id}`)

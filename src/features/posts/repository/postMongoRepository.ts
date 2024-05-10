@@ -20,8 +20,8 @@ export const postMongoRepository = {
             throw new Error("Failed to get post")
         }
     },
-    async create (input: InputPostType): Promise<{id?: string, error?: string}> {
-        const blog: BlogDBType | null = await blogMongoRepository.findById(new ObjectId(input.blogId))
+    async create ({blogId, ...restInput}: InputPostType): Promise<{id?: string, error?: string}> {
+        const blog: BlogDBType | null = await blogMongoRepository.findById(new ObjectId(blogId))
 
         if (!blog) {
             return {error: 'Blog not found'}
@@ -29,7 +29,8 @@ export const postMongoRepository = {
 
         const newPost: PostDbType = {
             _id: new ObjectId(),
-            ...input,
+            blogId: new ObjectId(blogId),
+            ...restInput,
             createdAt: new Date().toISOString(),
             blogName: blog.name
         }
@@ -45,10 +46,13 @@ export const postMongoRepository = {
             throw new Error("Failed to create post")
         }
     },
-    async update(id: ObjectId, input: InputPostType): Promise<{id?: string, error?: string}> {
+    async update(id: ObjectId, {blogId, ...restInput}: InputPostType): Promise<{id?: string, error?: string}> {
         const updatedInfo = await postCollection.updateOne(
             {_id: id},
-            {$set: {...input}}
+            {$set: {
+                blogId: new ObjectId(blogId),
+                ...restInput
+            }}
         )
 
         if (updatedInfo.matchedCount === 0) {
@@ -80,9 +84,10 @@ export const postMongoRepository = {
         }
         return {post: this.mapToOutput(post)}
     },
-    mapToOutput({_id, ...rest} : PostDbType): OutputPostType {
+    mapToOutput({_id, blogId, ...rest} : PostDbType): OutputPostType {
         return {
             id: _id.toString(),
+            blogId: blogId.toString(),
             ...rest
         }
     }
