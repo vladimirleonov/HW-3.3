@@ -1,4 +1,4 @@
-import {body} from "express-validator"
+import {body, param} from "express-validator"
 import {blogMongoRepository} from "../../blogs/repository/blogMongoRepository";
 import {ObjectId} from "mongodb";
 import {BlogDBType} from "../../../db/db-types/blog-db-types";
@@ -9,6 +9,12 @@ const validateBlogId = async (blogId: string) => {
         throw new Error('invalid blogId!');
     }
     return blogId === blog._id.toString()
+}
+
+const validateObjectId = async (objectId: string) => {
+    if (!ObjectId.isValid(objectId)) {
+        throw new Error('Invalid ObjectId')
+    }
 }
 
 const postTitleInputValidator = body('title')
@@ -41,3 +47,6 @@ export const postInputValidator = [
     postContentInputValidator,
     postBlogIdInputValidator
 ]
+
+export const idParamValidator = param('id')
+    .custom(validateObjectId).withMessage('Invalid ObjectId')

@@ -1,4 +1,5 @@
-import {body} from "express-validator"
+import {body, param} from "express-validator"
+import {ObjectId} from "mongodb";
 
 const blogTitleInputValidator = body('name')
     .isString().withMessage('name is missing or not a string')
@@ -24,3 +25,12 @@ export const blogInputValidator = [
     blogDescriptionInputValidator,
     blogWebsiteUrlInputValidator
 ]
+
+const validateObjectId = async (objectId: string) => {
+    if (!ObjectId.isValid(objectId)) {
+        throw new Error('Invalid ObjectId')
+    }
+}
+
+export const idParamValidator = param('id')
+    .custom(validateObjectId).withMessage('Invalid ObjectId')
