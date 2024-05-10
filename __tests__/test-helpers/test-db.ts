@@ -1,9 +1,7 @@
 import {MongoMemoryServer} from 'mongodb-memory-server'
-import { connectToDB, blogCollection, postCollection } from '../../src/db/mongo-db'
-import { MongoClient } from 'mongodb';
+import { connectToDB, client, db, blogCollection, postCollection } from '../../src/db/mongo-db'
 
 let mongoServer: MongoMemoryServer;
-let client: MongoClient
 
 export const connectToTestDB = async () => {
     try {
