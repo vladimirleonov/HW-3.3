@@ -6,14 +6,6 @@ export const inputCheckErrorsMiddleware = (req: Request, res: Response, next: Ne
     const result = validationResult(req);
 
     if (!result.isEmpty()) {
-        // const errors = result.formatWith((error: ValidationError) => ({
-        //     field: error.path
-        //     message: error.msg,         
-        // })).array({onlyFirstError: true});
-
-        // res.status(HTTP_CODES.BAD_REQUEST).send({errorsMessages: errors})
-        // return
-
         const errors = result.array({onlyFirstError: true}) as { path: string, msg: string }[]
 
         res.status(HTTP_CODES.BAD_REQUEST).send({

@@ -16,10 +16,10 @@ export const blogMongoRepository = {
         try {
             return await blogCollection.findOne({_id: id})
         } catch (err) {
-            throw new Error ('Failed to get blog')
+            throw new Error('Failed to get blog')
         }
     },
-    async create(input: InputBlogType): Promise<{id?: string, error?: string}> {
+    async create(input: InputBlogType): Promise<{ id?: string, error?: string }> {
         const newBlog: BlogDBType = {
             _id: new ObjectId(),
             createdAt: new Date().toISOString(),
@@ -39,7 +39,7 @@ export const blogMongoRepository = {
             throw new Error("Failed to create blog")
         }
     },
-    async update(id: ObjectId, input: InputBlogType): Promise<{id?: string, error?: string}> {
+    async update(id: ObjectId, input: InputBlogType): Promise<{ id?: string, error?: string }> {
         try {
             const updatedInfo: UpdateResult<BlogDBType> = await blogCollection.updateOne(
                 {_id: id},
@@ -58,27 +58,27 @@ export const blogMongoRepository = {
         try {
             const deletedInfo: DeleteResult = await blogCollection.deleteOne({_id: id})
 
-            if(deletedInfo.deletedCount === 0) {
+            if (deletedInfo.deletedCount === 0) {
                 return {error: 'Blog not found'}
             }
 
             return {success: true}
         } catch (err) {
-            throw new Error ('Error deleting blog')
+            throw new Error('Error deleting blog')
         }
     },
     async findAllForOutput(): Promise<OutputBlogType[]> {
         const blogs: BlogDBType[] = await this.find()
         return blogs.map((blog: BlogDBType): OutputBlogType => this.mapToOutput(blog))
     },
-    async findForOutputById(id: ObjectId): Promise<{blog?: OutputBlogType, error?: string}> {
-      const blog: BlogDBType | null = await this.findById(id)
+    async findForOutputById(id: ObjectId): Promise<{ blog?: OutputBlogType, error?: string }> {
+        const blog: BlogDBType | null = await this.findById(id)
         if (!blog) {
             return {error: 'Blog not found'}
         }
-      return {blog: this.mapToOutput(blog)}
+        return {blog: this.mapToOutput(blog)}
     },
-    mapToOutput ({_id, ...rest}: BlogDBType): OutputBlogType {
+    mapToOutput({_id, ...rest}: BlogDBType): OutputBlogType {
         return {
             ...rest,
             id: _id.toString()

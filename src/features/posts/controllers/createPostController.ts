@@ -13,7 +13,7 @@ export const createPostController = async (req: Request<{}, OutputPostType, Inpu
         }
 
         const foundInfo = await postMongoRepository.findForOutputById(new ObjectId(createdInfo.id))
-        if(!foundInfo.post && foundInfo.error) {
+        if (!foundInfo.post && foundInfo.error) {
             res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
             return
         }

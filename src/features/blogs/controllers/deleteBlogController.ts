@@ -18,15 +18,3 @@ export const deleteBlogController = async (req: Request<InputIdType>, res: Respo
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
     }
 }
-
-
-// export const deleteBlogController = async (req: Request<InputIdType>, res: Response) => {
-//     const deletedInfo = await blogRepository.delete(req.params.id);
-//
-//     if (deletedInfo.error) {
-//         res.status(HTTP_CODES.NOT_FOUND).send()
-//         return
-//     }
-//
-//     res.status(HTTP_CODES.NO_CONTENT).send()
-// }

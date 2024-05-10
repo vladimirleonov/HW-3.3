@@ -20,7 +20,7 @@ export const postMongoRepository = {
             throw new Error("Failed to get post")
         }
     },
-    async create ({blogId, ...restInput}: InputPostType): Promise<{id?: string, error?: string}> {
+    async create({blogId, ...restInput}: InputPostType): Promise<{ id?: string, error?: string }> {
         const blog: BlogDBType | null = await blogMongoRepository.findById(new ObjectId(blogId))
 
         if (!blog) {
@@ -41,22 +41,24 @@ export const postMongoRepository = {
                 return {error: 'Insert operation was not acknowledged'}
             }
 
-            return { id: insertedInfo.insertedId.toString() }
+            return {id: insertedInfo.insertedId.toString()}
         } catch (err) {
             throw new Error("Failed to create post")
         }
     },
-    async update(id: ObjectId, {blogId, ...restInput}: InputPostType): Promise<{id?: string, error?: string}> {
+    async update(id: ObjectId, {blogId, ...restInput}: InputPostType): Promise<{ id?: string, error?: string }> {
         const updatedInfo = await postCollection.updateOne(
             {_id: id},
-            {$set: {
-                blogId: new ObjectId(blogId),
-                ...restInput
-            }}
+            {
+                $set: {
+                    blogId: new ObjectId(blogId),
+                    ...restInput
+                }
+            }
         )
 
         if (updatedInfo.matchedCount === 0) {
-            return { error: "Post not found" }
+            return {error: "Post not found"}
         }
 
         return {id: id.toString()}
@@ -65,26 +67,26 @@ export const postMongoRepository = {
         try {
             const deletedInfo = await postCollection.deleteOne({_id: id});
             if (deletedInfo.deletedCount === 0) {
-                return { error: "Post not found" }
+                return {error: "Post not found"}
             }
 
-            return { success: true }
+            return {success: true}
         } catch (err) {
-            throw new Error ('Error deleting post')
+            throw new Error('Error deleting post')
         }
     },
     async findAllForOutput(): Promise<OutputPostType[]> {
         const posts: PostDbType[] = await this.find()
         return posts.map((post: PostDbType): OutputPostType => this.mapToOutput(post))
     },
-    async findForOutputById(id: ObjectId): Promise<{post?: OutputPostType, error?: string}> {
+    async findForOutputById(id: ObjectId): Promise<{ post?: OutputPostType, error?: string }> {
         const post: PostDbType | null = await this.findById(id)
-        if(!post) {
+        if (!post) {
             return {error: 'Post not found'}
         }
         return {post: this.mapToOutput(post)}
     },
-    mapToOutput({_id, blogId, ...rest} : PostDbType): OutputPostType {
+    mapToOutput({_id, blogId, ...rest}: PostDbType): OutputPostType {
         return {
             id: _id.toString(),
             blogId: blogId.toString(),
