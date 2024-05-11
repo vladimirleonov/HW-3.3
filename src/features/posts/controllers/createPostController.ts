@@ -24,21 +24,3 @@ export const createPostController = async (req: Request<{}, OutputPostType, Inpu
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
     }
 }
-
-/*
-export const createPostController = async (req: Request<{}, OutputPostType, InputPostType>, res: Response<OutputPostType>) => {
-    const createdInfo = await postRepository.create(req.body)
-
-    if (!createdInfo.id) {
-        res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
-        return;
-    }
-
-    const foundPost = await postRepository.findById(createdInfo.id)
-    if (!foundPost.post) {
-        res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
-        return
-    }
-
-    res.status(HTTP_CODES.CREATED).send(foundPost.post)
-}*/

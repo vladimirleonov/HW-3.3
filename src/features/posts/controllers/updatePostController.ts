@@ -18,14 +18,3 @@ export const updatePostController = async (req: Request<InputIdType, OutputPostT
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
     }
 }
-
-/*
-export const updatePostController = async (req: Request<InputIdType, InputPostType>, res: Response) => {
-    const updatedInfo = await postRepository.update(req.params.id, req.body)
-    if (updatedInfo.error) {
-        res.status(HTTP_CODES.NOT_FOUND).send()
-        return
-    }
-
-    res.status(HTTP_CODES.NO_CONTENT).send()
-}*/

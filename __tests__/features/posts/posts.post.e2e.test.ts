@@ -359,8 +359,6 @@ describe('POST /posts', () => {
         const postsDataset = generatePostsDataset(blogsDataset.blogs, 2)
         await postCollection.insertMany(postsDataset.posts)
 
-        const blogId = blogsDataset.blogs[0]._id.toString();
-
         const newPost: InputPostType = {
             title: 'title2',
             shortDescription: 'shortDescription2',
@@ -388,8 +386,6 @@ describe('POST /posts', () => {
         const postsDataset = generatePostsDataset(blogsDataset.blogs, 2)
         await postCollection.insertMany(postsDataset.posts)
 
-        const blogId = blogsDataset.blogs[0]._id.toString();
-
         const newPost: InputPostType = {
             title: 'title2',
             shortDescription: 'shortDescription2',
@@ -416,8 +412,6 @@ describe('POST /posts', () => {
 
         const postsDataset = generatePostsDataset(blogsDataset.blogs, 2)
         await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString();
 
         const newPost: any = {
             title: "",

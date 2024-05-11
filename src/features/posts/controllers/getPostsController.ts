@@ -11,14 +11,3 @@ export const getPostsController = async (req: Request, res: Response<OutputPostT
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
     }
 }
-
-/*
-export const getPostsController = async (req: Request, res: Response<OutputPostType[]>) => {
-    const foundInfo = await postRepository.find()
-    if (!foundInfo.posts) {
-        res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
-        return
-    }
-
-    res.status(HTTP_CODES.OK).send(foundInfo.posts)
-}*/

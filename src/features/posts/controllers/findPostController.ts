@@ -19,14 +19,3 @@ export const findPostController = async (req: Request<InputIdType, OutputPostTyp
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
     }
 }
-
-/*
-export const findPostController = async (req: Request<InputIdType>, res: Response<OutputPostType>) => {
-    const foundInfo = await postRepository.findById(req.params.id)
-    if (!foundInfo.post) {
-        res.status(HTTP_CODES.NOT_FOUND).send()
-        return
-    }
-
-    res.status(HTTP_CODES.OK).send(foundInfo.post)
-}*/

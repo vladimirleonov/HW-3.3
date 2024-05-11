@@ -1,12 +1,17 @@
 import {NextFunction, Request, Response} from "express";
-import {validationResult} from "express-validator";
+import {Result, validationResult, ValidationError} from "express-validator";
 import {HTTP_CODES} from "../settings";
 
+interface ValidationErrorMessage {
+    path: string;
+    msg: string;
+}
+
 export const inputCheckErrorsMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const result = validationResult(req);
+    const result: Result<ValidationError> = validationResult(req);
 
     if (!result.isEmpty()) {
-        const errors = result.array({onlyFirstError: true}) as { path: string, msg: string }[]
+        const errors: ValidationErrorMessage[] = result.array({onlyFirstError: true}) as ValidationErrorMessage[]
 
         res.status(HTTP_CODES.BAD_REQUEST).send({
             errorsMessages: errors.map(error => ({
@@ -16,6 +21,5 @@ export const inputCheckErrorsMiddleware = (req: Request, res: Response, next: Ne
         })
         return
     }
-
     next()
 };

@@ -17,14 +17,3 @@ export const deletePostController = async (req: Request<InputIdType>, res: Respo
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
     }
 }
-
-/*
-export const deletePostController = async (req: Request<InputIdType>, res: Response) => {
-    const deletedInfo = await postRepository.delete(req.params.id)
-    if (deletedInfo.error) {
-        res.status(HTTP_CODES.NOT_FOUND).send()
-        return
-    }
-
-    res.status(HTTP_CODES.NO_CONTENT).send()
-}*/
