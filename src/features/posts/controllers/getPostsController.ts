@@ -1,7 +1,7 @@
 import {Request, Response} from "express"
 import {HTTP_CODES} from "../../../settings"
 import {OutputPostType} from "../../../input-output-types/post-types"
-import {postMongoRepository} from "../repository/postMongoRepository";
+import {postMongoRepository} from "../repository/postMongoRepository"
 
 export const getPostsController = async (req: Request, res: Response<OutputPostType[]>) => {
     try {

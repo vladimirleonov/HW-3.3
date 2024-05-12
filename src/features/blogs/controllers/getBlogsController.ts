@@ -1,7 +1,7 @@
 import {Request, Response} from 'express'
 import {HTTP_CODES} from "../../../settings"
 import {OutputBlogType} from '../../../input-output-types/blog-types'
-import {blogMongoRepository} from "../repository/blogMongoRepository";
+import {blogMongoRepository} from "../repository/blogMongoRepository"
 
 export const getBlogsController = async (req: Request, res: Response<OutputBlogType[]>) => {
     try {

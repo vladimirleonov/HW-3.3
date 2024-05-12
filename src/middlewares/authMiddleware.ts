@@ -3,7 +3,7 @@ import {AUTH_DATA, HTTP_CODES} from "../settings"
 import {decodeFromBase64} from "../helpers/auth-helper"
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const auth: string | undefined = req.headers['authorization'];
+    const auth: string | undefined = req.headers['authorization']
 
     if (!auth || !auth.startsWith('Basic ')) {
         res.status(HTTP_CODES.UNAUTHORIZED).send()

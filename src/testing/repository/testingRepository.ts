@@ -1,4 +1,4 @@
-import {blogCollection, postCollection} from "../../db/mongo-db";
+import {blogCollection, postCollection} from "../../db/mongo-db"
 
 export const testingRepository = {
     async deleteAllData(): Promise<{ success?: boolean }> {

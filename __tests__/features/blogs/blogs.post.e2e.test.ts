@@ -1,9 +1,9 @@
-import {req} from "../../test-helpers/req";
-import {HTTP_CODES, SETTINGS} from "../../../src/settings";
-import {InputBlogType} from "../../../src/input-output-types/blog-types";
-import {encodeToBase64} from "../../../src/helpers/auth-helper";
-import {AUTH_DATA} from "../../../src/settings";
-import {clearTestDB, closeTestDB, connectToTestDB} from "../../test-helpers/test-db";
+import {req} from "../../test-helpers/req"
+import {HTTP_CODES, SETTINGS} from "../../../src/settings"
+import {InputBlogType} from "../../../src/input-output-types/blog-types"
+import {encodeToBase64} from "../../../src/helpers/auth-helper"
+import {AUTH_DATA} from "../../../src/settings"
+import {clearTestDB, closeTestDB, connectToTestDB} from "../../test-helpers/test-db"
 
 describe('POST /blogs', () => {
     beforeAll(async () => {
@@ -63,7 +63,7 @@ describe('POST /blogs', () => {
                 field: 'name',
                 message: 'name is missing or not a string'
             }
-        );
+        )
     })
     it('- POST blogs when name is not a string', async () => {
         const newBlog: InputBlogType = {
@@ -83,7 +83,7 @@ describe('POST /blogs', () => {
                 field: 'name',
                 message: 'name is missing or not a string'
             }
-        );
+        )
     })
     it('- POST blogs with incorrect name length', async () => {
         const newBlog: InputBlogType = {
@@ -104,7 +104,7 @@ describe('POST /blogs', () => {
                 field: 'name',
                 message: 'name must be less than 15 characters long'
             }
-        );
+        )
     })
     it('- POST blogs when description not passed', async () => {
         const newBlog: any = {
@@ -123,7 +123,7 @@ describe('POST /blogs', () => {
                 field: 'description',
                 message: 'description is missing or not a string'
             }
-        );
+        )
     })
     it('- POST blogs when description is not a string', async () => {
         const newBlog: InputBlogType = {
@@ -143,7 +143,7 @@ describe('POST /blogs', () => {
                 field: 'description',
                 message: 'description is missing or not a string'
             }
-        );
+        )
     })
     it('- POST blogs with incorrect description length', async () => {
         const newBlog: InputBlogType = {
@@ -164,7 +164,7 @@ describe('POST /blogs', () => {
                 field: 'description',
                 message: 'description must be less than 500 characters long'
             }
-        );
+        )
     })
     it('- POST blogs when websiteUrl not passed', async () => {
         const newBlog: any = {
@@ -183,7 +183,7 @@ describe('POST /blogs', () => {
                 field: 'websiteUrl',
                 message: 'websiteUrl is missing or not a string'
             }
-        );
+        )
     })
     it('- POST blogs when websiteUrl is not a string', async () => {
         const newBlog: InputBlogType = {
@@ -203,7 +203,7 @@ describe('POST /blogs', () => {
                 field: 'websiteUrl',
                 message: 'websiteUrl is missing or not a string'
             }
-        );
+        )
     })
     it('- POST blogs with incorrect websiteUrl length', async () => {
         const newBlog: InputBlogType = {
@@ -224,7 +224,7 @@ describe('POST /blogs', () => {
                 field: 'websiteUrl',
                 message: 'websiteUrl must be less than 100 characters long'
             }
-        );
+        )
     })
     it('- POST blogs with incorrect websiteUrl', async () => {
         const newBlog: InputBlogType = {
@@ -245,7 +245,7 @@ describe('POST /blogs', () => {
                 field: 'websiteUrl',
                 message: 'Invalid value'
             }
-        );
+        )
     })
     it('- POST blogs with incorrect data (first errors)', async () => {
         const newBlog: InputBlogType = {
@@ -273,6 +273,6 @@ describe('POST /blogs', () => {
                 field: 'websiteUrl',
                 message: 'websiteUrl is missing or not a string'
             }
-        ]);
+        ])
     })
 })

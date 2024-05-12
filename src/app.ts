@@ -1,9 +1,9 @@
 import express, {Express, Request, Response} from "express"
 import cors from "cors"
-import {HTTP_CODES, SETTINGS} from "./settings";
-import {postsRouter} from "./features/posts";
-import {blogsRouter} from "./features/blogs";
-import {testingRouter} from "./testing";
+import {HTTP_CODES, SETTINGS} from "./settings"
+import {postsRouter} from "./features/posts"
+import {blogsRouter} from "./features/blogs"
+import {testingRouter} from "./testing"
 
 const app: Express = express()
 

@@ -1,11 +1,11 @@
-import {req} from "../../test-helpers/req";
-import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings";
-import {InputPostType} from "../../../src/input-output-types/post-types";
-import {encodeToBase64} from "../../../src/helpers/auth-helper";
-import {generateBlogsDataset} from "../../datasets/blogsDatasets";
-import {generatePostsDataset} from "../../datasets/postsDatasets";
-import {postCollection, blogCollection} from "../../../src/db/mongo-db";
-import {clearTestDB, connectToTestDB, closeTestDB} from "../../test-helpers/test-db";
+import {req} from "../../test-helpers/req"
+import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings"
+import {InputPostType} from "../../../src/input-output-types/post-types"
+import {encodeToBase64} from "../../../src/helpers/auth-helper"
+import {generateBlogsDataset} from "../../datasets/blogsDatasets"
+import {generatePostsDataset} from "../../datasets/postsDatasets"
+import {postCollection, blogCollection} from "../../../src/db/mongo-db"
+import {clearTestDB, connectToTestDB, closeTestDB} from "../../test-helpers/test-db"
 
 describe('PUT /posts', () => {
     beforeAll(async () => {
@@ -24,7 +24,7 @@ describe('PUT /posts', () => {
         const postsDataset = generatePostsDataset(blogsDataset.blogs, 2)
         await postCollection.insertMany(postsDataset.posts)
 
-        const blogId = blogsDataset.blogs[0]._id.toString();
+        const blogId = blogsDataset.blogs[0]._id.toString()
 
         const postForUpdating: InputPostType = {
             title: 'title2',
@@ -46,7 +46,7 @@ describe('PUT /posts', () => {
         const postsDataset = generatePostsDataset(blogsDataset.blogs, 2)
         await postCollection.insertMany(postsDataset.posts)
 
-        const blogId = blogsDataset.blogs[0]._id.toString();
+        const blogId = blogsDataset.blogs[0]._id.toString()
 
         const postForUpdating: InputPostType = {
             title: 'title2',
@@ -68,7 +68,7 @@ describe('PUT /posts', () => {
         const postsDataset = generatePostsDataset(blogsDataset.blogs, 2)
         await postCollection.insertMany(postsDataset.posts)
 
-        const blogId = blogsDataset.blogs[0]._id.toString();
+        const blogId = blogsDataset.blogs[0]._id.toString()
 
         const postForUpdating: any = {
             shortDescription: 'shortDescription2',
@@ -87,7 +87,7 @@ describe('PUT /posts', () => {
                 field: 'title',
                 message: 'title is missing or not a string'
             }
-        );
+        )
     })
     it('- PUT posts when title is not a string', async () => {
         const blogsDataset = generateBlogsDataset(2)
@@ -96,7 +96,7 @@ describe('PUT /posts', () => {
         const postsDataset = generatePostsDataset(blogsDataset.blogs, 2)
         await postCollection.insertMany(postsDataset.posts)
 
-        const blogId = blogsDataset.blogs[0]._id.toString();
+        const blogId = blogsDataset.blogs[0]._id.toString()
 
         const postForUpdating: InputPostType = {
             title: 123 as any,
@@ -116,7 +116,7 @@ describe('PUT /posts', () => {
                 field: 'title',
                 message: 'title is missing or not a string'
             }
-        );
+        )
     })
     it('- PUT posts when title is too long', async () => {
         const blogsDataset = generateBlogsDataset(2)
@@ -125,7 +125,7 @@ describe('PUT /posts', () => {
         const postsDataset = generatePostsDataset(blogsDataset.blogs, 2)
         await postCollection.insertMany(postsDataset.posts)
 
-        const blogId = blogsDataset.blogs[0]._id.toString();
+        const blogId = blogsDataset.blogs[0]._id.toString()
 
         const postForUpdating: InputPostType = {
             title: 'title2'.repeat(10),
@@ -145,7 +145,7 @@ describe('PUT /posts', () => {
                 field: 'title',
                 message: 'title must be less than 30 characters long'
             }
-        );
+        )
     })
     it('- PUT posts when shortDescription not passed', async () => {
         const blogsDataset = generateBlogsDataset(2)
@@ -154,7 +154,7 @@ describe('PUT /posts', () => {
         const postsDataset = generatePostsDataset(blogsDataset.blogs, 2)
         await postCollection.insertMany(postsDataset.posts)
 
-        const blogId = blogsDataset.blogs[0]._id.toString();
+        const blogId = blogsDataset.blogs[0]._id.toString()
 
         const postForUpdating: any = {
             title: "title2",
@@ -173,7 +173,7 @@ describe('PUT /posts', () => {
                 field: 'shortDescription',
                 message: 'shortDescription is missing or not a string'
             }
-        );
+        )
     })
     it('- PUT posts when shortDescription is not a string', async () => {
         const blogsDataset = generateBlogsDataset(2)
@@ -182,7 +182,7 @@ describe('PUT /posts', () => {
         const postsDataset = generatePostsDataset(blogsDataset.blogs, 2)
         await postCollection.insertMany(postsDataset.posts)
 
-        const blogId = blogsDataset.blogs[0]._id.toString();
+        const blogId = blogsDataset.blogs[0]._id.toString()
 
         const postForUpdating: InputPostType = {
             title: "title2",
@@ -202,7 +202,7 @@ describe('PUT /posts', () => {
                 field: 'shortDescription',
                 message: 'shortDescription is missing or not a string'
             }
-        );
+        )
     })
     it('- PUT posts when shortDescription is too long', async () => {
         const blogsDataset = generateBlogsDataset(2)
@@ -211,7 +211,7 @@ describe('PUT /posts', () => {
         const postsDataset = generatePostsDataset(blogsDataset.blogs, 2)
         await postCollection.insertMany(postsDataset.posts)
 
-        const blogId = blogsDataset.blogs[0]._id.toString();
+        const blogId = blogsDataset.blogs[0]._id.toString()
 
         const postForUpdating: InputPostType = {
             title: 'title2',
@@ -231,7 +231,7 @@ describe('PUT /posts', () => {
                 field: 'shortDescription',
                 message: 'shortDescription must be less than 100 characters long'
             }
-        );
+        )
     })
     it('- PUT posts when content not passed', async () => {
         const blogsDataset = generateBlogsDataset(2)
@@ -240,7 +240,7 @@ describe('PUT /posts', () => {
         const postsDataset = generatePostsDataset(blogsDataset.blogs, 2)
         await postCollection.insertMany(postsDataset.posts)
 
-        const blogId = blogsDataset.blogs[0]._id.toString();
+        const blogId = blogsDataset.blogs[0]._id.toString()
 
         const postForUpdating: any = {
             title: "title2",
@@ -259,7 +259,7 @@ describe('PUT /posts', () => {
                 field: 'content',
                 message: 'content is missing or not a string'
             }
-        );
+        )
     })
     it('- PUT posts when content is not a string', async () => {
         const blogsDataset = generateBlogsDataset(2)
@@ -268,7 +268,7 @@ describe('PUT /posts', () => {
         const postsDataset = generatePostsDataset(blogsDataset.blogs, 2)
         await postCollection.insertMany(postsDataset.posts)
 
-        const blogId = blogsDataset.blogs[0]._id.toString();
+        const blogId = blogsDataset.blogs[0]._id.toString()
 
         const postForUpdating: InputPostType = {
             title: "title2",
@@ -288,7 +288,7 @@ describe('PUT /posts', () => {
                 field: 'content',
                 message: 'content is missing or not a string'
             }
-        );
+        )
     })
     it('- PUT posts when content is too long', async () => {
         const blogsDataset = generateBlogsDataset(2)
@@ -297,7 +297,7 @@ describe('PUT /posts', () => {
         const postsDataset = generatePostsDataset(blogsDataset.blogs, 2)
         await postCollection.insertMany(postsDataset.posts)
 
-        const blogId = blogsDataset.blogs[0]._id.toString();
+        const blogId = blogsDataset.blogs[0]._id.toString()
 
         const postForUpdating: InputPostType = {
             title: 'title2',
@@ -317,7 +317,7 @@ describe('PUT /posts', () => {
                 field: 'content',
                 message: 'content must be less than 1000 characters long'
             }
-        );
+        )
     })
     it('- PUT posts when blogId not passed', async () => {
         const blogsDataset = generateBlogsDataset(2)
@@ -343,7 +343,7 @@ describe('PUT /posts', () => {
                 field: 'blogId',
                 message: 'blogId is missing or not a string'
             }
-        );
+        )
     })
     it('- PUT posts when blogId is not a string', async () => {
         const blogsDataset = generateBlogsDataset(2)
@@ -370,7 +370,7 @@ describe('PUT /posts', () => {
                 field: 'blogId',
                 message: 'blogId is missing or not a string'
             }
-        );
+        )
     })
     it('- PUT posts when blogId is invalid', async () => {
         const blogsDataset = generateBlogsDataset(2)
@@ -397,7 +397,7 @@ describe('PUT /posts', () => {
                 field: 'blogId',
                 message: 'invalid blogId!'
             }
-        );
+        )
     })
     it('- PUT posts with incorrect data (first errors)', async () => {
         const blogsDataset = generateBlogsDataset(2)
@@ -436,6 +436,6 @@ describe('PUT /posts', () => {
                 field: 'blogId',
                 message: 'blogId is missing or not a string'
             }
-        ]);
+        ])
     })
 })

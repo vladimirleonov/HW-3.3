@@ -1,12 +1,12 @@
 import {Request, Response} from 'express'
-import {InputBlogType, InputIdType, OutputBlogType} from '../../../input-output-types/blog-types';
-import {HTTP_CODES} from '../../../settings';
-import {blogMongoRepository} from "../repository/blogMongoRepository";
-import {ObjectId} from "mongodb";
+import {InputBlogType, InputIdType, OutputBlogType} from '../../../input-output-types/blog-types'
+import {HTTP_CODES} from '../../../settings'
+import {blogMongoRepository} from "../repository/blogMongoRepository"
+import {ObjectId} from "mongodb"
 
 export const updateBlogController = async (req: Request<InputIdType, OutputBlogType, InputBlogType>, res: Response<OutputBlogType>) => {
     try {
-        const updatedInfo = await blogMongoRepository.update(new ObjectId(req.params.id), req.body);
+        const updatedInfo = await blogMongoRepository.update(new ObjectId(req.params.id), req.body)
 
         if (!updatedInfo?.id && updatedInfo?.error) {
             res.status(HTTP_CODES.NOT_FOUND).send()

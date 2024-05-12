@@ -4,11 +4,11 @@ import {createPostController} from "./controllers/createPostController"
 import {findPostController} from "./controllers/findPostController"
 import {deletePostController} from "./controllers/deletePostController"
 import {updatePostController} from "./controllers/updatePostController"
-import {postInputValidator, idParamValidator} from "./validators/postValidators";
-import {inputCheckErrorsMiddleware} from "../../middlewares/inputCheckErrorsMiddleware";
+import {postInputValidator, idParamValidator} from "./validators/postValidators"
+import {inputCheckErrorsMiddleware} from "../../middlewares/inputCheckErrorsMiddleware"
 import {authMiddleware} from "../../middlewares/authMiddleware"
 
-export const postsRouter = Router();
+export const postsRouter = Router()
 
 postsRouter.get('/', getPostsController)
 postsRouter.post('/', postInputValidator, authMiddleware, inputCheckErrorsMiddleware, createPostController)

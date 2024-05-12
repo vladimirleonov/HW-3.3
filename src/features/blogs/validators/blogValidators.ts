@@ -1,5 +1,5 @@
 import {body, param} from "express-validator"
-import {ObjectId} from "mongodb";
+import {ObjectId} from "mongodb"
 
 const blogTitleInputValidator = body('name')
     .isString().withMessage('name is missing or not a string')

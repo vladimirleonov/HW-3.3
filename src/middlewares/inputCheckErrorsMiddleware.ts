@@ -1,14 +1,14 @@
-import {NextFunction, Request, Response} from "express";
-import {Result, validationResult, ValidationError} from "express-validator";
-import {HTTP_CODES} from "../settings";
+import {NextFunction, Request, Response} from "express"
+import {Result, validationResult, ValidationError} from "express-validator"
+import {HTTP_CODES} from "../settings"
 
 interface ValidationErrorMessage {
-    path: string;
-    msg: string;
+    path: string
+    msg: string
 }
 
 export const inputCheckErrorsMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const result: Result<ValidationError> = validationResult(req);
+    const result: Result<ValidationError> = validationResult(req)
 
     if (!result.isEmpty()) {
         const errors: ValidationErrorMessage[] = result.array({onlyFirstError: true}) as ValidationErrorMessage[]
@@ -22,4 +22,4 @@ export const inputCheckErrorsMiddleware = (req: Request, res: Response, next: Ne
         return
     }
     next()
-};
+}

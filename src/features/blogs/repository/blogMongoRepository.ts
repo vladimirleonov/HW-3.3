@@ -1,7 +1,7 @@
 import {blogCollection} from "../../../db/mongo-db"
-import {BlogDBType} from "../../../db/db-types/blog-db-types";
-import {InputBlogType, OutputBlogType} from "../../../input-output-types/blog-types";
-import {DeleteResult, InsertOneResult, ObjectId, UpdateResult} from "mongodb";
+import {BlogDBType} from "../../../db/db-types/blog-db-types"
+import {InputBlogType, OutputBlogType} from "../../../input-output-types/blog-types"
+import {DeleteResult, InsertOneResult, ObjectId, UpdateResult} from "mongodb"
 
 export const blogMongoRepository = {
 
@@ -49,7 +49,7 @@ export const blogMongoRepository = {
                 return {error: 'Blog not found'}
             }
 
-            return {id: id.toString()};
+            return {id: id.toString()}
         } catch (err) {
             throw new Error('Error updating blog')
         }

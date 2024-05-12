@@ -1,6 +1,6 @@
-import {Request, Response} from "express";
-import {testingRepository} from "../repository/testingRepository";
-import {HTTP_CODES} from "../../settings";
+import {Request, Response} from "express"
+import {testingRepository} from "../repository/testingRepository"
+import {HTTP_CODES} from "../../settings"
 
 export const deleteTestingController = async (req: Request, res: Response) => {
     try {

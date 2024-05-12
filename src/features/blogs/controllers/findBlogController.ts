@@ -1,8 +1,8 @@
 import {Request, Response} from "express"
 import {InputIdType} from "../../../input-output-types/blog-types"
 import {HTTP_CODES} from "../../../settings"
-import {blogMongoRepository} from "../repository/blogMongoRepository";
-import {ObjectId} from "mongodb";
+import {blogMongoRepository} from "../repository/blogMongoRepository"
+import {ObjectId} from "mongodb"
 
 export const findBlogController = async (req: Request<InputIdType>, res: Response) => {
     try {

@@ -2,9 +2,9 @@ import {req} from "../../test-helpers/req"
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings"
 import {InputBlogType} from "../../../src/input-output-types/blog-types"
 import {encodeToBase64} from "../../../src/helpers/auth-helper"
-import {clearTestDB, closeTestDB, connectToTestDB} from "../../test-helpers/test-db";
-import {generateBlogsDataset} from "../../datasets/blogsDatasets";
-import {blogCollection} from "../../../src/db/mongo-db";
+import {clearTestDB, closeTestDB, connectToTestDB} from "../../test-helpers/test-db"
+import {generateBlogsDataset} from "../../datasets/blogsDatasets"
+import {blogCollection} from "../../../src/db/mongo-db"
 
 describe('PUT /blogs', () => {
     beforeAll(async () => {
@@ -136,7 +136,7 @@ describe('PUT /blogs', () => {
                 field: 'description',
                 message: 'description is missing or not a string'
             }
-        );
+        )
     })
     it('- PUT blogs when description is not a string', async () => {
         const blogsDataset = generateBlogsDataset()
@@ -159,7 +159,7 @@ describe('PUT /blogs', () => {
                 field: 'description',
                 message: 'description is missing or not a string'
             }
-        );
+        )
     })
     it('- PUT blogs with incorrect description length', async () => {
         const blogsDataset = generateBlogsDataset()
@@ -183,7 +183,7 @@ describe('PUT /blogs', () => {
                 field: 'description',
                 message: 'description must be less than 500 characters long'
             }
-        );
+        )
     })
     it('- PUT blogs when websiteUrl not passed', async () => {
         const blogsDataset = generateBlogsDataset()
@@ -205,7 +205,7 @@ describe('PUT /blogs', () => {
                 field: 'websiteUrl',
                 message: 'websiteUrl is missing or not a string'
             }
-        );
+        )
     })
     it('- PUT blogs when websiteUrl is not a string', async () => {
         const blogsDataset = generateBlogsDataset()
@@ -228,7 +228,7 @@ describe('PUT /blogs', () => {
                 field: 'websiteUrl',
                 message: 'websiteUrl is missing or not a string'
             }
-        );
+        )
     })
     it('- PUT blogs with incorrect websiteUrl length', async () => {
         const blogsDataset = generateBlogsDataset()
@@ -252,7 +252,7 @@ describe('PUT /blogs', () => {
                 field: 'websiteUrl',
                 message: 'websiteUrl must be less than 100 characters long'
             }
-        );
+        )
     })
     it('- PUT blogs with incorrect websiteUrl', async () => {
         const blogsDataset = generateBlogsDataset()
@@ -275,7 +275,7 @@ describe('PUT /blogs', () => {
                 field: 'websiteUrl',
                 message: 'Invalid value'
             }
-        );
+        )
     })
     it('- PUT blogs with incorrect data (first errors)', async () => {
         const blogsDataset = generateBlogsDataset()
@@ -306,6 +306,6 @@ describe('PUT /blogs', () => {
                 field: 'websiteUrl',
                 message: 'websiteUrl is missing or not a string'
             }
-        ]);
+        ])
     })
 })

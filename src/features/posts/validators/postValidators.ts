@@ -1,12 +1,12 @@
 import {body, param} from "express-validator"
-import {blogMongoRepository} from "../../blogs/repository/blogMongoRepository";
-import {ObjectId} from "mongodb";
-import {BlogDBType} from "../../../db/db-types/blog-db-types";
+import {blogMongoRepository} from "../../blogs/repository/blogMongoRepository"
+import {ObjectId} from "mongodb"
+import {BlogDBType} from "../../../db/db-types/blog-db-types"
 
 const validateBlogId = async (blogId: string) => {
     const blog: BlogDBType | null = await blogMongoRepository.findById(new ObjectId(blogId))
     if (!blog) {
-        throw new Error('invalid blogId!');
+        throw new Error('invalid blogId!')
     }
     return blogId === blog._id.toString()
 }

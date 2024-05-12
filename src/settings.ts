@@ -1,5 +1,5 @@
-import {config} from "dotenv";
-config();
+import {config} from "dotenv"
+config()
 
 export const SETTINGS = {
     PORT: process.env.PORT,
@@ -22,7 +22,7 @@ export const HTTP_CODES = {
     UNAUTHORIZED: 401,
     NOT_FOUND: 404,
     INTERNAL_SERVER_ERROR: 500
-};
+}
 
 type AuthDataType = {
     ADMIN_AUTH: string,

@@ -1,9 +1,9 @@
-import {PostDbType} from "../../../db/db-types/post-db-types";
-import {InputPostType, OutputPostType} from "../../../input-output-types/post-types";
-import {postCollection} from "../../../db/mongo-db";
-import {InsertOneResult, ObjectId} from "mongodb";
-import {blogMongoRepository} from "../../blogs/repository/blogMongoRepository";
-import {BlogDBType} from "../../../db/db-types/blog-db-types";
+import {PostDbType} from "../../../db/db-types/post-db-types"
+import {InputPostType, OutputPostType} from "../../../input-output-types/post-types"
+import {postCollection} from "../../../db/mongo-db"
+import {InsertOneResult, ObjectId} from "mongodb"
+import {blogMongoRepository} from "../../blogs/repository/blogMongoRepository"
+import {BlogDBType} from "../../../db/db-types/blog-db-types"
 
 export const postMongoRepository = {
     async find(): Promise<PostDbType[]> {
@@ -65,7 +65,7 @@ export const postMongoRepository = {
     },
     async delete(id: ObjectId) {
         try {
-            const deletedInfo = await postCollection.deleteOne({_id: id});
+            const deletedInfo = await postCollection.deleteOne({_id: id})
             if (deletedInfo.deletedCount === 0) {
                 return {error: "Post not found"}
             }

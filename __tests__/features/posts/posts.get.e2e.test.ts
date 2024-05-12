@@ -1,10 +1,10 @@
-import {req} from "../../test-helpers/req";
-import {SETTINGS} from "../../../src/settings";
-import {clearTestDB, connectToTestDB, closeTestDB} from "../../test-helpers/test-db";
-import {generateBlogsDataset} from "../../datasets/blogsDatasets";
-import {generatePostsDataset} from "../../datasets/postsDatasets";
-import {postCollection, blogCollection} from "../../../src/db/mongo-db";
-import {ObjectId} from "mongodb";
+import {req} from "../../test-helpers/req"
+import {SETTINGS} from "../../../src/settings"
+import {clearTestDB, connectToTestDB, closeTestDB} from "../../test-helpers/test-db"
+import {generateBlogsDataset} from "../../datasets/blogsDatasets"
+import {generatePostsDataset} from "../../datasets/postsDatasets"
+import {postCollection, blogCollection} from "../../../src/db/mongo-db"
+import {ObjectId} from "mongodb"
 
 describe('GET /posts', () => {
     beforeAll(async () => {

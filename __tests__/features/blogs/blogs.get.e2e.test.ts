@@ -1,10 +1,10 @@
-import {req} from "../../test-helpers/req";
-import {SETTINGS} from "../../../src/settings";
-import {HTTP_CODES} from "../../../src/settings";
-import {clearTestDB, closeTestDB, connectToTestDB} from "../../test-helpers/test-db";
+import {req} from "../../test-helpers/req"
+import {SETTINGS} from "../../../src/settings"
+import {HTTP_CODES} from "../../../src/settings"
+import {clearTestDB, closeTestDB, connectToTestDB} from "../../test-helpers/test-db"
 import {generateBlogsDataset} from '../../datasets/blogsDatasets'
-import {blogCollection} from "../../../src/db/mongo-db";
-import {ObjectId} from "mongodb";
+import {blogCollection} from "../../../src/db/mongo-db"
+import {ObjectId} from "mongodb"
 
 describe('GET /blogs', () => {
     beforeAll(async () => {

@@ -4,9 +4,9 @@ import {createBlogController} from "./controllers/createBlogController"
 import {findBlogController} from "./controllers/findBlogController"
 import {updateBlogController} from "./controllers/updateBlogController"
 import {deleteBlogController} from "./controllers/deleteBlogController"
-import {blogInputValidator, idParamValidator} from "./validators/blogValidators";
-import {inputCheckErrorsMiddleware} from "../../middlewares/inputCheckErrorsMiddleware";
-import {authMiddleware} from "../../middlewares/authMiddleware";
+import {blogInputValidator, idParamValidator} from "./validators/blogValidators"
+import {inputCheckErrorsMiddleware} from "../../middlewares/inputCheckErrorsMiddleware"
+import {authMiddleware} from "../../middlewares/authMiddleware"
 
 export const blogsRouter = Router()
 

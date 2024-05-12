@@ -1,10 +1,10 @@
-import {req} from "../../test-helpers/req";
-import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings";
-import {encodeToBase64} from "../../../src/helpers/auth-helper";
-import {clearTestDB, closeTestDB, connectToTestDB} from "../../test-helpers/test-db";
-import {generateBlogsDataset} from "../../datasets/blogsDatasets";
-import {blogCollection} from "../../../src/db/mongo-db";
-import {ObjectId} from "mongodb";
+import {req} from "../../test-helpers/req"
+import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings"
+import {encodeToBase64} from "../../../src/helpers/auth-helper"
+import {clearTestDB, closeTestDB, connectToTestDB} from "../../test-helpers/test-db"
+import {generateBlogsDataset} from "../../datasets/blogsDatasets"
+import {blogCollection} from "../../../src/db/mongo-db"
+import {ObjectId} from "mongodb"
 
 describe('DELETE /blogs', () => {
     beforeAll(async () => {

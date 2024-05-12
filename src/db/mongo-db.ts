@@ -11,7 +11,6 @@ export let postCollection: Collection<PostDbType> = {} as Collection<PostDbType>
 
 export const connectToDB = async (MONGO_URL: string) => {
     try {
-        // Create a MongoClient with a MongoClientOptions object to set the Stable API version
         client = new MongoClient(MONGO_URL, {
             serverApi: {
                 version: ServerApiVersion.v1,
@@ -25,7 +24,6 @@ export const connectToDB = async (MONGO_URL: string) => {
         blogCollection = db.collection(SETTINGS.BLOG_COLLECTION_NAME as string)
         postCollection = db.collection(SETTINGS.POSTS_COLLECTION_NAME as string)
 
-        // Connect the client to the server (optional starting in v4.7)
         await client.connect()
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ping: 1})
