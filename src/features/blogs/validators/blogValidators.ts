@@ -1,5 +1,7 @@
-import {body, param} from "express-validator"
+import {body, param, query} from "express-validator"
 import {ObjectId} from "mongodb"
+
+// body validator
 
 const blogTitleInputValidator = body('name')
     .isString().withMessage('name is missing or not a string')
@@ -26,6 +28,9 @@ export const blogInputValidator = [
     blogWebsiteUrlInputValidator
 ]
 
+
+// id param validator
+
 const validateObjectId = async (objectId: string) => {
     if (!ObjectId.isValid(objectId)) {
         throw new Error('Invalid ObjectId')
@@ -34,3 +39,35 @@ const validateObjectId = async (objectId: string) => {
 
 export const idParamValidator = param('id')
     .custom(validateObjectId).withMessage('Invalid ObjectId')
+
+
+// query param validator
+
+const searchNameTermQueryValidator = query('searchNameTerm')
+    .optional()
+    .isString().withMessage('searchNameTerm is not a string')
+
+const sortByQueryValidator = query('sortBy')
+    .optional()
+    .isString().withMessage('sortBy is not a string')
+
+const sortDirectionQueryValidator = query('sortDirection')
+    .optional()
+    .isString().withMessage('sortDirection is not a string')
+    .isIn(['asc', 'desc']).withMessage('sortDirection must be asc or desc')
+
+const pageNumberQueryValidator = query('pageNumber')
+    .optional()
+    .isInt({ min: 1 }).withMessage('pageNumber is not a positive integer')
+
+const pageSizeQueryValidator = query('pageSize')
+    .optional()
+    .isInt({ min: 1 }).withMessage('pageSize is not a positive integer')
+
+export const blogQueryValidator = [
+    searchNameTermQueryValidator,
+    sortByQueryValidator,
+    sortDirectionQueryValidator,
+    pageNumberQueryValidator,
+    pageSizeQueryValidator
+]

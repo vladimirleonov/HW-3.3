@@ -16,3 +16,11 @@ export type OutputBlogType = {
 export type InputIdType = {
     id: string
 }
+
+export type BlogQueryParams = {
+    searchNameTerm?: string | null,
+    sortBy?: string,
+    sortDirection?: 'asc' | 'desc',
+    pageNumber?: number,
+    pageSize?: number
+}
