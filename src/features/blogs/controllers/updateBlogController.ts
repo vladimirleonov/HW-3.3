@@ -1,10 +1,11 @@
 import {Request, Response} from 'express'
-import {InputBlogType, InputIdType, OutputBlogType} from '../../../input-output-types/blog-types'
+import {InputIdParamType} from '../../../input-output-types/common-types'
 import {HTTP_CODES} from '../../../settings'
 import {blogMongoRepository} from "../repository/blogMongoRepository"
 import {ObjectId} from "mongodb"
+import {InputBlogType, OutputBlogType} from "../../../input-output-types/blog-types";
 
-export const updateBlogController = async (req: Request<InputIdType, OutputBlogType, InputBlogType>, res: Response<OutputBlogType>) => {
+export const updateBlogController = async (req: Request<InputIdParamType, OutputBlogType, InputBlogType>, res: Response<OutputBlogType>) => {
     try {
         const updatedInfo = await blogMongoRepository.update(new ObjectId(req.params.id), req.body)
 

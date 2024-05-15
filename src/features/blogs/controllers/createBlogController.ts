@@ -3,6 +3,7 @@ import {InputBlogType, OutputBlogType} from '../../../input-output-types/blog-ty
 import {HTTP_CODES} from '../../../settings'
 import {blogMongoRepository} from "../repository/blogMongoRepository"
 import {ObjectId} from "mongodb"
+import {blogMongoQueryRepository} from "../repository/blogMongoQueryRepository";
 
 export const createBlogController = async (req: Request<{}, OutputBlogType, InputBlogType>, res: Response<OutputBlogType>) => {
     try {
@@ -12,7 +13,7 @@ export const createBlogController = async (req: Request<{}, OutputBlogType, Inpu
             return
         }
 
-        const foundInfo = await blogMongoRepository.findForOutputById(new ObjectId(createdInfo.id))
+        const foundInfo = await blogMongoQueryRepository.findForOutputById(new ObjectId(createdInfo.id))
         if (!foundInfo?.blog) {
             res.status(HTTP_CODES.NOT_FOUND).send()
             return

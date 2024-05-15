@@ -5,8 +5,9 @@ import {QueryParamsType} from "../../../input-output-types/common-types";
 import {postMongoQueryRepository} from "../../posts/repository/postMongoQueryRepository";
 import {SanitizedQueryParamsType, sanitizeQueryParams} from "../../../helpers/query-helpers";
 import {ObjectId} from "mongodb";
+import {InputBlogIdParamType} from "../../../input-output-types/blog-types";
 
-export const getBlogPostsController = async (req: Request<{blogId: string}, OutputPostPaginationType, {}, QueryParamsType>, res: Response<OutputPostPaginationType>) => {
+export const getBlogPostsController = async (req: Request<InputBlogIdParamType, OutputPostPaginationType, {}, QueryParamsType>, res: Response<OutputPostPaginationType>) => {
     try {
         const sanitizedQuery: SanitizedQueryParamsType = sanitizeQueryParams(req.query)
         const posts: OutputPostPaginationType = await postMongoQueryRepository.findAll(sanitizedQuery, new ObjectId(req.params.blogId))

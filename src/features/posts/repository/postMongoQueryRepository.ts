@@ -7,7 +7,7 @@ import {BlogDBType} from "../../../db/db-types/blog-db-types"
 import {SanitizedQueryParamsType} from "../../../helpers/query-helpers";
 
 export const postMongoQueryRepository = {
-    async findAll(query: SanitizedQueryParamsType, blogId: ObjectId ): Promise<OutputPostPaginationType> {
+    async findAll(query: SanitizedQueryParamsType, blogId?: ObjectId ): Promise<OutputPostPaginationType> {
         try {
             console.log(query)
             // {
@@ -18,10 +18,12 @@ export const postMongoQueryRepository = {
             //     pageSize: 10
             // }
             console.log(blogId)
-            // new ObjectId('66446da5dd276959a1fb34f9')
+            // new ObjectId('66446da5dd276959a1fb34f9') | undefined
+
+            const byId = blogId ? {blogId: blogId} : {}
 
             const filter = {
-                blogId
+                ...byId
             }
 
             const posts: PostDbType[] = await postCollection

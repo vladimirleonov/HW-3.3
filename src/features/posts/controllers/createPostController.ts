@@ -3,6 +3,7 @@ import {InputPostType, OutputPostType} from "../../../input-output-types/post-ty
 import {HTTP_CODES} from "../../../settings"
 import {postMongoRepository} from "../repository/postMongoRepository"
 import {ObjectId} from "mongodb"
+import {postMongoQueryRepository} from "../repository/postMongoQueryRepository";
 
 export const createPostController = async (req: Request<{}, OutputPostType, InputPostType>, res: Response<OutputPostType>) => {
     try {
@@ -12,7 +13,7 @@ export const createPostController = async (req: Request<{}, OutputPostType, Inpu
             return
         }
 
-        const foundInfo = await postMongoRepository.findForOutputById(new ObjectId(createdInfo.id))
+        const foundInfo = await postMongoQueryRepository.findForOutputById(new ObjectId(createdInfo.id))
         if (!foundInfo.post && foundInfo.error) {
             res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
             return

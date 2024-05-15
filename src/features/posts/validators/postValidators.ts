@@ -2,9 +2,10 @@ import {body, param} from "express-validator"
 import {blogMongoRepository} from "../../blogs/repository/blogMongoRepository"
 import {ObjectId} from "mongodb"
 import {BlogDBType} from "../../../db/db-types/blog-db-types"
+import {blogMongoQueryRepository} from "../../blogs/repository/blogMongoQueryRepository";
 
-const validateBlogId = async (blogId: string) => {
-    const blog: BlogDBType | null = await blogMongoRepository.findById(new ObjectId(blogId))
+export const validateBlogId = async (blogId: string) => {
+    const blog: BlogDBType | null = await blogMongoQueryRepository.findById(new ObjectId(blogId))
     if (!blog) {
         throw new Error('invalid blogId!')
     }
@@ -40,4 +41,10 @@ export const postInputValidator = [
     postShortDescriptionInputValidator,
     postContentInputValidator,
     postBlogIdInputValidator
+]
+
+export const BlogPostInputValidator = [
+    postTitleInputValidator,
+    postShortDescriptionInputValidator,
+    postContentInputValidator
 ]

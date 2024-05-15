@@ -1,12 +1,13 @@
 import {Request, Response} from "express"
-import {InputIdType} from "../../../input-output-types/blog-types"
+import {InputIdParamType} from "../../../input-output-types/common-types"
 import {HTTP_CODES} from "../../../settings"
 import {blogMongoRepository} from "../repository/blogMongoRepository"
 import {ObjectId} from "mongodb"
+import {blogMongoQueryRepository} from "../repository/blogMongoQueryRepository";
 
-export const findBlogController = async (req: Request<InputIdType>, res: Response) => {
+export const findBlogController = async (req: Request<InputIdParamType>, res: Response) => {
     try {
-        const foundInfo = await blogMongoRepository.findForOutputById(new ObjectId(req.params.id))
+        const foundInfo = await blogMongoQueryRepository.findForOutputById(new ObjectId(req.params.id))
 
         if (foundInfo.error) {
             res.status(HTTP_CODES.NOT_FOUND).send()

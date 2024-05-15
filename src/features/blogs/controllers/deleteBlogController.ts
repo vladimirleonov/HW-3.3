@@ -1,10 +1,10 @@
 import {Request, Response} from 'express'
-import {InputIdType} from '../../../input-output-types/blog-types'
+import {InputIdParamType} from '../../../input-output-types/common-types'
 import {HTTP_CODES} from '../../../settings'
 import {blogMongoRepository} from "../repository/blogMongoRepository"
 import {ObjectId} from "mongodb"
 
-export const deleteBlogController = async (req: Request<InputIdType>, res: Response) => {
+export const deleteBlogController = async (req: Request<InputIdParamType>, res: Response) => {
     try {
         const deletedInfo = await blogMongoRepository.delete(new ObjectId(req.params.id))
 

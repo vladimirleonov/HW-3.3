@@ -13,8 +13,12 @@ export type OutputBlogType = {
     isMembership: boolean
 }
 
-export type InputIdType = {
-    id: string
+// export type InputIdType = {
+//     id: string
+// }
+
+export type InputBlogIdParamType = {
+    blogId: string
 }
 
 export type OutputBlogPaginationType = {

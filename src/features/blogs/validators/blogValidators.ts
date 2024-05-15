@@ -1,5 +1,7 @@
 import {body, param, query} from "express-validator"
 import {ObjectId} from "mongodb"
+import {BlogDBType} from "../../../db/db-types/blog-db-types";
+import {blogMongoQueryRepository} from "../repository/blogMongoQueryRepository";
 
 // body validator
 
@@ -27,3 +29,17 @@ export const blogInputValidator = [
     blogDescriptionInputValidator,
     blogWebsiteUrlInputValidator
 ]
+
+
+// blogId param validator
+
+export const validateBlogId = async (blogId: string) => {
+    const blog: BlogDBType | null = await blogMongoQueryRepository.findById(new ObjectId(blogId))
+    if (!blog) {
+        throw new Error('invalid blogId!')
+    }
+    return blogId === blog._id.toString()
+}
+
+export const blogIdParamValidator = param('blogId')
+    .custom(validateBlogId)

@@ -1,10 +1,10 @@
 import {Request, Response} from 'express'
-import {InputIdType} from '../../../input-output-types/post-types'
+import {InputIdParamType} from '../../../input-output-types/common-types'
 import {HTTP_CODES} from '../../../settings'
 import {ObjectId} from 'mongodb'
 import {postMongoRepository} from '../repository/postMongoRepository'
 
-export const deletePostController = async (req: Request<InputIdType>, res: Response) => {
+export const deletePostController = async (req: Request<InputIdParamType>, res: Response) => {
     try {
         const deletedInfo = await postMongoRepository.delete(new ObjectId(req.params.id))
         if (deletedInfo.error) {

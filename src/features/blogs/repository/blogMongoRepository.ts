@@ -6,20 +6,20 @@ import {QueryParamsType} from "../../../input-output-types/common-types";
 
 export const blogMongoRepository = {
 
-    async find(): Promise<BlogDBType[]> {
-        try {
-            return await blogCollection.find({}).toArray()
-        } catch (err) {
-            throw new Error("Failed to get blogs")
-        }
-    },
-    async findById(id: ObjectId): Promise<BlogDBType | null> {
-        try {
-            return await blogCollection.findOne({_id: id})
-        } catch (err) {
-            throw new Error('Failed to get blog')
-        }
-    },
+    // async find(): Promise<BlogDBType[]> {
+    //     try {
+    //         return await blogCollection.find({}).toArray()
+    //     } catch (err) {
+    //         throw new Error("Failed to get blogs")
+    //     }
+    // },
+    // async findById(id: ObjectId): Promise<BlogDBType | null> {
+    //     try {
+    //         return await blogCollection.findOne({_id: id})
+    //     } catch (err) {
+    //         throw new Error('Failed to get blog')
+    //     }
+    // },
     async create(input: InputBlogType): Promise<{ id?: string, error?: string }> {
         const newBlog: BlogDBType = {
             _id: new ObjectId(),
@@ -68,21 +68,21 @@ export const blogMongoRepository = {
             throw new Error('Error deleting blog')
         }
     },
-    async findAllForOutput(queryParams: QueryParamsType): Promise<OutputBlogType[]> {
-        const blogs: BlogDBType[] = await this.find()
-        return blogs.map((blog: BlogDBType): OutputBlogType => this.mapToOutput(blog))
-    },
-    async findForOutputById(id: ObjectId): Promise<{ blog?: OutputBlogType, error?: string }> {
-        const blog: BlogDBType | null = await this.findById(id)
-        if (!blog) {
-            return {error: 'Blog not found'}
-        }
-        return {blog: this.mapToOutput(blog)}
-    },
-    mapToOutput({_id, ...rest}: BlogDBType): OutputBlogType {
-        return {
-            ...rest,
-            id: _id.toString()
-        }
-    }
+    // async findAllForOutput(queryParams: QueryParamsType): Promise<OutputBlogType[]> {
+    //     const blogs: BlogDBType[] = await this.find()
+    //     return blogs.map((blog: BlogDBType): OutputBlogType => this.mapToOutput(blog))
+    // },
+    // async findForOutputById(id: ObjectId): Promise<{ blog?: OutputBlogType, error?: string }> {
+    //     const blog: BlogDBType | null = await this.findById(id)
+    //     if (!blog) {
+    //         return {error: 'Blog not found'}
+    //     }
+    //     return {blog: this.mapToOutput(blog)}
+    // },
+    // mapToOutput({_id, ...rest}: BlogDBType): OutputBlogType {
+    //     return {
+    //         ...rest,
+    //         id: _id.toString()
+    //     }
+    // }
 }
