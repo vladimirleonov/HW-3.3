@@ -1,6 +1,6 @@
 import {BlogQueryParamsType} from "../input-output-types/blog-types";
 
-export type SanitizedBlogQueryParamsType = {
+export type SanitizedQueryParamsType = {
     searchNameTerm: string | null,
     sortBy: string,
     sortDirection: 'asc' | 'desc',
@@ -8,7 +8,7 @@ export type SanitizedBlogQueryParamsType = {
     pageSize: number
 };
 
-export const sanitizeBlogQueryParams = (query: BlogQueryParamsType): SanitizedBlogQueryParamsType => {
+export const sanitizeQueryParams = (query: BlogQueryParamsType): SanitizedQueryParamsType => {
     return {
         searchNameTerm: query.searchNameTerm || null,
         sortBy: query.sortBy || 'createdAt',
