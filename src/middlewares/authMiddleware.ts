@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express"
 import {AUTH_DATA, HTTP_CODES} from "../settings"
-import {decodeFromBase64} from "../helpers/auth-helper"
+import {decodeFromBase64} from "../helpers/auth-helpers"
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const auth: string | undefined = req.headers['authorization']

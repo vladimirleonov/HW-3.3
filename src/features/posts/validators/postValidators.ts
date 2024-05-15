@@ -11,12 +11,6 @@ const validateBlogId = async (blogId: string) => {
     return blogId === blog._id.toString()
 }
 
-const validateObjectId = async (objectId: string) => {
-    if (!ObjectId.isValid(objectId)) {
-        throw new Error('Invalid ObjectId')
-    }
-}
-
 const postTitleInputValidator = body('title')
     .isString().withMessage('title is missing or not a string')
     .trim()
@@ -47,6 +41,3 @@ export const postInputValidator = [
     postContentInputValidator,
     postBlogIdInputValidator
 ]
-
-export const idParamValidator = param('id')
-    .custom(validateObjectId).withMessage('Invalid ObjectId')

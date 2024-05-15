@@ -1,7 +1,7 @@
 import {req} from "../../test-helpers/req"
 import {HTTP_CODES, SETTINGS} from "../../../src/settings"
 import {InputPostType} from "../../../src/input-output-types/post-types"
-import {encodeToBase64} from "../../../src/helpers/auth-helper"
+import {encodeToBase64} from "../../../src/helpers/auth-helpers"
 import {AUTH_DATA} from "../../../src/settings"
 import {generateBlogsDataset} from "../../datasets/blogsDatasets"
 import {generatePostsDataset} from "../../datasets/postsDatasets"

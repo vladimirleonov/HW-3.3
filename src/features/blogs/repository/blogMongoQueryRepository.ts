@@ -1,8 +1,8 @@
 import {blogCollection} from "../../../db/mongo-db"
 import {BlogDBType} from "../../../db/db-types/blog-db-types"
-import {BlogQueryParams, OutputBlogType} from "../../../input-output-types/blog-types"
+import {OutputBlogType} from "../../../input-output-types/blog-types"
 import {ObjectId} from "mongodb"
-import {SanitizedBlogQueryParamsType} from "../../../helpers/query-helper";
+import {SanitizedBlogQueryParamsType} from "../../../helpers/query-helpers";
 
 export const blogMongoQueryRepository = {
 
@@ -13,7 +13,7 @@ export const blogMongoQueryRepository = {
             //   searchNameTerm: null,
             //   sortBy: 'createdAt',
             //   sortDirection: 'desc',
-            //   pageNumber: 4,
+            //   pageNumber: 2,
             //   pageSize: 3
             // }
             const search = query.searchNameTerm

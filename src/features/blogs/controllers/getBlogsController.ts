@@ -1,12 +1,12 @@
 import {Request, Response} from 'express'
 import {HTTP_CODES} from "../../../settings"
-import {OutputBlogType, BlogQueryParams} from '../../../input-output-types/blog-types'
+import {BlogQueryParamsType, OutputBlogType} from '../../../input-output-types/blog-types'
 import {blogMongoRepository} from "../repository/blogMongoRepository"
 import {blogMongoQueryRepository} from "../repository/blogMongoQueryRepository";
-import {sanitizeBlogQueryParams, SanitizedBlogQueryParamsType} from "../../../helpers/query-helper";
+import {sanitizeBlogQueryParams, SanitizedBlogQueryParamsType} from "../../../helpers/query-helpers";
 
 
-export const getBlogsController = async (req: Request<{}, {}, {}, BlogQueryParams>, res: Response<OutputBlogType[]>) => {
+export const getBlogsController = async (req: Request<{}, {}, {}, BlogQueryParamsType>, res: Response<OutputBlogType[]>) => {
     try {
         const sanitizedQuery: SanitizedBlogQueryParamsType = sanitizeBlogQueryParams(req.query)
         const blogs: OutputBlogType[] = await blogMongoQueryRepository.findAllForOutput(sanitizedQuery)
