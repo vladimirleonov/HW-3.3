@@ -1,4 +1,4 @@
-import {blogCollection, postCollection} from "../../../db/mongo-db"
+import {blogCollection} from "../../../db/mongo-db"
 import {BlogDBType} from "../../../db/db-types/blog-db-types"
 import {OutputBlogType} from "../../../input-output-types/blog-types"
 import {ObjectId} from "mongodb"
@@ -31,7 +31,8 @@ export const blogMongoQueryRepository = {
             //     ...searchFilter
             // }
 
-            const blogs: BlogDBType[] = await blogCollection.find(searchFilter)
+            const blogs: BlogDBType[] = await blogCollection
+                .find(searchFilter)
                 .sort(query.sortBy, query.sortDirection)
                 .skip((query.pageNumber - 1) * query.pageSize)
                 .limit(query.pageSize)

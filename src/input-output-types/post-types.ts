@@ -15,6 +15,10 @@ export type OutputPostType = {
     createdAt: string
 }
 
-export type InputIdType = {
-    id: string
+export type OutputPostPaginationType = {
+    pagesCount: number,
+    page: number,
+    pageSize: number,
+    totalCount: number,
+    items: OutputPostType[]
 }

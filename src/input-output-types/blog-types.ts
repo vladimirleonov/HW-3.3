@@ -1,5 +1,3 @@
-import {BlogDBType} from "../db/db-types/blog-db-types";
-
 export type InputBlogType = {
     name: string
     description: string
@@ -19,10 +17,10 @@ export type InputIdType = {
     id: string
 }
 
-export type BlogQueryParamsType = {
-    searchNameTerm?: string,
-    sortBy?: keyof BlogDBType,
-    sortDirection?: 'asc' | 'desc',
-    pageNumber?: number,
-    pageSize?: number
+export type OutputBlogPaginationType = {
+    pagesCount: number,
+    page: number,
+    pageSize: number,
+    totalCount: number,
+    items: OutputBlogType[]
 }

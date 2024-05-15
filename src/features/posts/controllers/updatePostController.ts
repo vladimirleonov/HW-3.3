@@ -1,10 +1,11 @@
 import {Request, Response} from 'express'
-import {InputIdType, InputPostType, OutputPostType} from "../../../input-output-types/post-types"
+import {InputPostType, OutputPostType} from "../../../input-output-types/post-types"
 import {HTTP_CODES} from "../../../settings"
 import {postMongoRepository} from '../repository/postMongoRepository'
 import {ObjectId} from 'mongodb'
+import {InputIdParamType} from "../../../input-output-types/common-types";
 
-export const updatePostController = async (req: Request<InputIdType, OutputPostType, InputPostType>, res: Response<OutputPostType>) => {
+export const updatePostController = async (req: Request<InputIdParamType, OutputPostType, InputPostType>, res: Response<OutputPostType>) => {
     try {
         const updatedInfo = await postMongoRepository.update(new ObjectId(req.params.id), req.body)
 

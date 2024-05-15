@@ -1,7 +1,8 @@
 import {blogCollection} from "../../../db/mongo-db"
 import {BlogDBType} from "../../../db/db-types/blog-db-types"
-import {BlogQueryParamsType, InputBlogType, OutputBlogType} from "../../../input-output-types/blog-types"
+import {InputBlogType, OutputBlogType} from "../../../input-output-types/blog-types"
 import {DeleteResult, InsertOneResult, ObjectId, UpdateResult} from "mongodb"
+import {QueryParamsType} from "../../../input-output-types/common-types";
 
 export const blogMongoRepository = {
 
@@ -67,7 +68,7 @@ export const blogMongoRepository = {
             throw new Error('Error deleting blog')
         }
     },
-    async findAllForOutput(queryParams: BlogQueryParamsType): Promise<OutputBlogType[]> {
+    async findAllForOutput(queryParams: QueryParamsType): Promise<OutputBlogType[]> {
         const blogs: BlogDBType[] = await this.find()
         return blogs.map((blog: BlogDBType): OutputBlogType => this.mapToOutput(blog))
     },

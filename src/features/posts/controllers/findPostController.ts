@@ -1,10 +1,11 @@
 import {Request, Response} from 'express'
-import {InputIdType, OutputPostType} from '../../../input-output-types/post-types'
+import {OutputPostType} from '../../../input-output-types/post-types'
 import {HTTP_CODES} from '../../../settings'
 import {postMongoRepository} from '../repository/postMongoRepository'
 import {ObjectId} from 'mongodb'
+import {InputIdParamType} from "../../../input-output-types/common-types";
 
-export const findPostController = async (req: Request<InputIdType, OutputPostType>, res: Response<OutputPostType>) => {
+export const findPostController = async (req: Request<InputIdParamType, OutputPostType>, res: Response<OutputPostType>) => {
     try {
         const foundInfo = await postMongoRepository.findForOutputById(new ObjectId(req.params.id))
 
