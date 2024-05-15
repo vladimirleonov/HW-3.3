@@ -17,8 +17,8 @@ export type InputIdType = {
     id: string
 }
 
-export type BlogQueryParams = {
-    searchNameTerm?: string | null,
+export type BlogQueryParamsType = {
+    searchNameTerm?: string,
     sortBy?: string,
     sortDirection?: 'asc' | 'desc',
     pageNumber?: number,
