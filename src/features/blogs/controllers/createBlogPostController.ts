@@ -1,7 +1,7 @@
 import {Request, Response} from 'express';
 import {postMongoRepository} from "../../posts/repository/postMongoRepository";
 import {ObjectId} from "mongodb";
-import {InputBlogPostType, InputPostType, OutputPostType} from "../../../input-output-types/post-types";
+import {InputBlogPostType, OutputPostType} from "../../../input-output-types/post-types";
 import {HTTP_CODES} from "../../../settings";
 import {postMongoQueryRepository} from "../../posts/repository/postMongoQueryRepository";
 import {InputBlogIdParamType} from "../../../input-output-types/blog-types";
@@ -17,7 +17,7 @@ export const createBlogPostController = async (req: Request<InputBlogIdParamType
 
         const foundInfo = await postMongoQueryRepository.findForOutputById(new ObjectId(createdInfo.id))
 
-        if(!foundInfo.post) {
+        if (!foundInfo.post) {
             res.status(HTTP_CODES.NOT_FOUND).send()
             return
         }

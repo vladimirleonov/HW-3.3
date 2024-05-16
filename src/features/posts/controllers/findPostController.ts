@@ -1,7 +1,6 @@
 import {Request, Response} from 'express'
 import {OutputPostType} from '../../../input-output-types/post-types'
 import {HTTP_CODES} from '../../../settings'
-import {postMongoRepository} from '../repository/postMongoRepository'
 import {ObjectId} from 'mongodb'
 import {InputIdParamType} from "../../../input-output-types/common-types";
 import {postMongoQueryRepository} from "../repository/postMongoQueryRepository";

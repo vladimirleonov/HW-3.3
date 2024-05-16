@@ -1,4 +1,4 @@
-import {QueryParamsType} from "../input-output-types/common-types";
+import {InputQueryParamsType} from "../input-output-types/common-types";
 
 export type SanitizedQueryParamsType = {
     searchNameTerm: string | null,
@@ -8,7 +8,7 @@ export type SanitizedQueryParamsType = {
     pageSize: number
 };
 
-export const sanitizeQueryParams = (query: QueryParamsType): SanitizedQueryParamsType => {
+export const sanitizeQueryParams = (query: InputQueryParamsType): SanitizedQueryParamsType => {
     return {
         searchNameTerm: query.searchNameTerm || null,
         sortBy: query.sortBy || 'createdAt',

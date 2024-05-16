@@ -4,6 +4,10 @@ export type InputBlogType = {
     websiteUrl: string
 }
 
+export type InputBlogIdParamType = {
+    blogId: string
+}
+
 export type OutputBlogType = {
     id: string
     name: string
@@ -11,14 +15,6 @@ export type OutputBlogType = {
     websiteUrl: string
     createdAt: string
     isMembership: boolean
-}
-
-// export type InputIdType = {
-//     id: string
-// }
-
-export type InputBlogIdParamType = {
-    blogId: string
 }
 
 export type OutputBlogPaginationType = {

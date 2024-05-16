@@ -1,7 +1,6 @@
 import {Request, Response} from "express"
 import {InputIdParamType} from "../../../input-output-types/common-types"
 import {HTTP_CODES} from "../../../settings"
-import {blogMongoRepository} from "../repository/blogMongoRepository"
 import {ObjectId} from "mongodb"
 import {blogMongoQueryRepository} from "../repository/blogMongoQueryRepository";
 

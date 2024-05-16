@@ -1,30 +1,26 @@
 import {PostDbType} from "../../../db/db-types/post-db-types"
-import {InputPostType, OutputPostPaginationType, OutputPostType} from "../../../input-output-types/post-types"
+import {OutputPostPaginationType, OutputPostType} from "../../../input-output-types/post-types"
 import {postCollection} from "../../../db/mongo-db"
-import {InsertOneResult, ObjectId} from "mongodb"
-import {blogMongoRepository} from "../../blogs/repository/blogMongoRepository"
-import {BlogDBType} from "../../../db/db-types/blog-db-types"
+import {ObjectId} from "mongodb"
+
 import {SanitizedQueryParamsType} from "../../../helpers/query-helpers";
 
 export const postMongoQueryRepository = {
-    async findAll(query: SanitizedQueryParamsType, blogId?: ObjectId ): Promise<OutputPostPaginationType> {
+    async findAll(query: SanitizedQueryParamsType, blogId?: ObjectId): Promise<OutputPostPaginationType> {
         try {
-            console.log(query)
-            // {
-            //     searchNameTerm: null,
-            //     sortBy: 'createdAt',
-            //     sortDirection: 'desc',
-            //     pageNumber: 1,
-            //     pageSize: 10
-            // }
-            console.log(blogId)
-            // new ObjectId('66446da5dd276959a1fb34f9') | undefined
-
             const byId = blogId ? {blogId: blogId} : {}
 
             const filter = {
                 ...byId
             }
+
+            console.log(filter)
+
+            const posts1: PostDbType[] = await postCollection
+                .find(filter)
+                .toArray()
+
+            console.log(posts1)
 
             const posts: PostDbType[] = await postCollection
                 .find(filter)
@@ -32,6 +28,8 @@ export const postMongoQueryRepository = {
                 .skip((query.pageNumber - 1) * query.pageSize)
                 .limit(query.pageSize)
                 .toArray()
+
+            console.log(posts)
 
             const totalCount: number = await postCollection.countDocuments(filter)
 

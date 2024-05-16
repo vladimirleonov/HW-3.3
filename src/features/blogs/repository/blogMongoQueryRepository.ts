@@ -5,42 +5,24 @@ import {ObjectId} from "mongodb"
 import {SanitizedQueryParamsType} from "../../../helpers/query-helpers";
 
 export const blogMongoQueryRepository = {
-
     async findAll(query: SanitizedQueryParamsType): Promise<any> {
         try {
-            // const {
-            //     searchNameTerm,
-            //     sortBy,
-            //     sortDirection,
-            //     pageNumber,
-            //     pageSize
-            // }: SanitizedQueryParamsType = query
-            // console.log(query)
-            //{
-            //   searchNameTerm: null,
-            //   sortBy: 'createdAt',
-            //   sortDirection: 'desc',
-            //   pageNumber: 2,
-            //   pageSize: 3
-            // }
             const searchFilter = query.searchNameTerm
                 ? { name : { $regex: query.searchNameTerm, $options: 'i' }}
                 : {}
 
-            // const filter = {
-            //     ...searchFilter
-            // }
+            const filter = {
+                ...searchFilter
+            }
 
             const blogs: BlogDBType[] = await blogCollection
-                .find(searchFilter)
+                .find(filter)
                 .sort(query.sortBy, query.sortDirection)
                 .skip((query.pageNumber - 1) * query.pageSize)
                 .limit(query.pageSize)
                 .toArray()
 
-            console.log(searchFilter)
-            const totalCount: number = await blogCollection.countDocuments(searchFilter)
-            console.log(totalCount)
+            const totalCount: number = await blogCollection.countDocuments(filter)
 
             return {
                 pagesCount: Math.ceil(totalCount / query.pageSize),
@@ -49,23 +31,6 @@ export const blogMongoQueryRepository = {
                 totalCount,
                 items: blogs.map((blog: BlogDBType) => this.mapToOutput(blog))
             }
-            // {
-            //     "pagesCount": 0,
-            //     "page": 0,
-            //     "pageSize": 0,
-            //     "totalCount": 0,
-            //     "items": [
-            //     {
-            //         "id": "string",
-            //         "name": "string",
-            //         "description": "string",
-            //         "websiteUrl": "string",
-            //         "createdAt": "2024-05-15T10:00:11.080Z",
-            //         "isMembership": true
-            //     }
-            //     ]
-            // }
-
         } catch (err) {
             throw new Error("Failed to get blogs")
         }
