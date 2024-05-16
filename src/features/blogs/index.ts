@@ -19,7 +19,7 @@ export const blogsRouter = Router()
 
 blogsRouter.get('/', queryParamsValidator, inputCheckErrorsMiddleware, getBlogsController)
 blogsRouter.post('/', blogInputValidator, authMiddleware, inputCheckErrorsMiddleware, createBlogController)
-blogsRouter.get('/:blogId/posts', blogIdParamValidator, inputCheckErrorsMiddleware, getBlogPostsController)
+blogsRouter.get('/:blogId/posts', blogIdParamValidator, queryParamsValidator, inputCheckErrorsMiddleware, getBlogPostsController)
 blogsRouter.post('/:blogId/posts', blogIdParamValidator, BlogPostInputValidator, authMiddleware, inputCheckErrorsMiddleware, createBlogPostController)
 blogsRouter.get('/:id', idParamValidator, inputCheckErrorsMiddleware, findBlogController)
 blogsRouter.put('/:id', idParamValidator, blogInputValidator, authMiddleware, inputCheckErrorsMiddleware, updateBlogController)

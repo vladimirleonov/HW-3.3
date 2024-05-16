@@ -8,10 +8,11 @@ import {postInputValidator} from "./validators/postValidators"
 import {inputCheckErrorsMiddleware} from "../../middlewares/inputCheckErrorsMiddleware"
 import {authMiddleware} from "../../middlewares/authMiddleware"
 import {idParamValidator} from "../../middlewares/idParamValidator";
+import {queryParamsValidator} from "../../middlewares/queryParamsValidator";
 
 export const postsRouter = Router()
 
-postsRouter.get('/', getPostsController)
+postsRouter.get('/', queryParamsValidator, inputCheckErrorsMiddleware, getPostsController)
 postsRouter.post('/', postInputValidator, authMiddleware, inputCheckErrorsMiddleware, createPostController)
 postsRouter.get('/:id', idParamValidator, inputCheckErrorsMiddleware, findPostController)
 postsRouter.put('/:id', idParamValidator, postInputValidator, authMiddleware, inputCheckErrorsMiddleware, updatePostController)
