@@ -10,7 +10,7 @@ import {InputBlogIdParamType} from "../../../input-output-types/blog-types";
 export const getBlogPostsController = async (req: Request<InputBlogIdParamType, OutputPostPaginationType, {}, InputQueryParamsType>, res: Response<OutputPostPaginationType>) => {
     try {
         const sanitizedQuery: SanitizedQueryParamsType = sanitizeQueryParams(req.query)
-        const posts: OutputPostPaginationType = await postMongoQueryRepository.findAll(sanitizedQuery, new ObjectId(req.params.blogId))
+        const posts: OutputPostPaginationType = await postMongoQueryRepository.findAllForOutput(sanitizedQuery, new ObjectId(req.params.blogId))
         res.status(HTTP_CODES.OK).send(posts);
     } catch (err) {
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR)

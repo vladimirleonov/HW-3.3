@@ -8,7 +8,7 @@ import {SanitizedQueryParamsType, sanitizeQueryParams} from "../../../helpers/qu
 export const getPostsController = async (req: Request<{}, OutputPostPaginationType, InputQueryParamsType>, res: Response<OutputPostPaginationType>) => {
     try {
         const sanitizedQuery: SanitizedQueryParamsType = sanitizeQueryParams(req.query)
-        const posts: OutputPostPaginationType = await postMongoQueryRepository.findAll(sanitizedQuery)
+        const posts: OutputPostPaginationType = await postMongoQueryRepository.findAllForOutput(sanitizedQuery)
         res.status(HTTP_CODES.OK).send(posts)
     } catch (err) {
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()

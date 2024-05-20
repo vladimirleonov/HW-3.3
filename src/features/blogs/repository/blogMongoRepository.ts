@@ -4,7 +4,7 @@ import {InputBlogType} from "../../../input-output-types/blog-types"
 import {DeleteResult, InsertOneResult, ObjectId, UpdateResult} from "mongodb"
 
 export const blogMongoRepository = {
-    async create(input: InputBlogType): Promise<{ id?: string, error?: string }> {
+    async create(input: InputBlogType): Promise<{id: string}> {
         const newBlog: BlogDBType = {
             _id: new ObjectId(),
             createdAt: new Date().toISOString(),
@@ -15,9 +15,9 @@ export const blogMongoRepository = {
         try {
             const insertedInfo: InsertOneResult<BlogDBType> = await blogCollection.insertOne(newBlog)
 
-            if (!insertedInfo.acknowledged) {
-                return {error: 'Insert operation was not acknowledged'}
-            }
+            // if (!insertedInfo.acknowledged) {
+            //     return {error: 'Insert operation was not acknowledged'}
+            // }
 
             return {id: insertedInfo.insertedId.toString()}
         } catch (err) {

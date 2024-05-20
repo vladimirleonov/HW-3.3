@@ -9,8 +9,7 @@ import {InputQueryParamsType} from "../../../input-output-types/common-types";
 export const getBlogsController = async (req: Request<{}, OutputBlogPaginationType, {}, InputQueryParamsType>, res: Response<OutputBlogPaginationType>) => {
     try {
         const sanitizedQuery: SanitizedQueryParamsType = sanitizeQueryParams(req.query)
-
-        const blogs: OutputBlogPaginationType = await blogMongoQueryRepository.findAll(sanitizedQuery)
+        const blogs: OutputBlogPaginationType = await blogMongoQueryRepository.findAllForOutput(sanitizedQuery)
 
         res.status(HTTP_CODES.OK).send(blogs)
     } catch (err) {

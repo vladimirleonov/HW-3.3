@@ -6,7 +6,7 @@ import {ObjectId} from "mongodb"
 import {SanitizedQueryParamsType} from "../../../helpers/query-helpers";
 
 export const postMongoQueryRepository = {
-    async findAll(query: SanitizedQueryParamsType, blogId?: ObjectId): Promise<OutputPostPaginationType> {
+    async findAllForOutput(query: SanitizedQueryParamsType, blogId?: ObjectId): Promise<OutputPostPaginationType> {
         try {
             const byId = blogId ? {blogId: blogId} : {}
 
