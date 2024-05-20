@@ -7,8 +7,8 @@ import {updatePostController} from "./controllers/updatePostController"
 import {postInputValidator} from "./validators/postBodyValidators"
 import {inputCheckErrorsMiddleware} from "../../middlewares/inputCheckErrorsMiddleware"
 import {authMiddleware} from "../../middlewares/authMiddleware"
-import {idParamValidator} from "../../middlewares/idParamValidator";
-import {queryParamsValidator} from "../../middlewares/queryParamsValidator";
+import {idParamValidator} from "../../validators/idParamValidator";
+import {queryParamsValidator} from "../../validators/queryParamsValidator";
 
 export const postsRouter = Router()
 

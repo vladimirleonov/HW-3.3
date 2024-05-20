@@ -1,8 +1,8 @@
 import {Request, Response, NextFunction} from "express";
-import {blogMongoQueryRepository} from "../features/blogs/repository/blogMongoQueryRepository";
+import {blogMongoQueryRepository} from "../repository/blogMongoQueryRepository";
 import {ObjectId} from "mongodb";
-import {HTTP_CODES} from "../settings";
-import {BlogDBType} from "../db/db-types/blog-db-types";
+import {HTTP_CODES} from "../../../settings";
+import {BlogDBType} from "../../../db/db-types/blog-db-types";
 
 export const blogIdParamValidator = async (req: Request, res: Response, next: NextFunction) => {
     const blogId: string = req.params.blogId;
