@@ -4,7 +4,7 @@ import {createBlogController} from "./controllers/createBlogController"
 import {findBlogController} from "./controllers/findBlogController"
 import {updateBlogController} from "./controllers/updateBlogController"
 import {deleteBlogController} from "./controllers/deleteBlogController"
-import {blogIdParamValidator, blogInputValidator} from "./validators/blogValidators"
+import {blogInputValidator} from "./validators/blogBodyValidators"
 import {inputCheckErrorsMiddleware} from "../../middlewares/inputCheckErrorsMiddleware"
 import {authMiddleware} from "../../middlewares/authMiddleware"
 import {queryParamsValidator} from "../../middlewares/queryParamsValidator";
@@ -13,7 +13,8 @@ import {getBlogPostsController} from "./controllers/getBlogPostsController";
 import {createBlogPostController} from "./controllers/createBlogPostController";
 import {
     BlogPostInputValidator,
-} from "../posts/validators/postValidators";
+} from "../posts/validators/postBodyValidators";
+import {blogIdParamValidator} from "../../middlewares/blogIdParamValidator";
 
 export const blogsRouter = Router()
 

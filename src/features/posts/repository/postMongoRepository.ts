@@ -23,9 +23,9 @@ export const postMongoRepository = {
 
         try {
             const insertedInfo: InsertOneResult<PostDbType> = await postCollection.insertOne(newPost)
-            if (!insertedInfo.acknowledged) {
-                return {error: 'Insert operation was not acknowledged'}
-            }
+            // if (!insertedInfo.acknowledged) {
+            //     return {error: 'Insert operation was not acknowledged'}
+            // }
 
             return {id: insertedInfo.insertedId.toString()}
         } catch (err) {
@@ -47,26 +47,34 @@ export const postMongoRepository = {
             createdAt: new Date().toISOString()
         }
 
-        const insertedInfo: InsertOneResult<PostDbType> = await postCollection.insertOne(newPost)
+        try {
+            const insertedInfo: InsertOneResult<PostDbType> = await postCollection.insertOne(newPost)
 
-        return {id: insertedInfo.insertedId.toString()}
+            return {id: insertedInfo.insertedId.toString()}
+        } catch (err) {
+            throw new Error("Failed to create post")
+        }
     },
     async update(id: ObjectId, {blogId, ...restInput}: InputPostType): Promise<{ id?: string, error?: string }> {
-        const updatedInfo = await postCollection.updateOne(
-            {_id: id},
-            {
-                $set: {
-                    blogId: new ObjectId(blogId),
-                    ...restInput
+        try {
+            const updatedInfo = await postCollection.updateOne(
+                {_id: id},
+                {
+                    $set: {
+                        blogId: new ObjectId(blogId),
+                        ...restInput
+                    }
                 }
+            )
+
+            if (updatedInfo.matchedCount === 0) {
+                return {error: "Post not found"}
             }
-        )
 
-        if (updatedInfo.matchedCount === 0) {
-            return {error: "Post not found"}
+            return {id: id.toString()}
+        } catch (err) {
+            throw new Error('Error updating post')
         }
-
-        return {id: id.toString()}
     },
     async delete(id: ObjectId): Promise<{ success?: boolean, error?: string }> {
         try {

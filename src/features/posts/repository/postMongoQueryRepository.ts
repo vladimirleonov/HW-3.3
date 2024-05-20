@@ -3,7 +3,7 @@ import {OutputPostPaginationType, OutputPostType} from "../../../input-output-ty
 import {postCollection} from "../../../db/mongo-db"
 import {ObjectId} from "mongodb"
 
-import {SanitizedQueryParamsType} from "../../../helpers/query-helpers";
+import {SanitizedQueryParamsType} from "../../../helpers/queryParamsSanitizer";
 
 export const postMongoQueryRepository = {
     async findAllForOutput(query: SanitizedQueryParamsType, blogId?: ObjectId): Promise<OutputPostPaginationType> {

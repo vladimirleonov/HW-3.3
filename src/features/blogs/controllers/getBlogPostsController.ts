@@ -3,7 +3,7 @@ import {HTTP_CODES} from "../../../settings";
 import {OutputPostPaginationType} from "../../../input-output-types/post-types";
 import {InputQueryParamsType} from "../../../input-output-types/common-types";
 import {postMongoQueryRepository} from "../../posts/repository/postMongoQueryRepository";
-import {SanitizedQueryParamsType, sanitizeQueryParams} from "../../../helpers/query-helpers";
+import {SanitizedQueryParamsType, sanitizeQueryParams} from "../../../helpers/queryParamsSanitizer";
 import {ObjectId} from "mongodb";
 import {InputBlogIdParamType} from "../../../input-output-types/blog-types";
 
