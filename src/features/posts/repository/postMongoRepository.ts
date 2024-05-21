@@ -1,5 +1,5 @@
 import {PostDbType} from "../../../db/db-types/post-db-types"
-import {InputPostType} from "../../../input-output-types/post-types"
+import {InputPostType} from "../types/post-types"
 import {postCollection} from "../../../db/mongo-db"
 import {DeleteResult, InsertOneResult, ObjectId, UpdateResult} from "mongodb"
 

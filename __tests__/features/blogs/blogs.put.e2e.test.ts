@@ -1,6 +1,6 @@
 import {req} from "../../test-helpers/req"
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings"
-import {InputBlogType} from "../../../src/input-output-types/blog-types"
+import {InputBlogType} from "../../../src/features/blogs/types/blog-types"
 import {encodeToBase64} from "../../../src/helpers/auth-helpers"
 import {clearTestDB, closeTestDB, connectToTestDB} from "../../test-helpers/test-db"
 import {generateBlogsDataset} from "../../datasets/blogsDatasets"

@@ -1,5 +1,5 @@
 import {Request, Response} from 'express'
-import {InputPostType, OutputPostType} from "../../../input-output-types/post-types"
+import {InputPostType, OutputPostType} from "../types/post-types"
 import {HTTP_CODES} from "../../../settings"
 import {InputIdParamType} from "../../../input-output-types/common-types";
 import {postService} from "../services/postService";

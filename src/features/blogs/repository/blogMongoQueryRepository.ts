@@ -1,6 +1,6 @@
 import {blogCollection} from "../../../db/mongo-db"
 import {BlogDBType} from "../../../db/db-types/blog-db-types"
-import {OutputBlogPaginationType, OutputBlogType} from "../../../input-output-types/blog-types"
+import {OutputBlogPaginationType, OutputBlogType} from "../types/blog-types"
 import {ObjectId} from "mongodb"
 import {SanitizedBlogsQueryParamsType} from "../../../helpers/queryParamsSanitizer";
 
@@ -31,12 +31,12 @@ export const blogMongoQueryRepository = {
             items: blogs.map((blog: BlogDBType) => this.mapToOutput(blog))
         }
     },
-    async findForOutputById(id: string): Promise<OutputBlogType> {
+    async findForOutputById(id: string): Promise<{error?: string, blog?: OutputBlogType}> {
         const blog: BlogDBType | null = await blogCollection.findOne({_id: new ObjectId(id)})
         if (!blog) {
-            throw new Error('Post not found')
+            return {error: 'Post not found'}
         }
-        return this.mapToOutput(blog)
+        return {blog: this.mapToOutput(blog)}
     },
     mapToOutput({_id, ...rest}: BlogDBType): OutputBlogType {
         return {

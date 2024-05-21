@@ -5,7 +5,7 @@ import {generateBlogsDataset} from "../../datasets/blogsDatasets"
 import {generatePostsDataset} from "../../datasets/postsDatasets"
 import {postCollection, blogCollection} from "../../../src/db/mongo-db"
 import {ObjectId} from "mongodb"
-import {OutputPostType} from "../../../src/input-output-types/post-types";
+import {OutputPostType} from "../../../src/features/posts/types/post-types";
 import {PostDbType} from "../../../src/db/db-types/post-db-types";
 
 describe('GET /posts', () => {

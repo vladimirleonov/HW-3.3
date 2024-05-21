@@ -1,6 +1,6 @@
 import {Request, Response} from 'express'
 import {HTTP_CODES} from "../../../settings"
-import {OutputBlogPaginationType} from '../../../input-output-types/blog-types'
+import {OutputBlogPaginationType} from '../types/blog-types'
 import {blogMongoQueryRepository} from "../repository/blogMongoQueryRepository";
 import {sanitizeBlogsQueryParams, SanitizedBlogsQueryParamsType} from "../../../helpers/queryParamsSanitizer";
 import {InputBlogsQueryParamsType} from "../../../input-output-types/common-types";

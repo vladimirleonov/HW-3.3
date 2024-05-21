@@ -1,5 +1,5 @@
 import {PostDbType} from "../../../db/db-types/post-db-types"
-import {OutputPostPaginationType, OutputPostType} from "../../../input-output-types/post-types"
+import {OutputPostPaginationType, OutputPostType} from "../types/post-types"
 import {postCollection} from "../../../db/mongo-db"
 import {ObjectId} from "mongodb"
 
@@ -30,12 +30,12 @@ export const postMongoQueryRepository = {
             items: posts.map((post: PostDbType) => this.mapToOutput(post))
         }
     },
-    async findForOutputById(id: string): Promise<OutputPostType> {
+    async findForOutputById(id: string): Promise<{ error?: string, post?: OutputPostType }> {
         const post: PostDbType | null = await postCollection.findOne({_id: new ObjectId(id)})
         if (!post) {
-            throw new Error('Post not found')
+            return {error: 'Post not found'}
         }
-        return this.mapToOutput(post)
+        return {post: this.mapToOutput(post)}
     },
     mapToOutput({_id, blogId, ...rest}: PostDbType): OutputPostType {
         return {

@@ -1,6 +1,6 @@
 import {Request, Response} from "express"
 import {HTTP_CODES} from "../../../settings"
-import {OutputPostPaginationType} from "../../../input-output-types/post-types"
+import {OutputPostPaginationType} from "../types/post-types"
 import {postMongoQueryRepository} from "../repository/postMongoQueryRepository";
 import {InputDefaultQueryParamsType} from "../../../input-output-types/common-types";
 import {SanitizedDefaultQueryParamsType, sanitizeDefaultQueryParams} from "../../../helpers/queryParamsSanitizer";
