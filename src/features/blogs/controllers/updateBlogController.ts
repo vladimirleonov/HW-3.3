@@ -7,9 +7,9 @@ import {blogService} from "../services/blogService";
 
 export const updateBlogController = async (req: Request<InputIdParamType, OutputBlogType, InputBlogType>, res: Response<OutputBlogType>) => {
     try {
-        const updatedInfo = await blogService.updateBlog(new ObjectId(req.params.id), req.body)
+        const isUpdated = await blogService.updateBlog(req.params.id, req.body)
 
-        if (updatedInfo.error) {
+        if (!isUpdated) {
             res.status(HTTP_CODES.NOT_FOUND).send()
             return
         }
@@ -19,18 +19,3 @@ export const updateBlogController = async (req: Request<InputIdParamType, Output
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
     }
 }
-
-// export const updateBlogController = async (req: Request<InputIdParamType, OutputBlogType, InputBlogType>, res: Response<OutputBlogType>) => {
-//     try {
-//         const updatedInfo = await blogMongoRepository.update(new ObjectId(req.params.id), req.body)
-//
-//         if (!updatedInfo?.id && updatedInfo?.error) {
-//             res.status(HTTP_CODES.NOT_FOUND).send()
-//             return
-//         }
-//
-//         res.status(HTTP_CODES.NO_CONTENT).send()
-//     } catch (err) {
-//         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
-//     }
-// }

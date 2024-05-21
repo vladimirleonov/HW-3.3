@@ -1,10 +1,9 @@
 import {body} from "express-validator"
 import {BlogDBType} from "../../../db/db-types/blog-db-types";
-import {blogMongoQueryRepository} from "../../blogs/repository/blogMongoQueryRepository";
-import {ObjectId} from "mongodb";
+import {blogMongoRepository} from "../../blogs/repository/blogMongoRepository";
 
 export const validateBlogId = async (blogId: string) => {
-    const blog: BlogDBType | null = await blogMongoQueryRepository.findById(new ObjectId(blogId)) //check count
+    const blog: BlogDBType | null = await blogMongoRepository.findById(blogId) //check count
     if (!blog) {
         throw new Error('invalid blogId')
     }
