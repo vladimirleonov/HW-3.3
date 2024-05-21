@@ -1,19 +1,19 @@
 import {blogMongoRepository} from "../repository/blogMongoRepository";
-import {blogMongoQueryRepository} from "../repository/blogMongoQueryRepository";
 import {ObjectId} from "mongodb";
 import {InputBlogType, OutputBlogType} from "../../../input-output-types/blog-types";
+import {BlogDBType} from "../../../db/db-types/blog-db-types";
 
 export const blogService = {
-    async createBlog(input: InputBlogType): Promise<{blog: OutputBlogType}> {
+    async createBlog(input: InputBlogType): Promise<string> {
         try {
-            const createdInfo = await blogMongoRepository.create(input)
-
-            const foundInfo = await blogMongoQueryRepository.findForOutputById(new ObjectId(createdInfo.id))
-            // if (!foundInfo.blog) {
-            //     return { error: 'Blog not found after creation' }
-            // }
-
-            return {blog: foundInfo.blog} as { blog: OutputBlogType }
+            const newBlog: BlogDBType = {
+                _id: new ObjectId(),
+                createdAt: new Date().toISOString(),
+                isMembership: false,
+                ...input,
+            }
+            const createdInfo = await blogMongoRepository.create(newBlog)
+            return createdInfo.id
         } catch (err) {
             console.error(err)
             throw new Error("Failed to create blog")

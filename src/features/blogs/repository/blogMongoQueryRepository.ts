@@ -37,7 +37,7 @@ export const blogMongoQueryRepository = {
     },
     async findById(id: ObjectId): Promise<BlogDBType | null> {
         try {
-            return await blogCollection.findOne({_id: id})
+            return await blogCollection.findOne({_id: id}, {projecti})
         } catch (err) {
             throw new Error('Failed to get blog')
         }
@@ -46,8 +46,8 @@ export const blogMongoQueryRepository = {
     //     const blogs: BlogDBType[] = await this.find(query)
     //     return blogs.map((blog: BlogDBType): OutputBlogType => this.mapToOutput(blog))
     // },
-    async findForOutputById(id: ObjectId): Promise<{ blog?: OutputBlogType, error?: string }> {
-        const blog: BlogDBType | null = await this.findById(id)
+    async findForOutputById(id: string): Promise<{ blog?: OutputBlogType, error?: string }> {
+        const blog: BlogDBType | null = await this.findById(new ObjectId(id))
         if (!blog) {
             return {error: 'Blog not found'}
         }

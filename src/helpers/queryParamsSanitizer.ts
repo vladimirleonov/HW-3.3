@@ -8,7 +8,7 @@ export type SanitizedQueryParamsType = {
     pageSize: number
 };
 
-export const sanitizeQueryParams = (query: InputQueryParamsType): SanitizedQueryParamsType => {
+export const sanitizeDefaultQueryParams = (query: InputQueryParamsType): SanitizedQueryParamsType => {
     return {
         searchNameTerm: query.searchNameTerm || null,
         sortBy: query.sortBy || 'createdAt',
@@ -17,3 +17,8 @@ export const sanitizeQueryParams = (query: InputQueryParamsType): SanitizedQuery
         pageSize: query.pageSize ? +query.pageSize : 10,
     }
 }
+
+export const satitizePostsQueryParams = () => {
+
+}
+

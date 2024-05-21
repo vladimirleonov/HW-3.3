@@ -4,7 +4,7 @@ import {blogMongoQueryRepository} from "../../blogs/repository/blogMongoQueryRep
 import {ObjectId} from "mongodb";
 
 export const validateBlogId = async (blogId: string) => {
-    const blog: BlogDBType | null = await blogMongoQueryRepository.findById(new ObjectId(blogId))
+    const blog: BlogDBType | null = await blogMongoQueryRepository.findById(new ObjectId(blogId)) //check count
     if (!blog) {
         throw new Error('invalid blogId')
     }

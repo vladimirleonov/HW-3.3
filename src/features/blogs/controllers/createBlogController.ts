@@ -2,12 +2,14 @@ import {Request, Response} from 'express'
 import {InputBlogType, OutputBlogType} from '../../../input-output-types/blog-types'
 import {HTTP_CODES} from '../../../settings'
 import {blogService} from "../services/blogService";
+import {blogMongoQueryRepository} from "../repository/blogMongoQueryRepository";
 
 
 export const createBlogController = async (req: Request<{}, OutputBlogType, InputBlogType>, res: Response<OutputBlogType>) => {
     try {
-        const createdInfo: { blog: OutputBlogType } = await blogService.createBlog(req.body)
-        res.status(HTTP_CODES.CREATED).send(createdInfo.blog)
+        const createdBlogId = await blogService.createBlog(req.body)
+        const result = await blogMongoQueryRepository.findForOutputById(createdBlogId);
+        res.status(HTTP_CODES.CREATED).send(result!.blog);
     } catch (err) {
         console.error(err)
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()

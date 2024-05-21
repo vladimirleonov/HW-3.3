@@ -6,21 +6,7 @@ import {BlogDBType} from "../../../db/db-types/blog-db-types"
 import {blogMongoQueryRepository} from "../../blogs/repository/blogMongoQueryRepository";
 
 export const postMongoRepository = {
-    async create({blogId, ...restInput}: InputPostType): Promise<{ id?: string, error?: string }> {
-        const blog: BlogDBType | null = await blogMongoQueryRepository.findById(new ObjectId(blogId))
-
-        if (!blog) {
-            return {error: 'Blog not found'}
-        }
-
-        const newPost: PostDbType = {
-            _id: new ObjectId(),
-            ...restInput,
-            blogId: new ObjectId(blogId),
-            blogName: blog.name,
-            createdAt: new Date().toISOString()
-        }
-
+    async create(newPost: PostDbType): Promise<{ id?: string, error?: string }> {
         try {
             const insertedInfo: InsertOneResult<PostDbType> = await postCollection.insertOne(newPost)
             // if (!insertedInfo.acknowledged) {
@@ -32,21 +18,7 @@ export const postMongoRepository = {
             throw new Error("Failed to create post")
         }
     },
-    async createBlogPost(input: InputBlogPostType, blogId: ObjectId): Promise<{ id?: string, error?: string }> {
-        const blog: BlogDBType | null = await blogMongoQueryRepository.findById(blogId)
-
-        if (!blog) {
-            return {error: 'Blog not found'}
-        }
-
-        const newPost: PostDbType = {
-            _id: new ObjectId(),
-            ...input,
-            blogId: blogId,
-            blogName: blog.name,
-            createdAt: new Date().toISOString()
-        }
-
+    async createBlogPost(newPost: PostDbType): Promise<{ id?: string, error?: string }> {
         try {
             const insertedInfo: InsertOneResult<PostDbType> = await postCollection.insertOne(newPost)
 
