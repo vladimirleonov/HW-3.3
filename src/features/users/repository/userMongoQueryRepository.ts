@@ -1,4 +1,4 @@
-import {blogCollection, userCollection} from "../../../db/mongo-db"
+import {userCollection} from "../../../db/mongo-db"
 import {SanitizedUsersQueryParamsType} from "../helpers/sanitizeUsersQueryParams";
 import {OutputUserPaginationType, OutputUserType} from "../input-output-types/user-types";
 import {UserDbType} from "../../../db/db-types/user-db-types";
@@ -25,7 +25,7 @@ export const userMongoQueryRepository = {
             .limit(query.pageSize)
             .toArray()
 
-        const totalCount: number = await blogCollection.countDocuments(filter)
+        const totalCount: number = await userCollection.countDocuments(filter)
 
         return {
             pagesCount: Math.ceil(totalCount / query.pageSize),
