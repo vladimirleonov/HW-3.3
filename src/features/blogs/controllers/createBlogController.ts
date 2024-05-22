@@ -1,5 +1,5 @@
 import {Request, Response} from 'express'
-import {InputBlogType, OutputBlogType} from '../types/blog-types'
+import {InputBlogType, OutputBlogType} from '../input-output-types/blog-types'
 import {HTTP_CODES} from '../../../settings'
 import {blogService} from "../services/blogService";
 import {blogMongoQueryRepository} from "../repository/blogMongoQueryRepository";

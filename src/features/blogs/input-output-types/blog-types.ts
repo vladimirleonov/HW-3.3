@@ -1,11 +1,17 @@
+import {InputDefaultQueryParamsType} from "../../../common/input-output-types/common-types";
+
+export type InputBlogIdParamType = {
+    blogId: string
+}
+
+export type InputBlogsQueryParamsType = InputDefaultQueryParamsType & {
+    searchNameTerm?: string
+}
+
 export type InputBlogType = {
     name: string
     description: string
     websiteUrl: string
-}
-
-export type InputBlogIdParamType = {
-    blogId: string
 }
 
 export type OutputBlogType = {

@@ -1,10 +1,12 @@
 import {Request, Response} from 'express';
 import {HTTP_CODES} from "../../../settings";
-import {OutputPostPaginationType} from "../../posts/types/post-types";
-import {InputBlogsQueryParamsType} from "../../../input-output-types/common-types";
+import {OutputPostPaginationType} from "../../posts/input-output-types/post-types";
 import {postMongoQueryRepository} from "../../posts/repository/postMongoQueryRepository";
-import {SanitizedDefaultQueryParamsType, sanitizeDefaultQueryParams} from "../../../helpers/queryParamsSanitizer";
-import {InputBlogIdParamType} from "../types/blog-types";
+import {InputBlogIdParamType, InputBlogsQueryParamsType} from "../input-output-types/blog-types";
+import {
+    SanitizedDefaultQueryParamsType,
+    sanitizeDefaultQueryParams
+} from "../../../common/helpers/queryParamsSanitizer";
 
 export const getBlogPostsController = async (req: Request<InputBlogIdParamType, OutputPostPaginationType, {}, InputBlogsQueryParamsType>, res: Response<OutputPostPaginationType>) => {
     try {

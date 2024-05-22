@@ -6,10 +6,10 @@ import {generateBlogsDataset} from '../../datasets/blogsDatasets'
 import {blogCollection, postCollection} from "../../../src/db/mongo-db"
 import {ObjectId} from "mongodb"
 import {BlogDBType} from "../../../src/db/db-types/blog-db-types";
-import {OutputBlogType} from "../../../src/features/blogs/types/blog-types";
+import {OutputBlogType} from "../../../src/features/blogs/input-output-types/blog-types";
 import {generatePostsDataset} from "../../datasets/postsDatasets";
 import {PostDbType} from "../../../src/db/db-types/post-db-types";
-import {OutputPostType} from "../../../src/features/posts/types/post-types";
+import {OutputPostType} from "../../../src/features/posts/input-output-types/post-types";
 
 describe('GET /blogs', () => {
     beforeAll(async () => {

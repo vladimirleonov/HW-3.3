@@ -1,7 +1,7 @@
 import {req} from "../../test-helpers/req"
 import {HTTP_CODES, SETTINGS} from "../../../src/settings"
-import {InputBlogType} from "../../../src/features/blogs/types/blog-types"
-import {encodeToBase64} from "../../../src/helpers/auth-helpers"
+import {InputBlogType} from "../../../src/features/blogs/input-output-types/blog-types"
+import {encodeToBase64} from "../../../src/common/helpers/auth-helpers"
 import {AUTH_DATA} from "../../../src/settings"
 import {clearTestDB, closeTestDB, connectToTestDB} from "../../test-helpers/test-db"
 

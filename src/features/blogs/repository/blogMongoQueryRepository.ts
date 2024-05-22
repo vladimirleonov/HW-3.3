@@ -1,8 +1,8 @@
 import {blogCollection} from "../../../db/mongo-db"
 import {BlogDBType} from "../../../db/db-types/blog-db-types"
-import {OutputBlogPaginationType, OutputBlogType} from "../types/blog-types"
+import {OutputBlogPaginationType, OutputBlogType} from "../input-output-types/blog-types"
 import {ObjectId} from "mongodb"
-import {SanitizedBlogsQueryParamsType} from "../../../helpers/queryParamsSanitizer";
+import {SanitizedBlogsQueryParamsType} from "../../../common/helpers/queryParamsSanitizer";
 
 export const blogMongoQueryRepository = {
     async findAllForOutput(query: SanitizedBlogsQueryParamsType): Promise<OutputBlogPaginationType> {

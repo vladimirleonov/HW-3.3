@@ -1,9 +1,9 @@
 import {Request, Response} from "express"
 import {HTTP_CODES} from "../../../settings"
-import {OutputPostPaginationType} from "../types/post-types"
+import {OutputPostPaginationType} from "../input-output-types/post-types"
 import {postMongoQueryRepository} from "../repository/postMongoQueryRepository";
-import {InputDefaultQueryParamsType} from "../../../input-output-types/common-types";
-import {SanitizedDefaultQueryParamsType, sanitizeDefaultQueryParams} from "../../../helpers/queryParamsSanitizer";
+import {InputDefaultQueryParamsType} from "../../../common/input-output-types/common-types";
+import {SanitizedDefaultQueryParamsType, sanitizeDefaultQueryParams} from "../../../common/helpers/queryParamsSanitizer";
 
 export const getPostsController = async (req: Request<{}, OutputPostPaginationType, InputDefaultQueryParamsType>, res: Response<OutputPostPaginationType>) => {
     try {

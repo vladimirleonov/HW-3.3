@@ -1,6 +1,6 @@
 import {req} from "../../test-helpers/req"
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings"
-import {encodeToBase64} from "../../../src/helpers/auth-helpers"
+import {encodeToBase64} from "../../../src/common/helpers/auth-helpers"
 import {generateBlogsDataset} from "../../datasets/blogsDatasets"
 import {generatePostsDataset} from "../../datasets/postsDatasets"
 import {postCollection, blogCollection} from "../../../src/db/mongo-db"

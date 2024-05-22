@@ -1,5 +1,5 @@
 import {NextFunction, Request, Response} from "express"
-import {AUTH_DATA, HTTP_CODES} from "../settings"
+import {AUTH_DATA, HTTP_CODES} from "../../settings"
 import {decodeFromBase64} from "../helpers/auth-helpers"
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {

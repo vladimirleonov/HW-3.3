@@ -1,8 +1,8 @@
 import {Request, Response} from 'express'
-import {InputIdParamType} from '../../../input-output-types/common-types'
+import {InputIdParamType} from '../../../common/input-output-types/common-types'
 import {HTTP_CODES} from '../../../settings'
 import {ObjectId} from "mongodb"
-import {InputBlogType, OutputBlogType} from "../types/blog-types";
+import {InputBlogType, OutputBlogType} from "../input-output-types/blog-types";
 import {blogService} from "../services/blogService";
 
 export const updateBlogController = async (req: Request<InputIdParamType, OutputBlogType, InputBlogType>, res: Response<OutputBlogType>) => {

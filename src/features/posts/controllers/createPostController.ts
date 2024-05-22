@@ -1,5 +1,5 @@
 import {Request, Response} from 'express'
-import {InputPostType, OutputPostType} from "../types/post-types"
+import {InputPostType, OutputPostType} from "../input-output-types/post-types"
 import {HTTP_CODES} from "../../../settings"
 import {postService} from "../services/postService";
 import {postMongoQueryRepository} from "../repository/postMongoQueryRepository";

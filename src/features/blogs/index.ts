@@ -5,10 +5,11 @@ import {findBlogController} from "./controllers/findBlogController"
 import {updateBlogController} from "./controllers/updateBlogController"
 import {deleteBlogController} from "./controllers/deleteBlogController"
 import {blogInputValidator} from "./validators/blogBodyValidators"
-import {inputCheckErrorsMiddleware} from "../../middlewares/inputCheckErrorsMiddleware"
-import {authMiddleware} from "../../middlewares/authMiddleware"
-import {queryParamsValidator} from "../../validators/queryParamsValidator";
-import {idParamValidator} from "../../validators/idParamValidator";
+import {inputCheckErrorsMiddleware} from "../../common/middlewares/inputCheckErrorsMiddleware"
+import {authMiddleware} from "../../common/middlewares/authMiddleware"
+import {queryBlogPostsParamsValidator} from "./validators/queryBlogPostsParamsValidator";
+import {queryBlogsParamsValidator} from "./validators/queryBlogsParamsValidator"
+import {idParamValidator} from "../../common/validators/idParamValidator";
 import {getBlogPostsController} from "./controllers/getBlogPostsController";
 import {createBlogPostController} from "./controllers/createBlogPostController";
 import {
@@ -18,9 +19,9 @@ import {blogIdParamValidator} from "./validators/blogIdParamValidator";
 
 export const blogsRouter = Router()
 
-blogsRouter.get('/', queryParamsValidator, inputCheckErrorsMiddleware, getBlogsController)
+blogsRouter.get('/', queryBlogsParamsValidator, inputCheckErrorsMiddleware, getBlogsController)
 blogsRouter.post('/', blogInputValidator, authMiddleware, inputCheckErrorsMiddleware, createBlogController)
-blogsRouter.get('/:blogId/posts', blogIdParamValidator, queryParamsValidator, inputCheckErrorsMiddleware, getBlogPostsController)
+blogsRouter.get('/:blogId/posts', blogIdParamValidator, queryBlogPostsParamsValidator, inputCheckErrorsMiddleware, getBlogPostsController)
 blogsRouter.post('/:blogId/posts', blogIdParamValidator, BlogPostInputValidator, authMiddleware, inputCheckErrorsMiddleware, createBlogPostController)
 blogsRouter.get('/:id', idParamValidator, inputCheckErrorsMiddleware, findBlogController)
 blogsRouter.put('/:id', idParamValidator, blogInputValidator, authMiddleware, inputCheckErrorsMiddleware, updateBlogController)

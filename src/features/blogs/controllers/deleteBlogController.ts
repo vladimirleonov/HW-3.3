@@ -1,5 +1,5 @@
 import {Request, Response} from 'express'
-import {InputIdParamType} from '../../../input-output-types/common-types'
+import {InputIdParamType} from '../../../common/input-output-types/common-types'
 import {HTTP_CODES} from '../../../settings'
 import {blogService} from "../services/blogService";
 

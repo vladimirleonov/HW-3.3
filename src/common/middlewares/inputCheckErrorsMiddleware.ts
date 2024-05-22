@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express"
 import {Result, validationResult, ValidationError} from "express-validator"
-import {HTTP_CODES} from "../settings"
+import {HTTP_CODES} from "../../settings"
 
 interface ValidationErrorMessage {
     path: string

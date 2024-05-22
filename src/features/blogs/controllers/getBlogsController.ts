@@ -1,9 +1,8 @@
 import {Request, Response} from 'express'
 import {HTTP_CODES} from "../../../settings"
-import {OutputBlogPaginationType} from '../types/blog-types'
+import {InputBlogsQueryParamsType, OutputBlogPaginationType} from '../input-output-types/blog-types'
 import {blogMongoQueryRepository} from "../repository/blogMongoQueryRepository";
-import {sanitizeBlogsQueryParams, SanitizedBlogsQueryParamsType} from "../../../helpers/queryParamsSanitizer";
-import {InputBlogsQueryParamsType} from "../../../input-output-types/common-types";
+import {sanitizeBlogsQueryParams, SanitizedBlogsQueryParamsType} from "../helpers/sanitizeBlogsQueryParams";
 
 
 export const getBlogsController = async (req: Request<{}, OutputBlogPaginationType, {}, InputBlogsQueryParamsType>, res: Response<OutputBlogPaginationType>) => {

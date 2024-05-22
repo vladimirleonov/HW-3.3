@@ -1,8 +1,8 @@
 import {Request, Response} from 'express';
 
-import {InputBlogPostType, OutputPostType} from "../../posts/types/post-types";
+import {InputBlogPostType, OutputPostType} from "../../posts/input-output-types/post-types";
 import {HTTP_CODES} from "../../../settings";
-import {InputBlogIdParamType} from "../types/blog-types";
+import {InputBlogIdParamType} from "../input-output-types/blog-types";
 import {postService} from "../../posts/services/postService";
 import {postMongoQueryRepository} from "../../posts/repository/postMongoQueryRepository";
 

@@ -1,6 +1,6 @@
 import {blogMongoRepository} from "../repository/blogMongoRepository";
 import {ObjectId} from "mongodb";
-import {InputBlogType} from "../types/blog-types";
+import {InputBlogType} from "../input-output-types/blog-types";
 import {BlogDBType} from "../../../db/db-types/blog-db-types";
 
 export const blogService = {
