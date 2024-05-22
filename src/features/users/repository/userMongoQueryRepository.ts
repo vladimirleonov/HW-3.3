@@ -16,9 +16,7 @@ export const userMongoQueryRepository = {
         const orFilters = [searchLoginFilter, searchEmailFilter]
             .filter(filter => Object.keys(filter).length > 0 );
 
-        const filter = {
-            $or : orFilters.length > 0 ? orFilters : null,
-        }
+        const filter = orFilters.length > 0 ? { $or: orFilters } : {}
 
         const users: UserDbType[] = await userCollection
             .find(filter)

@@ -14,7 +14,6 @@ export type InputUserType = {
 export type OutputUserType = {
     id: string
     login: string
-    password: string
     email: string
 }
 
