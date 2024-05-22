@@ -20,7 +20,7 @@ export const userService = {
         }
         return userMongoRepository.create(newUser)
     },
-    deleteUser () {
-        console.log("deleteUser service")
+    deleteUser (id: string): Promise<boolean> {
+        return userMongoRepository.delete(id)
     }
 }
