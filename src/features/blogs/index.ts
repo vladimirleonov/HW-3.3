@@ -17,7 +17,7 @@ import {
 } from "../posts/validators/postBodyValidators";
 import {blogIdParamValidator} from "./validators/blogIdParamValidator";
 
-export const blogsRouter = Router()
+export const blogsRouter: Router = Router()
 
 blogsRouter.get('/', queryBlogsParamsValidator, inputCheckErrorsMiddleware, getBlogsController)
 blogsRouter.post('/', blogInputValidator, authMiddleware, inputCheckErrorsMiddleware, createBlogController)

@@ -1,12 +1,11 @@
 import {InputBlogsQueryParamsType} from "../input-output-types/blog-types";
-import {sanitizeDefaultQueryParams} from "../../../common/helpers/queryParamsSanitizer";
+import {
+    SanitizedDefaultQueryParamsType,
+    sanitizeDefaultQueryParams
+} from "../../../common/helpers/queryParamsSanitizer";
 
-export type SanitizedBlogsQueryParamsType = {
+export type SanitizedBlogsQueryParamsType = SanitizedDefaultQueryParamsType & {
     searchNameTerm: string | null,
-    sortBy: string,
-    sortDirection: 'asc' | 'desc',
-    pageNumber: number,
-    pageSize: number
 };
 
 export const sanitizeBlogsQueryParams = (query: InputBlogsQueryParamsType): SanitizedBlogsQueryParamsType => {

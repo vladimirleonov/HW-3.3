@@ -23,7 +23,7 @@ export type OutputBlogType = {
     isMembership: boolean
 }
 
-export type OutputBlogPaginationType = {
+export type OutputBlogsPaginationType = {
     pagesCount: number,
     page: number,
     pageSize: number,
