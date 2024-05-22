@@ -8,8 +8,8 @@ import {inputCheckErrorsMiddleware} from "../../common/middlewares/inputCheckErr
 import {idParamValidator} from "../../common/validators/idParamValidator";
 import {userInputValidator} from "./validators/userBodyValidator";
 
-export const userRouter: Router = Router()
+export const usersRouter: Router = Router()
 
-userRouter.get('/', queryUsersParamsValidator, authMiddleware, inputCheckErrorsMiddleware, getUsersController)
-userRouter.post('/', userInputValidator, authMiddleware, inputCheckErrorsMiddleware, createUserController)
-userRouter.delete('/:id', idParamValidator, authMiddleware, inputCheckErrorsMiddleware, deleteUserController)
+usersRouter.get('/', queryUsersParamsValidator, authMiddleware, inputCheckErrorsMiddleware, getUsersController)
+usersRouter.post('/', userInputValidator, authMiddleware, inputCheckErrorsMiddleware, createUserController)
+usersRouter.delete('/:id', idParamValidator, authMiddleware, inputCheckErrorsMiddleware, deleteUserController)

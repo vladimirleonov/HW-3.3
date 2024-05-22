@@ -3,6 +3,7 @@ import cors from "cors"
 import {HTTP_CODES, SETTINGS} from "./settings"
 import {postsRouter} from "./features/posts"
 import {blogsRouter} from "./features/blogs"
+import {usersRouter} from "./features/users"
 import {testingRouter} from "./features/testing"
 
 const app: Express = express()
@@ -16,6 +17,7 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use(SETTINGS.PATH.BLOGS, blogsRouter)
 app.use(SETTINGS.PATH.POSTS, postsRouter)
+app.use(SETTINGS.PATH.USERS, usersRouter)
 app.use(SETTINGS.PATH.TESTING, testingRouter)
 
 

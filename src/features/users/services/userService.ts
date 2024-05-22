@@ -1,7 +1,6 @@
 const userSerice = {
-    createUser () {
-        console.log("createUser service")
-
+    async createUser (input: any) {
+        console.log(input);
     },
     deleteUser () {
         console.log("deleteUser service")
