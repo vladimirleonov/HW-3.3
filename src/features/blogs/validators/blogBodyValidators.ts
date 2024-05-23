@@ -21,7 +21,7 @@ const blogWebsiteUrlInputValidator = body('websiteUrl')
     .isLength({max: 100}).withMessage('websiteUrl must be less than 100 characters long')
     .matches(/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/)
 
-export const blogInputValidator = [
+export const blogBodyValidator = [
     blogTitleInputValidator,
     blogDescriptionInputValidator,
     blogWebsiteUrlInputValidator
