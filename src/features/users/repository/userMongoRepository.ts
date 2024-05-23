@@ -3,6 +3,9 @@ import {userCollection} from "../../../db/mongo-db";
 import {DeleteResult, InsertOneResult, ObjectId} from "mongodb";
 
 export const userMongoRepository = {
+    async findUserByField(field: string, value: string) {
+        return await userCollection.findOne({[field]: value})
+    },
     async create(newUser: UserDbType): Promise<string> {
         const insertedInfo: InsertOneResult<UserDbType> = await userCollection.insertOne(newUser)
         return insertedInfo.insertedId.toString()

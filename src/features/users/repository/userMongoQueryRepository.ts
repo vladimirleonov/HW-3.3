@@ -1,9 +1,7 @@
-import {blogCollection, userCollection} from "../../../db/mongo-db"
+import {userCollection} from "../../../db/mongo-db"
 import {SanitizedUsersQueryParamsType} from "../helpers/sanitizeUsersQueryParams";
 import {OutputUserPaginationType, OutputUserType} from "../input-output-types/user-types";
 import {UserDbType} from "../../../db/db-types/user-db-types";
-import {OutputBlogType} from "../../blogs/input-output-types/blog-types";
-import {BlogDBType} from "../../../db/db-types/blog-db-types";
 import {ObjectId} from "mongodb";
 
 export const userMongoQueryRepository = {
@@ -28,8 +26,6 @@ export const userMongoQueryRepository = {
             .limit(query.pageSize)
             .toArray()
 
-        console.log("users", users)
-
         const totalCount: number = await userCollection.countDocuments(filter)
 
         return {
@@ -43,7 +39,7 @@ export const userMongoQueryRepository = {
     async findForOutputById(id: string): Promise<{error?: string, user?: OutputUserType}> {
         const user: UserDbType | null = await userCollection.findOne({_id: new ObjectId(id)})
         if (!user) {
-            return {error: 'Post not found'}
+            return {error: 'User not found'}
         }
         return {user: this.mapToOutput(user)}
     },

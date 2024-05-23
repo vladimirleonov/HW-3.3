@@ -3,12 +3,18 @@ import {InputUserType, OutputUserType} from "../input-output-types/user-types";
 import {userService} from "../services/userService";
 import {userMongoQueryRepository} from "../repository/userMongoQueryRepository";
 import {HTTP_CODES} from "../../../settings";
+import {ErrorsMessagesType} from "../../../common/helpers/generateErrorMessages";
 
-export const createUserController = async (req: Request<{}, OutputUserType, InputUserType>, res: Response<OutputUserType>) => {
+export const createUserController = async (req: Request<{}, OutputUserType| ErrorsMessagesType, InputUserType>, res: Response<OutputUserType | ErrorsMessagesType>) => {
     try {
-        const createdUserId: string = await userService.createUser(req.body)
+        const createdInfo = await userService.createUser(req.body)
+        if (createdInfo.error) {
+            res.status(HTTP_CODES.BAD_REQUEST).send(createdInfo.error)
+            return
+        }
 
-        const foundInfo = await userMongoQueryRepository.findForOutputById(createdUserId)
+        //? !
+        const foundInfo = await userMongoQueryRepository.findForOutputById(createdInfo.id!)
 
         res.status(HTTP_CODES.CREATED).send(foundInfo.user)
     } catch (err) {
