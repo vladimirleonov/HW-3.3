@@ -1,8 +1,8 @@
 import { ObjectId } from "mongodb"
-import { PostDbType } from "../../src/db/db-types/post-db-types"
-import { BlogDBType } from "../../src/db/db-types/blog-db-types"
+import { PostDbType } from "../../../src/db/db-types/post-db-types"
+import { BlogDBType } from "../../../src/db/db-types/blog-db-types"
 
-export const generatePostsDataset = (blogs: BlogDBType[], count: number = 2): {posts: PostDbType[]} => {
+export const createPosts= (blogs: BlogDBType[], count: number = 2): {posts: PostDbType[]} => {
     const posts: PostDbType[] = []
 
     for(let i: number = 0; i < count; i++) {

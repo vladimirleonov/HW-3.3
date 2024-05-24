@@ -1,5 +1,5 @@
 import {MongoMemoryServer} from 'mongodb-memory-server'
-import {connectToDB, client, blogCollection, postCollection} from '../../src/db/mongo-db'
+import {connectToDB, client, blogCollection, postCollection, userCollection} from '../../src/db/mongo-db'
 
 let mongoServer: MongoMemoryServer
 
@@ -27,5 +27,6 @@ export const closeTestDB = async () => {
 export const clearTestDB = async () => {
     await blogCollection.deleteMany({})
     await postCollection.deleteMany({})
+    await userCollection.deleteMany({})
     console.log("In-Memory MongoDB cleared")
 }
