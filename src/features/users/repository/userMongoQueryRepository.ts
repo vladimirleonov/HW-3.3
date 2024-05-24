@@ -27,7 +27,7 @@ export const userMongoQueryRepository = {
             .toArray()
 
         const totalCount: number = await userCollection.countDocuments(filter)
-
+        console.log(query)
         return {
             pagesCount: Math.ceil(totalCount / query.pageSize),
             page: query.pageNumber,
