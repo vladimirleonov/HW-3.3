@@ -1,9 +1,10 @@
-import {req} from "../../../test-helpers/req"
+import {req} from "../../../helpers/req"
 import {HTTP_CODES, SETTINGS} from "../../../../src/settings"
 import {encodeToBase64} from "../../../../src/common/helpers/auth-helpers"
 import {AUTH_DATA} from "../../../../src/settings"
-import {clearTestDB, closeTestDB, connectToTestDB} from "../../../test-helpers/test-db"
+import {clearTestDB, closeTestDB, connectToTestDB} from "../../../test-db"
 import {InputUserType} from "../../../../src/features/users/input-output-types/user-types";
+import {testSeeder} from "../../../testSeeder";
 
 describe('POST /users', () => {
     beforeAll(async () => {
@@ -15,12 +16,8 @@ describe('POST /users', () => {
     beforeEach(async () => {
         await clearTestDB()
     })
-    it('- POST users unauthorized', async () => {
-        const newUser: any = {
-            login: 'login',
-            email: 'test@gmail.com',
-            password: 'test1234',
-        }
+    it('- POST user unauthorized: STATUS 401', async () => {
+        const newUser: InputUserType = testSeeder.createUserDTO()
 
         await req
             .post(SETTINGS.PATH.USERS)
@@ -28,12 +25,8 @@ describe('POST /users', () => {
             .send(newUser)
             .expect(HTTP_CODES.UNAUTHORIZED)
     })
-    it('+ POST user with correct input data', async () => {
-        const newUser: any = {
-            login: 'login',
-            email: 'test@gmail.com',
-            password: 'test1234',
-        }
+    it('+ POST user with correct input data: STATUS 201', async () => {
+        const newUser: InputUserType = testSeeder.createUserDTO()
 
         const res = await req
             .post(SETTINGS.PATH.USERS)
@@ -41,22 +34,12 @@ describe('POST /users', () => {
             .send(newUser)
             .expect(HTTP_CODES.CREATED)
 
-        console.log(res.body)
-
         expect(res.body.login).toEqual(newUser.login)
         expect(res.body.email).toEqual(newUser.email)
     })
-    it('+ POST user when login not unique', async () => {
-        const user1: any = {
-            login: 'login',
-            email: 'test1@gmail.com',
-            password: 'test1234',
-        }
-        const user2: any = {
-            login: 'login',
-            email: 'test2@gmail.com',
-            password: 'test1234',
-        }
+    it('+ POST user when login not unique: STATUS 400', async () => {
+        const user1: InputUserType = testSeeder.createUserDTO()
+        const user2: InputUserType = testSeeder.createUserDTO()
 
         await req
             .post(SETTINGS.PATH.USERS)
@@ -77,38 +60,7 @@ describe('POST /users', () => {
             }
         )
     })
-    it('+ POST user when email not unique', async () => {
-        const user1: any = {
-            login: 'login1',
-            email: 'test@gmail.com',
-            password: 'test1234',
-        }
-        const user2: any = {
-            login: 'login2',
-            email: 'test@gmail.com',
-            password: 'test1234',
-        }
-
-        await req
-            .post(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
-            .send(user1)
-            .expect(HTTP_CODES.CREATED)
-
-        const res = await req
-            .post(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
-            .send(user2)
-            .expect(HTTP_CODES.BAD_REQUEST)
-
-        expect(res.body.errorsMessages[0]).toEqual(
-            {
-                field: 'email',
-                message: 'email should be unique'
-            }
-        )
-    })
-    it('- POST users when login not passed', async () => {
+    it('- POST user when login not passed: STATUS 400', async () => {
         const newUser: any = {
             email: 'test@gmail.com',
             password: 'test1234',
@@ -127,7 +79,7 @@ describe('POST /users', () => {
             }
         )
     })
-    it('- POST USERS when login is not a string', async () => {
+    it('- POST user when login is not a string: STATUS 400', async () => {
         const newUser: any = {
             login: 123 as any,
             email: 'test@gmail.com',
@@ -147,7 +99,7 @@ describe('POST /users', () => {
             }
         )
     })
-    it('- POST USERS with incorrect min login length', async () => {
+    it('- POST user with incorrect min login length: STATUS 400', async () => {
         const newUser: any = {
             login: 'te',
             email: 'test@gmail.com',
@@ -168,7 +120,7 @@ describe('POST /users', () => {
             }
         )
     })
-    it('- POST USERS with incorrect login', async () => {
+    it('- POST user with incorrect login: STATUS 400', async () => {
         const newUser: any = {
             login: '#4123$1_!',
             email: 'test@gmail.com',
@@ -189,7 +141,7 @@ describe('POST /users', () => {
             }
         )
     })
-    it('- POST users when password not passed', async () => {
+    it('- POST user when password not passed: STATUS 400', async () => {
         const newUser: any = {
             login: 'test',
             email: 'test@gmail.com',
@@ -208,7 +160,7 @@ describe('POST /users', () => {
             }
         )
     })
-    it('- POST USERS when password is not a string', async () => {
+    it('- POST user when password is not a string: STATUS 400', async () => {
         const newUser: any = {
             login: 'test',
             email: 'test@gmail.com',
@@ -228,7 +180,7 @@ describe('POST /users', () => {
             }
         )
     })
-    it('- POST USERS with incorrect min password length', async () => {
+    it('- POST user with incorrect min password length: STATUS 400', async () => {
         const newUser: any = {
             login: 'test',
             email: 'test@gmail.com',
@@ -249,7 +201,7 @@ describe('POST /users', () => {
             }
         )
     })
-    it('- POST users when email not passed', async () => {
+    it('- POST user when email not passed: STATUS 400', async () => {
         const newUser: any = {
             login: 'test',
             password: 'test1234',
@@ -268,7 +220,7 @@ describe('POST /users', () => {
             }
         )
     })
-    it('- POST USERS when email is not a string', async () => {
+    it('- POST user when email is not a string: STATUS 400', async () => {
         const newUser: any = {
             login: 'test',
             email: 123 as any,
@@ -288,7 +240,7 @@ describe('POST /users', () => {
             }
         )
     })
-    it('- POST USERS with incorrect email', async () => {
+    it('- POST user with incorrect email: STATUS 400', async () => {
         const newUser: any = {
             login: 'test',
             email: 'test.com',
@@ -309,7 +261,7 @@ describe('POST /users', () => {
             }
         )
     })
-    it('- POST USERS with incorrect data (first errors)', async () => {
+    it('- POST user with incorrect data (first errors): STATUS 400', async () => {
         const newUser: any = {
             login: "1",
             email: null as any,

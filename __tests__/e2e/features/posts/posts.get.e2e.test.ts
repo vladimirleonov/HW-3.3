@@ -1,12 +1,11 @@
-import {req} from "../../../test-helpers/req"
+import {req} from "../../../helpers/req"
 import {SETTINGS} from "../../../../src/settings"
-import {clearTestDB, connectToTestDB, closeTestDB} from "../../../test-helpers/test-db"
-import {createBlogs} from "../../../test-helpers/dataset-helpers/blogsDatasets"
-import {createPosts} from "../../../test-helpers/dataset-helpers/postsDatasets"
-import {postCollection, blogCollection} from "../../../../src/db/mongo-db"
+import {clearTestDB, connectToTestDB, closeTestDB} from "../../../test-db"
+import {createBlogs} from "../../../helpers/dataset-helpers/blogsDatasets"
+import {createPosts} from "../../../helpers/dataset-helpers/postsDatasets"
 import {ObjectId} from "mongodb"
 import {OutputPostType} from "../../../../src/features/posts/input-output-types/post-types";
-import {PostDbType} from "../../../../src/db/db-types/post-db-types";
+import {OutputBlogType} from "../../../../src/features/blogs/input-output-types/blog-types";
 
 describe('GET /posts', () => {
     beforeAll(async () => {
@@ -25,44 +24,32 @@ describe('GET /posts', () => {
         expect(res.body.items.length).toBe(0)
     })
     it('+ GET posts with default query parameters', async () => {
-        const {blogs} = createBlogs()
-        await blogCollection.insertMany(blogs)
-
-        const postsDataset = createPosts(blogs)
-        await postCollection.insertMany(postsDataset.posts)
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
         const res = await req.get(SETTINGS.PATH.POSTS).expect(200)
-
-        expect(res.body).toHaveProperty('pagesCount');
-        expect(res.body).toHaveProperty('page');
-        expect(res.body).toHaveProperty('pageSize');
-        expect(res.body).toHaveProperty('totalCount');
-        expect(res.body).toHaveProperty('items');
 
         expect(res.body.pagesCount).toBe(1);
         expect(res.body.page).toBe(1);
         expect(res.body.pageSize).toBe(10);
-        expect(res.body.totalCount).toBe(postsDataset.posts.length);
+        expect(res.body.totalCount).toBe(posts.length);
 
-        expect(res.body.items.length).toBe(postsDataset.posts.length)
+        expect(res.body.items.length).toBe(posts.length)
         res.body.items.forEach((item: OutputPostType, index: number) => {
             res.body.items.forEach((item: OutputPostType, index: number) => {
-                expect(item.id).toBe(postsDataset.posts[index]._id.toString());
-                expect(item.title).toBe(postsDataset.posts[index].title);
-                expect(item.shortDescription).toBe(postsDataset.posts[index].shortDescription);
-                expect(item.content).toBe(postsDataset.posts[index].content);
-                expect(item.blogId).toBe(postsDataset.posts[index].blogId.toString());
-                expect(item.blogName).toBe(postsDataset.posts[index].blogName);
-                expect(new Date(item.createdAt).toISOString()).toEqual(postsDataset.posts[index].createdAt);
+                expect(item.id).toBe(posts[index].id);
+                expect(item.title).toBe(posts[index].title);
+                expect(item.shortDescription).toBe(posts[index].shortDescription);
+                expect(item.content).toBe(posts[index].content);
+                expect(item.blogId).toBe(posts[index].blogId.toString());
+                expect(item.blogName).toBe(posts[index].blogName);
+                expect(new Date(item.createdAt).toISOString()).toEqual(posts[index].createdAt);
             })
         })
     })
     it('+ GET posts with sorting query parameters', async () => {
-        const {blogs} = createBlogs()
-        await blogCollection.insertMany(blogs)
-
-        const postsDataset = createPosts(blogs)
-        await postCollection.insertMany(postsDataset.posts)
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
         const sortBy: string = 'title'
         const sortDirection = 'asc'
@@ -71,11 +58,11 @@ describe('GET /posts', () => {
             .query({sortBy, sortDirection})
             .expect(200)
 
-        const sortedPosts = postsDataset.posts.sort((a: PostDbType, b: PostDbType) => a.title.localeCompare(b.title))
+        const sortedPosts = posts.sort((a: OutputPostType, b: OutputPostType) => a.title.localeCompare(b.title))
 
         expect(res.body.items.length).toBe(sortedPosts.length)
         res.body.items.forEach((item: OutputPostType, index: number) => {
-            expect(item.id).toBe(sortedPosts[index]._id.toString());
+            expect(item.id).toBe(sortedPosts[index].id);
             expect(item.title).toBe(sortedPosts[index].title);
             expect(item.shortDescription).toBe(sortedPosts[index].shortDescription);
             expect(item.content).toBe(sortedPosts[index].content);
@@ -85,11 +72,8 @@ describe('GET /posts', () => {
         })
     })
     it('+ GET posts with pagination', async () => {
-        const {blogs} = createBlogs(2)
-        await blogCollection.insertMany(blogs)
-
-        const postsDataset = createPosts(blogs, 5)
-        await postCollection.insertMany(postsDataset.posts)
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
         const pageNumber: number = 2
         const pageSize: number = 3
@@ -98,14 +82,11 @@ describe('GET /posts', () => {
             .query({pageNumber, pageSize})
             .expect(200)
 
-        //default sorting by createdAt desc
-        const sortedPosts: PostDbType[] = postsDataset.posts.sort((a: PostDbType, b: PostDbType) => b.createdAt.localeCompare(a.createdAt));
-
-        const paginatedPosts: PostDbType[] = sortedPosts.slice((pageNumber - 1) * pageSize, pageNumber * pageSize)
+        const paginatedPosts: OutputPostType[] = posts.slice((pageNumber - 1) * pageSize, pageNumber * pageSize)
 
         expect(res.body.items.length).toBe(paginatedPosts.length)
         res.body.items.forEach((item: OutputPostType, index: number) => {
-            expect(item.id).toBe(paginatedPosts[index]._id.toString());
+            expect(item.id).toBe(paginatedPosts[index].id);
             expect(item.title).toBe(paginatedPosts[index].title);
             expect(item.shortDescription).toBe(paginatedPosts[index].shortDescription);
             expect(item.content).toBe(paginatedPosts[index].content);
@@ -116,24 +97,18 @@ describe('GET /posts', () => {
     })
     //posts/{id}
     it('+ GET post with correct id', async () => {
-        const {blogs} = createBlogs(2)
-        await blogCollection.insertMany(blogs)
-
-        const postsDataset = createPosts(blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
         const res = await req
-            .get(`${SETTINGS.PATH.POSTS}/${postsDataset.posts[0]._id}`)
+            .get(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .expect(200)
 
-        expect(res.body.id).toEqual(postsDataset.posts[0]._id.toString())
+        expect(res.body.id).toEqual(posts[0].id)
     })
     it('- GET post with incorrect id', async () => {
-        const {blogs} = createBlogs(2)
-        await blogCollection.insertMany(blogs)
-
-        const postsDataset = createPosts(blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
+        const blogs: OutputBlogType[] = await createBlogs()
+        await createPosts(blogs)
 
         await req
             .get(`${SETTINGS.PATH.POSTS}/${new ObjectId()}`)

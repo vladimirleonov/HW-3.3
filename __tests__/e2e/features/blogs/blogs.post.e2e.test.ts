@@ -1,9 +1,11 @@
-import {req} from "../../../test-helpers/req"
+import {req} from "../../../helpers/req"
 import {HTTP_CODES, SETTINGS} from "../../../../src/settings"
 import {InputBlogType} from "../../../../src/features/blogs/input-output-types/blog-types"
 import {encodeToBase64} from "../../../../src/common/helpers/auth-helpers"
 import {AUTH_DATA} from "../../../../src/settings"
-import {clearTestDB, closeTestDB, connectToTestDB} from "../../../test-helpers/test-db"
+import {clearTestDB, closeTestDB, connectToTestDB} from "../../../test-db"
+import {createBlogs} from "../../../helpers/dataset-helpers/blogsDatasets";
+import {testSeeder} from "../../../testSeeder";
 
 describe('POST /blogs', () => {
     beforeAll(async () => {
@@ -15,12 +17,8 @@ describe('POST /blogs', () => {
     beforeEach(async () => {
         await clearTestDB()
     })
-    it('- POST blogs unauthorized', async () => {
-        const newBlog: InputBlogType = {
-            name: 'name1',
-            description: 'description1',
-            websiteUrl: 'https://youtube.com'
-        }
+    it('- POST blog unauthorized: STATUS 401', async () => {
+        const newBlog = testSeeder.createBlogDTO()
 
         await req
             .post(SETTINGS.PATH.BLOGS)
@@ -28,12 +26,8 @@ describe('POST /blogs', () => {
             .send(newBlog)
             .expect(HTTP_CODES.UNAUTHORIZED)
     })
-    it('+ POST blogs with correct input data', async () => {
-        const newBlog: InputBlogType = {
-            name: 'name1',
-            description: 'description1',
-            websiteUrl: 'https://youtube.com'
-        }
+    it('+ POST blog with correct input data: STATUS 201', async () => {
+        const newBlog = testSeeder.createBlogDTO()
 
         const res = await req
             .post(SETTINGS.PATH.BLOGS)
@@ -46,7 +40,7 @@ describe('POST /blogs', () => {
         expect(res.body.description).toEqual(newBlog.description)
         expect(res.body.websiteUrl).toEqual(newBlog.websiteUrl)
     })
-    it('- POST blogs when name not passed', async () => {
+    it('- POST blog when name not passed: STATUS 400', async () => {
         const newBlog: any = {
             description: 'description1',
             websiteUrl: 'https://youtube.com'
@@ -65,7 +59,7 @@ describe('POST /blogs', () => {
             }
         )
     })
-    it('- POST blogs when name is not a string', async () => {
+    it('- POST blog when name is not a string: STATUS 400', async () => {
         const newBlog: InputBlogType = {
             name: 123 as any,
             description: 'description1',
@@ -85,7 +79,7 @@ describe('POST /blogs', () => {
             }
         )
     })
-    it('- POST blogs with incorrect name length', async () => {
+    it('- POST blog with incorrect name length: STATUS 400', async () => {
         const newBlog: InputBlogType = {
             name: 'name1'.repeat(5),
             description: 'description1',
@@ -106,7 +100,7 @@ describe('POST /blogs', () => {
             }
         )
     })
-    it('- POST blogs when description not passed', async () => {
+    it('- POST blog when description not passed: STATUS 400', async () => {
         const newBlog: any = {
             name: 'name1',
             websiteUrl: 'https://youtube.com'
@@ -125,7 +119,7 @@ describe('POST /blogs', () => {
             }
         )
     })
-    it('- POST blogs when description is not a string', async () => {
+    it('- POST blog when description is not a string: STATUS 400', async () => {
         const newBlog: InputBlogType = {
             name: 'name1',
             description: 123 as any,
@@ -145,7 +139,7 @@ describe('POST /blogs', () => {
             }
         )
     })
-    it('- POST blogs with incorrect description length', async () => {
+    it('- POST blog with incorrect description length: STATUS 400', async () => {
         const newBlog: InputBlogType = {
             name: 'name1',
             description: 'description1'.repeat(50),
@@ -166,7 +160,7 @@ describe('POST /blogs', () => {
             }
         )
     })
-    it('- POST blogs when websiteUrl not passed', async () => {
+    it('- POST blog when websiteUrl not passed: STATUS 400', async () => {
         const newBlog: any = {
             name: 'name1',
             description: 'description1',
@@ -185,7 +179,7 @@ describe('POST /blogs', () => {
             }
         )
     })
-    it('- POST blogs when websiteUrl is not a string', async () => {
+    it('- POST blog when websiteUrl is not a string: STATUS 400', async () => {
         const newBlog: InputBlogType = {
             name: 'name1',
             description: 'description1',
@@ -205,7 +199,7 @@ describe('POST /blogs', () => {
             }
         )
     })
-    it('- POST blogs with incorrect websiteUrl length', async () => {
+    it('- POST blog with incorrect websiteUrl length: STATUS 400', async () => {
         const newBlog: InputBlogType = {
             name: 'name1',
             description: 'description1',
@@ -226,7 +220,7 @@ describe('POST /blogs', () => {
             }
         )
     })
-    it('- POST blogs with incorrect websiteUrl', async () => {
+    it('- POST blog with incorrect websiteUrl: STATUS 400', async () => {
         const newBlog: InputBlogType = {
             name: 'name1',
             description: 'description1',
@@ -247,7 +241,7 @@ describe('POST /blogs', () => {
             }
         )
     })
-    it('- POST blogs with incorrect data (first errors)', async () => {
+    it('- POST blog with incorrect data (first errors): STATUS 400', async () => {
         const newBlog: InputBlogType = {
             name: "",
             description: null as any,

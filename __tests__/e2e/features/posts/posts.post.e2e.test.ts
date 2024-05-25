@@ -1,12 +1,12 @@
-import {req} from "../../../test-helpers/req"
+import {req} from "../../../helpers/req"
 import {HTTP_CODES, SETTINGS} from "../../../../src/settings"
 import {InputPostType} from "../../../../src/features/posts/input-output-types/post-types"
 import {encodeToBase64} from "../../../../src/common/helpers/auth-helpers"
 import {AUTH_DATA} from "../../../../src/settings"
-import {createBlogs} from "../../../test-helpers/dataset-helpers/blogsDatasets"
-import {createPosts} from "../../../test-helpers/dataset-helpers/postsDatasets"
-import {postCollection, blogCollection} from "../../../../src/db/mongo-db"
-import {clearTestDB, connectToTestDB, closeTestDB} from "../../../test-helpers/test-db"
+import {createBlogs} from "../../../helpers/dataset-helpers/blogsDatasets"
+import {clearTestDB, connectToTestDB, closeTestDB} from "../../../test-db"
+import {OutputBlogType} from "../../../../src/features/blogs/input-output-types/blog-types";
+import {testSeeder} from "../../../testSeeder";
 
 describe('POST /posts', () => {
     beforeAll(async () => {
@@ -18,14 +18,10 @@ describe('POST /posts', () => {
     beforeEach(async () => {
         await clearTestDB()
     })
-    it('- POST posts unauthorized', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+    it('- POST post unauthorized: STATUS 401', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString()
+        const blogId = blogs[0].id
 
         const newPost: InputPostType = {
             title: 'title2',
@@ -40,21 +36,12 @@ describe('POST /posts', () => {
             .send(newPost)
             .expect(401)
     })
-    it('+ POST posts with correct input data', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+    it('+ POST post with correct input data: STATUS 201', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
+        const blogId: string = blogs[0].id
 
-        const blogId = blogsDataset.blogs[0]._id.toString()
-
-        const newPost: InputPostType = {
-            title: 'title2',
-            shortDescription: 'shortDescription2',
-            content: 'content2',
-            blogId: blogId
-        }
+        const newPost: InputPostType = testSeeder.createPostDTO(blogId)
 
         const res = await req
             .post(SETTINGS.PATH.POSTS)
@@ -66,16 +53,12 @@ describe('POST /posts', () => {
         expect(res.body.shortDescription).toEqual(newPost.shortDescription)
         expect(res.body.content).toEqual(newPost.content)
         expect(res.body.blogId).toEqual(newPost.blogId)
-        expect(res.body.blogName).toEqual(blogsDataset.blogs[0].name)
+        expect(res.body.blogName).toEqual(blogs[0].name)
     })
-    it('- POST posts when title not passed', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+    it('- POST post when title not passed: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString()
+        const blogId = blogs[0].id
 
         const newPost: any = {
             shortDescription: 'shortDescription2',
@@ -96,14 +79,10 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST posts when title is not a string', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+    it('- POST post when title is not a string: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString()
+        const blogId = blogs[0].id
 
         const newPost: InputPostType = {
             title: 123 as any,
@@ -125,14 +104,10 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST posts with incorrect title length', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+    it('- POST post with incorrect title length: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString()
+        const blogId = blogs[0].id
 
         const newPost: InputPostType = {
             title: 'title2'.repeat(10),
@@ -154,14 +129,10 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST posts when shortDescription not passed', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+    it('- POST post when shortDescription not passed: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString()
+        const blogId = blogs[0].id
 
         const newPost: any = {
             title: "title2",
@@ -182,14 +153,10 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST posts when shortDescription is not a string', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+    it('- POST post when shortDescription is not a string: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString()
+        const blogId = blogs[0].id
 
         const newPost: InputPostType = {
             title: "title2",
@@ -211,14 +178,10 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST posts with incorrect shortDescription length', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+    it('- POST post with incorrect shortDescription length: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString()
+        const blogId = blogs[0].id
 
         const newPost: InputPostType = {
             title: 'title2',
@@ -240,14 +203,10 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST posts when content not passed', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+    it('- POST post when content not passed: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString()
+        const blogId = blogs[0].id
 
         const newPost: any = {
             title: "title2",
@@ -268,14 +227,10 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST posts when content is not a string', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+    it('- POST post when content is not a string: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString()
+        const blogId = blogs[0].id
 
         const newPost: InputPostType = {
             title: "title2",
@@ -297,14 +252,10 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST posts with incorrect content length', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+    it('- POST post with incorrect content length: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString()
+        const blogId = blogs[0].id
 
         const newPost: InputPostType = {
             title: 'title2',
@@ -326,13 +277,7 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST posts when blogId not passed', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
-
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
+    it('- POST post when blogId not passed: STATUS 400', async () => {
         const newPost: any = {
             title: 'title2',
             shortDescription: 'shortDescription2',
@@ -352,13 +297,7 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST posts when blogId is not a string', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
-
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
+    it('- POST post when blogId is not a string: STATUS 400', async () => {
         const newPost: InputPostType = {
             title: 'title2',
             shortDescription: 'shortDescription2',
@@ -379,13 +318,7 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST posts when blogId is invalid', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
-
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
+    it('- POST post when blogId is invalid: STATUS 400', async () => {
         const newPost: InputPostType = {
             title: 'title2',
             shortDescription: 'shortDescription2',
@@ -406,13 +339,7 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST posts with incorrect data (first errors)', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
-
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
+    it('- POST post with incorrect data (first errors): STATUS 400', async () => {
         const newPost: any = {
             title: "",
             shortDescription: 123 as any,

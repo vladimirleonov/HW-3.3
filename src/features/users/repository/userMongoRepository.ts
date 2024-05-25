@@ -12,6 +12,7 @@ export const userMongoRepository = {
     },
     async delete(id: string): Promise<boolean> {
         const deletedInfo: DeleteResult = await userCollection.deleteOne({_id: new ObjectId(id)})
+        console.log(deletedInfo)
         return deletedInfo.deletedCount === 1
     }
 }

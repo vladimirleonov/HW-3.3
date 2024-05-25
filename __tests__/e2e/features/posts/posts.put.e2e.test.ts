@@ -1,11 +1,11 @@
-import {req} from "../../../test-helpers/req"
+import {req} from "../../../helpers/req"
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../../src/settings"
-import {InputPostType} from "../../../../src/features/posts/input-output-types/post-types"
+import {InputPostType, OutputPostType} from "../../../../src/features/posts/input-output-types/post-types"
 import {encodeToBase64} from "../../../../src/common/helpers/auth-helpers"
-import {createBlogs} from "../../../test-helpers/dataset-helpers/blogsDatasets"
-import {createPosts} from "../../../test-helpers/dataset-helpers/postsDatasets"
-import {postCollection, blogCollection} from "../../../../src/db/mongo-db"
-import {clearTestDB, connectToTestDB, closeTestDB} from "../../../test-helpers/test-db"
+import {createBlogs} from "../../../helpers/dataset-helpers/blogsDatasets"
+import {createPosts} from "../../../helpers/dataset-helpers/postsDatasets"
+import {clearTestDB, connectToTestDB, closeTestDB} from "../../../test-db"
+import {OutputBlogType} from "../../../../src/features/blogs/input-output-types/blog-types";
 
 describe('PUT /posts', () => {
     beforeAll(async () => {
@@ -17,14 +17,11 @@ describe('PUT /posts', () => {
     beforeEach(async () => {
         await clearTestDB()
     })
-    it('- PUT posts unauthorized', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+    it('- PUT posts unauthorized: STATUS 401', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString()
+        const blogId: string = blogs[0].id.toString()
 
         const postForUpdating: InputPostType = {
             title: 'title2',
@@ -34,19 +31,16 @@ describe('PUT /posts', () => {
         }
 
         await req
-            .put(`${SETTINGS.PATH.POSTS}/${postsDataset.posts[0]._id}`)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.FAKE_AUTH)}`)
             .send(postForUpdating)
             .expect(HTTP_CODES.UNAUTHORIZED)
     })
-    it('+ PUT posts with correct input data', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+    it('+ PUT posts with correct input data: STATUS 204', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString()
+        const blogId: string = blogs[0].id.toString()
 
         const postForUpdating: InputPostType = {
             title: 'title2',
@@ -56,19 +50,16 @@ describe('PUT /posts', () => {
         }
 
         await req
-            .put(`${SETTINGS.PATH.POSTS}/${postsDataset.posts[0]._id}`)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(postForUpdating)
             .expect(HTTP_CODES.NO_CONTENT)
     })
     it('- PUT posts when title not passed', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString()
+        const blogId: string = blogs[0].id.toString()
 
         const postForUpdating: any = {
             shortDescription: 'shortDescription2',
@@ -77,7 +68,7 @@ describe('PUT /posts', () => {
         }
 
         const res = await req
-            .put(`${SETTINGS.PATH.POSTS}/${postsDataset.posts[0]._id}`)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
@@ -89,14 +80,11 @@ describe('PUT /posts', () => {
             }
         )
     })
-    it('- PUT posts when title is not a string', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+    it('- PUT posts when title is not a string: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString()
+        const blogId: string = blogs[0].id.toString()
 
         const postForUpdating: InputPostType = {
             title: 123 as any,
@@ -106,7 +94,7 @@ describe('PUT /posts', () => {
         }
 
         const res = await req
-            .put(`${SETTINGS.PATH.POSTS}/${postsDataset.posts[0]._id}`)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
@@ -118,14 +106,11 @@ describe('PUT /posts', () => {
             }
         )
     })
-    it('- PUT posts when title is too long', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+    it('- PUT posts when title is too long: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString()
+        const blogId: string = blogs[0].id.toString()
 
         const postForUpdating: InputPostType = {
             title: 'title2'.repeat(10),
@@ -135,7 +120,7 @@ describe('PUT /posts', () => {
         }
 
         const res = await req
-            .put(`${SETTINGS.PATH.POSTS}/${postsDataset.posts[0]._id}`)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
@@ -147,14 +132,11 @@ describe('PUT /posts', () => {
             }
         )
     })
-    it('- PUT posts when shortDescription not passed', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+    it('- PUT posts when shortDescription not passed: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString()
+        const blogId: string = blogs[0].id.toString()
 
         const postForUpdating: any = {
             title: "title2",
@@ -163,7 +145,7 @@ describe('PUT /posts', () => {
         }
 
         const res = await req
-            .put(`${SETTINGS.PATH.POSTS}/${postsDataset.posts[0]._id}`)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
@@ -175,14 +157,11 @@ describe('PUT /posts', () => {
             }
         )
     })
-    it('- PUT posts when shortDescription is not a string', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+    it('- PUT posts when shortDescription is not a string: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString()
+        const blogId: string = blogs[0].id.toString()
 
         const postForUpdating: InputPostType = {
             title: "title2",
@@ -192,7 +171,7 @@ describe('PUT /posts', () => {
         }
 
         const res = await req
-            .put(`${SETTINGS.PATH.POSTS}/${postsDataset.posts[0]._id}`)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
@@ -204,14 +183,11 @@ describe('PUT /posts', () => {
             }
         )
     })
-    it('- PUT posts when shortDescription is too long', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+    it('- PUT posts when shortDescription is too long: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString()
+        const blogId: string = blogs[0].id.toString()
 
         const postForUpdating: InputPostType = {
             title: 'title2',
@@ -221,7 +197,7 @@ describe('PUT /posts', () => {
         }
 
         const res = await req
-            .put(`${SETTINGS.PATH.POSTS}/${postsDataset.posts[0]._id}`)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
@@ -233,14 +209,11 @@ describe('PUT /posts', () => {
             }
         )
     })
-    it('- PUT posts when content not passed', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+    it('- PUT posts when content not passed: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString()
+        const blogId: string = blogs[0].id.toString()
 
         const postForUpdating: any = {
             title: "title2",
@@ -249,7 +222,7 @@ describe('PUT /posts', () => {
         }
 
         const res = await req
-            .put(`${SETTINGS.PATH.POSTS}/${postsDataset.posts[0]._id}`)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
@@ -261,14 +234,11 @@ describe('PUT /posts', () => {
             }
         )
     })
-    it('- PUT posts when content is not a string', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+    it('- PUT posts when content is not a string: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString()
+        const blogId: string = blogs[0].id.toString()
 
         const postForUpdating: InputPostType = {
             title: "title2",
@@ -278,7 +248,7 @@ describe('PUT /posts', () => {
         }
 
         const res = await req
-            .put(`${SETTINGS.PATH.POSTS}/${postsDataset.posts[0]._id}`)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
@@ -290,14 +260,11 @@ describe('PUT /posts', () => {
             }
         )
     })
-    it('- PUT posts when content is too long', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
+    it('- PUT posts when content is too long: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
-
-        const blogId = blogsDataset.blogs[0]._id.toString()
+        const blogId: string = blogs[0].id.toString()
 
         const postForUpdating: InputPostType = {
             title: 'title2',
@@ -307,7 +274,7 @@ describe('PUT /posts', () => {
         }
 
         const res = await req
-            .put(`${SETTINGS.PATH.POSTS}/${postsDataset.posts[0]._id}`)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
@@ -319,12 +286,9 @@ describe('PUT /posts', () => {
             }
         )
     })
-    it('- PUT posts when blogId not passed', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
-
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
+    it('- PUT posts when blogId not passed: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
         const postForUpdating: any = {
             title: "title2",
@@ -333,7 +297,7 @@ describe('PUT /posts', () => {
         }
 
         const res = await req
-            .put(`${SETTINGS.PATH.POSTS}/${postsDataset.posts[0]._id}`)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
@@ -345,12 +309,9 @@ describe('PUT /posts', () => {
             }
         )
     })
-    it('- PUT posts when blogId is not a string', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
-
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
+    it('- PUT posts when blogId is not a string: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
         const postForUpdating: InputPostType = {
             title: "title2",
@@ -360,7 +321,7 @@ describe('PUT /posts', () => {
         }
 
         const res = await req
-            .put(`${SETTINGS.PATH.POSTS}/${postsDataset.posts[0]._id}`)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
@@ -372,12 +333,9 @@ describe('PUT /posts', () => {
             }
         )
     })
-    it('- PUT posts when blogId is invalid', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
-
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
+    it('- PUT posts when blogId is invalid: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
         const postForUpdating: InputPostType = {
             title: 'title2',
@@ -387,7 +345,7 @@ describe('PUT /posts', () => {
         }
 
         const res = await req
-            .put(`${SETTINGS.PATH.POSTS}/${postsDataset.posts[0]._id}`)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
@@ -399,12 +357,9 @@ describe('PUT /posts', () => {
             }
         )
     })
-    it('- PUT posts with incorrect data (first errors)', async () => {
-        const blogsDataset = createBlogs(2)
-        await blogCollection.insertMany(blogsDataset.blogs)
-
-        const postsDataset = createPosts(blogsDataset.blogs, 2)
-        await postCollection.insertMany(postsDataset.posts)
+    it('- PUT posts with incorrect data (first errors): STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
         const postForUpdating: InputPostType = {
             title: "",
@@ -414,7 +369,7 @@ describe('PUT /posts', () => {
         }
 
         const res = await req
-            .put(`${SETTINGS.PATH.POSTS}/${postsDataset.posts[0]._id}`)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)

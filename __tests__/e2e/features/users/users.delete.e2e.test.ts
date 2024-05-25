@@ -3,10 +3,11 @@ import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../../src/settings"
 import {encodeToBase64} from "../../../../src/common/helpers/auth-helpers"
 import {createBlogs} from "../../../helpers/dataset-helpers/blogsDatasets"
 import {createPosts} from "../../../helpers/dataset-helpers/postsDatasets"
+import {postCollection, blogCollection} from "../../../../src/db/mongo-db"
 import {clearTestDB, connectToTestDB, closeTestDB} from "../../../test-db"
 import {ObjectId} from "mongodb"
-import {OutputBlogType} from "../../../../src/features/blogs/input-output-types/blog-types";
-import {OutputPostType} from "../../../../src/features/posts/input-output-types/post-types";
+import {OutputUserType} from "../../../../src/features/users/input-output-types/user-types";
+import {createUser, createUsers} from "../../../helpers/dataset-helpers/usersDatasets";
 
 describe('DELETE /posts', () => {
     beforeAll(async () => {
@@ -18,30 +19,26 @@ describe('DELETE /posts', () => {
     beforeEach(async () => {
         await clearTestDB()
     })
-    it('- DELETE posts unauthorized: STATUS 401', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+    it('- DELETE user unauthorized: STATUS 401', async () => {
+        const user: OutputUserType = await createUser()
 
         await req
-            .delete(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
+            .delete(`${SETTINGS.PATH.USERS}/${user.id}`)
             .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.FAKE_AUTH)}`)
             .expect(HTTP_CODES.UNAUTHORIZED)
     })
-    it('- DELETE posts with incorrect input id: STATUS 404', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
-
+    it('- DELETE user with incorrect input id: STATUS 404', async () => {
         await req
-            .delete(`${SETTINGS.PATH.POSTS}/${new ObjectId()}`)
+            .delete(`${SETTINGS.PATH.USERS}/${new ObjectId()}`)
             .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .expect(HTTP_CODES.NOT_FOUND)
     })
-    it('+ DELETE posts with correct input data: STATUS 204', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+    it('+ DELETE user with correct input data: STATUS 204', async () => {
+        const user: OutputUserType = await createUser()
+        console.log(user.id)
 
         await req
-            .delete(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
+            .delete(`${SETTINGS.PATH.USERS}/${user.id}`)
             .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .expect(HTTP_CODES.NO_CONTENT)
     })
