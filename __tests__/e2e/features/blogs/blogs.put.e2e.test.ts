@@ -2,19 +2,21 @@ import {req} from "../../../helpers/req"
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../../src/settings"
 import {InputBlogType} from "../../../../src/features/blogs/input-output-types/blog-types"
 import {encodeToBase64} from "../../../../src/common/helpers/auth-helpers"
-import {clearTestDB, closeTestDB, connectToTestDB} from "../../../test-db"
 import {createBlogs} from "../../../helpers/dataset-helpers/blogsDatasets"
 import {testSeeder} from "../../../testSeeder";
+import {MongoMemoryServer} from "mongodb-memory-server";
+import {db} from "../../../../src/db/mongo-db";
 
 describe('PUT /blogs', () => {
     beforeAll(async () => {
-        await connectToTestDB()
+        const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
+        await db.run(mongoServer.getUri())
     })
     afterAll(async () => {
-        await closeTestDB()
+        await db.stop()
     })
     beforeEach(async () => {
-        await clearTestDB()
+        await db.drop()
     })
     it('- PUT blogs unauthorized: STATUS 401', async () => {
         const blogs = await createBlogs()

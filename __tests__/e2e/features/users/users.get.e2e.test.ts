@@ -1,19 +1,21 @@
-import {clearTestDB, connectToTestDB, closeTestDB} from "../../../test-db"
 import {req} from "../../../helpers/req";
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../../src/settings";
 import {encodeToBase64} from "../../../../src/common/helpers/auth-helpers";
 import {createUsers} from "../../../helpers/dataset-helpers/usersDatasets";
 import {OutputUserType} from "../../../../src/features/users/input-output-types/user-types";
+import {MongoMemoryServer} from "mongodb-memory-server";
+import {db} from "../../../../src/db/mongo-db";
 
 describe('GET /users', () => {
     beforeAll(async () => {
-        await connectToTestDB()
+        const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
+        await db.run(mongoServer.getUri())
     })
     afterAll(async () => {
-        await closeTestDB()
+        await db.stop()
     })
     beforeEach(async () => {
-        await clearTestDB()
+        await db.drop()
     })
     it('- GET users unauthorized: STATUS 401', async () => {
         await req.get(SETTINGS.PATH.USERS)

@@ -2,19 +2,21 @@ import {req} from "../../../helpers/req"
 import {HTTP_CODES, SETTINGS} from "../../../../src/settings"
 import {encodeToBase64} from "../../../../src/common/helpers/auth-helpers"
 import {AUTH_DATA} from "../../../../src/settings"
-import {clearTestDB, closeTestDB, connectToTestDB} from "../../../test-db"
 import {InputUserType} from "../../../../src/features/users/input-output-types/user-types";
 import {testSeeder} from "../../../testSeeder";
+import {MongoMemoryServer} from "mongodb-memory-server";
+import {db} from "../../../../src/db/mongo-db";
 
 describe('POST /users', () => {
     beforeAll(async () => {
-        await connectToTestDB()
+        const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
+        await db.run(mongoServer.getUri())
     })
     afterAll(async () => {
-        await closeTestDB()
+        await db.stop()
     })
     beforeEach(async () => {
-        await clearTestDB()
+        await db.drop()
     })
     it('- POST user unauthorized: STATUS 401', async () => {
         const newUser: InputUserType = testSeeder.createUserDTO()

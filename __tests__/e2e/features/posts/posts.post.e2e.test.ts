@@ -4,19 +4,21 @@ import {InputPostType} from "../../../../src/features/posts/input-output-types/p
 import {encodeToBase64} from "../../../../src/common/helpers/auth-helpers"
 import {AUTH_DATA} from "../../../../src/settings"
 import {createBlogs} from "../../../helpers/dataset-helpers/blogsDatasets"
-import {clearTestDB, connectToTestDB, closeTestDB} from "../../../test-db"
 import {OutputBlogType} from "../../../../src/features/blogs/input-output-types/blog-types";
 import {testSeeder} from "../../../testSeeder";
+import {MongoMemoryServer} from "mongodb-memory-server";
+import {db} from "../../../../src/db/mongo-db";
 
 describe('POST /posts', () => {
     beforeAll(async () => {
-        await connectToTestDB()
+        const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
+        await db.run(mongoServer.getUri())
     })
     afterAll(async () => {
-        await closeTestDB()
+        await db.stop()
     })
     beforeEach(async () => {
-        await clearTestDB()
+        await db.drop()
     })
     it('- POST post unauthorized: STATUS 401', async () => {
         const blogs: OutputBlogType[] = await createBlogs()

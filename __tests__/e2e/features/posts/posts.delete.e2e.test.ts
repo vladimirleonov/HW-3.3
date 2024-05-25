@@ -3,20 +3,22 @@ import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../../src/settings"
 import {encodeToBase64} from "../../../../src/common/helpers/auth-helpers"
 import {createBlogs} from "../../../helpers/dataset-helpers/blogsDatasets"
 import {createPosts} from "../../../helpers/dataset-helpers/postsDatasets"
-import {clearTestDB, connectToTestDB, closeTestDB} from "../../../test-db"
 import {ObjectId} from "mongodb"
 import {OutputBlogType} from "../../../../src/features/blogs/input-output-types/blog-types";
 import {OutputPostType} from "../../../../src/features/posts/input-output-types/post-types";
+import {MongoMemoryServer} from "mongodb-memory-server";
+import {db} from "../../../../src/db/mongo-db";
 
 describe('DELETE /posts', () => {
     beforeAll(async () => {
-        await connectToTestDB()
+        const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
+        await db.run(mongoServer.getUri())
     })
     afterAll(async () => {
-        await closeTestDB()
+        await db.stop()
     })
     beforeEach(async () => {
-        await clearTestDB()
+        await db.drop()
     })
     it('- DELETE posts unauthorized: STATUS 401', async () => {
         const blogs: OutputBlogType[] = await createBlogs()

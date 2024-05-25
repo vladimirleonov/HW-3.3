@@ -1,4 +1,5 @@
-import {blogCollection} from "../../../db/mongo-db"
+import {db} from "../../../db/mongo-db"
+//import {blogCollection, db} from "../../../db/mongo-db"
 import {BlogDBType} from "../../../db/db-types/blog-db-types"
 import {OutputBlogsPaginationType, OutputBlogType} from "../input-output-types/blog-types"
 import {ObjectId} from "mongodb"
@@ -14,14 +15,14 @@ export const blogMongoQueryRepository = {
             ...searchFilter
         }
 
-        const blogs: BlogDBType[] = await blogCollection
+        const blogs: BlogDBType[] = await db.getCollections().blogCollection
             .find(filter)
             .sort(query.sortBy, query.sortDirection)
             .skip((query.pageNumber - 1) * query.pageSize)
             .limit(query.pageSize)
             .toArray()
 
-        const totalCount: number = await blogCollection.countDocuments(filter)
+        const totalCount: number = await db.getCollections().blogCollection.countDocuments(filter)
 
         return {
             pagesCount: Math.ceil(totalCount / query.pageSize),
@@ -32,7 +33,7 @@ export const blogMongoQueryRepository = {
         }
     },
     async findForOutputById(id: string): Promise<{error?: string, blog?: OutputBlogType}> {
-        const blog: BlogDBType | null = await blogCollection.findOne({_id: new ObjectId(id)})
+        const blog: BlogDBType | null = await db.getCollections().blogCollection.findOne({_id: new ObjectId(id)})
         if (!blog) {
             return {error: 'Post not found'}
         }

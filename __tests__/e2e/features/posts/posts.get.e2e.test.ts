@@ -1,21 +1,23 @@
 import {req} from "../../../helpers/req"
 import {SETTINGS} from "../../../../src/settings"
-import {clearTestDB, connectToTestDB, closeTestDB} from "../../../test-db"
 import {createBlogs} from "../../../helpers/dataset-helpers/blogsDatasets"
 import {createPosts} from "../../../helpers/dataset-helpers/postsDatasets"
 import {ObjectId} from "mongodb"
 import {OutputPostType} from "../../../../src/features/posts/input-output-types/post-types";
 import {OutputBlogType} from "../../../../src/features/blogs/input-output-types/blog-types";
+import {MongoMemoryServer} from "mongodb-memory-server";
+import {db} from "../../../../src/db/mongo-db";
 
 describe('GET /posts', () => {
     beforeAll(async () => {
-        await connectToTestDB()
+        const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
+        await db.run(mongoServer.getUri())
     })
     afterAll(async () => {
-        await closeTestDB()
+        await db.stop()
     })
     beforeEach(async () => {
-        await clearTestDB()
+        await db.drop()
     })
     //posts
     it('+ GET posts empty array', async () => {

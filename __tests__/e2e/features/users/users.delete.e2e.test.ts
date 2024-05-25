@@ -1,23 +1,22 @@
 import {req} from "../../../helpers/req"
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../../src/settings"
 import {encodeToBase64} from "../../../../src/common/helpers/auth-helpers"
-import {createBlogs} from "../../../helpers/dataset-helpers/blogsDatasets"
-import {createPosts} from "../../../helpers/dataset-helpers/postsDatasets"
-import {postCollection, blogCollection} from "../../../../src/db/mongo-db"
-import {clearTestDB, connectToTestDB, closeTestDB} from "../../../test-db"
 import {ObjectId} from "mongodb"
 import {OutputUserType} from "../../../../src/features/users/input-output-types/user-types";
-import {createUser, createUsers} from "../../../helpers/dataset-helpers/usersDatasets";
+import {createUser} from "../../../helpers/dataset-helpers/usersDatasets";
+import {MongoMemoryServer} from "mongodb-memory-server";
+import {db} from "../../../../src/db/mongo-db";
 
 describe('DELETE /posts', () => {
     beforeAll(async () => {
-        await connectToTestDB()
+        const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
+        await db.run(mongoServer.getUri())
     })
     afterAll(async () => {
-        await closeTestDB()
+        await db.stop()
     })
     beforeEach(async () => {
-        await clearTestDB()
+        await db.drop()
     })
     it('- DELETE user unauthorized: STATUS 401', async () => {
         const user: OutputUserType = await createUser()
