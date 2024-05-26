@@ -1,7 +1,7 @@
 import {req} from "../../../helpers/req"
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../../src/settings"
 import {InputBlogType} from "../../../../src/features/blogs/input-output-types/blog-types"
-import {encodeToBase64} from "../../../../src/common/helpers/auth-helpers"
+import {base64Service} from "../../../../src/common/adapters/base64Service";
 import {createBlogs} from "../../../helpers/blog-helpers"
 import {testSeeder} from "../../../testSeeder";
 import {MongoMemoryServer} from "mongodb-memory-server";
@@ -25,7 +25,7 @@ describe('PUT /blogs', () => {
 
         await req
             .put(`${SETTINGS.PATH.BLOGS}/${blogs[1].id}`)
-            .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.FAKE_AUTH)}`)
+            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.FAKE_AUTH)}`)
             .send(blogForUpdate)
             .expect(HTTP_CODES.UNAUTHORIZED)
     })
@@ -40,7 +40,7 @@ describe('PUT /blogs', () => {
 
         await req
             .put(`${SETTINGS.PATH.BLOGS}/${blogs[0].id}`)
-            .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(blogDataForUpdate)
             .expect(HTTP_CODES.NO_CONTENT)
     })
@@ -54,7 +54,7 @@ describe('PUT /blogs', () => {
 
         const res = await req
             .put(`${SETTINGS.PATH.BLOGS}/${blogs[0].id}`)
-            .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(blogDataForUpdate)
             .expect(HTTP_CODES.BAD_REQUEST)
 
@@ -76,7 +76,7 @@ describe('PUT /blogs', () => {
 
         const res = await req
             .put(`${SETTINGS.PATH.BLOGS}/${blogs[0].id}`)
-            .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(blogDataForUpdate)
             .expect(HTTP_CODES.BAD_REQUEST)
 
@@ -98,7 +98,7 @@ describe('PUT /blogs', () => {
 
         const res = await req
             .put(`${SETTINGS.PATH.BLOGS}/${blogs[0].id}`)
-            .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(blogDataForUpdate)
             .expect(HTTP_CODES.BAD_REQUEST)
 
@@ -119,7 +119,7 @@ describe('PUT /blogs', () => {
 
         const res = await req
             .put(`${SETTINGS.PATH.BLOGS}/${blogs[0].id}`)
-            .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(blogDataForUpdate)
             .expect(HTTP_CODES.BAD_REQUEST)
 
@@ -141,7 +141,7 @@ describe('PUT /blogs', () => {
 
         const res = await req
             .put(`${SETTINGS.PATH.BLOGS}/${blogs[0].id}`)
-            .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(blogDataForUpdate)
             .expect(HTTP_CODES.BAD_REQUEST)
 
@@ -163,7 +163,7 @@ describe('PUT /blogs', () => {
 
         const res = await req
             .put(`${SETTINGS.PATH.BLOGS}/${blogs[0].id}`)
-            .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(blogDataForUpdate)
             .expect(HTTP_CODES.BAD_REQUEST)
 
@@ -185,7 +185,7 @@ describe('PUT /blogs', () => {
 
         const res = await req
             .put(`${SETTINGS.PATH.BLOGS}/${blogs[0].id}`)
-            .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(blogDataForUpdate)
             .expect(HTTP_CODES.BAD_REQUEST)
 
@@ -207,7 +207,7 @@ describe('PUT /blogs', () => {
 
         const res = await req
             .put(`${SETTINGS.PATH.BLOGS}/${blogs[0].id}`)
-            .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(blogDataForUpdate)
             .expect(HTTP_CODES.BAD_REQUEST)
 
@@ -229,7 +229,7 @@ describe('PUT /blogs', () => {
 
         const res = await req
             .put(`${SETTINGS.PATH.BLOGS}/${blogs[0].id}`)
-            .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(blogDataForUpdate)
             .expect(HTTP_CODES.BAD_REQUEST)
 
@@ -252,7 +252,7 @@ describe('PUT /blogs', () => {
 
         const res = await req
             .put(`${SETTINGS.PATH.BLOGS}/${blogs[0].id}`)
-            .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(blogDataForUpdate)
             .expect(HTTP_CODES.BAD_REQUEST)
 
@@ -274,7 +274,7 @@ describe('PUT /blogs', () => {
 
         const res = await req
             .put(`${SETTINGS.PATH.BLOGS}/${blogs[0].id}`)
-            .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(blogDataForUpdate)
             .expect(HTTP_CODES.BAD_REQUEST)
 

@@ -20,11 +20,11 @@ export const testSeeder = {
         return users
     },
     createBlogDTO() {
-      return {
-          name: 'name1',
-          description: 'description1',
-          websiteUrl: 'https://youtube.com'
-      }
+        return {
+            name: 'name1',
+            description: 'description1',
+            websiteUrl: 'https://youtube.com'
+        }
     },
     createPostDTO(blogId: string) {
         return {

@@ -1,14 +1,14 @@
 import { PostDbType } from "../../src/db/db-types/post-db-types"
 import {req} from "./req";
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../src/settings";
-import {encodeToBase64} from "../../src/common/helpers/auth-helpers";
+import {base64Service} from "../../src/common/adapters/base64Service";
 import {OutputBlogType} from "../../src/features/blogs/input-output-types/blog-types";
 import {OutputPostType} from "../../src/features/posts/input-output-types/post-types";
 
 export const createPost= async (blogId: string, count: number = 2): Promise<PostDbType> => {
     const res = await req
         .post(SETTINGS.PATH.POSTS)
-        .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+        .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
         .send({
             title: `title`,
             shortDescription: `shortDescription`,
@@ -28,7 +28,7 @@ export const createPosts= async (blogs: OutputBlogType[], count: number = 2): Pr
 
         const res = await req
             .post(SETTINGS.PATH.POSTS)
-            .set('authorization', `Basic ${encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send({
                 title: `title${i}`,
                 shortDescription: `shortDescription${i}`,

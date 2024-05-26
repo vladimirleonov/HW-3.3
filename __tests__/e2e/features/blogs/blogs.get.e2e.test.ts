@@ -115,7 +115,7 @@ describe('GET /blogs', () => {
         const blogs: OutputBlogType[] = await createBlogs(2)
         const posts: OutputPostType[] = await createPosts(blogs)
 
-        const blogId: string= blogs[0].id
+        const blogId: string = blogs[0].id
 
         const res = await req.get(`${SETTINGS.PATH.BLOGS}/${blogId}/posts`)
             .expect(HTTP_CODES.OK)
@@ -142,7 +142,7 @@ describe('GET /blogs', () => {
         const blogs: OutputBlogType[] = await createBlogs()
         const posts: OutputPostType[] = await createPosts(blogs)
 
-        const blogId: string= blogs[0].id
+        const blogId: string = blogs[0].id
 
         const res = await req.get(`${SETTINGS.PATH.BLOGS}/${blogId}/posts`)
             .query({sortBy: 'title', sortDirection: 'asc'})
@@ -165,7 +165,7 @@ describe('GET /blogs', () => {
         const blogs: OutputBlogType[] = await createBlogs()
         const posts: OutputPostType[] = await createPosts(blogs)
 
-        const blogId: string= blogs[0].id
+        const blogId: string = blogs[0].id
 
         const pageNumber: number = 2
         const pageSize: number = 4
