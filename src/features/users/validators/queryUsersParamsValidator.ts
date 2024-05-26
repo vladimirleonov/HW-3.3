@@ -5,7 +5,7 @@ import {
     sortDirectionQueryValidator, 
     pageNumberQueryValidator, 
     pageSizeQueryValidator 
-} from "../../../common/validators/defaultQueryParamsValidator"
+} from "../../../common/validators/queryParamValidators"
 
 export const queryUsersParamsValidator = [
     searchLoginTermQueryValidator,

@@ -14,10 +14,10 @@ export const blogService = {
 
         return await blogMongoRepository.create(newBlog)
     },
-    async deleteBlog(blogId: string) {
+    async deleteBlog(blogId: string): Promise<Boolean> {
         return blogMongoRepository.delete(blogId)
     },
-    async updateBlog(blogId: string, input: InputBlogType) {
+    async updateBlog(blogId: string, input: InputBlogType): Promise<Boolean> {
         return blogMongoRepository.update(blogId, input)
     }
 }
