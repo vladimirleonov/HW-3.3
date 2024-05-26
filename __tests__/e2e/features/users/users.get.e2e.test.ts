@@ -1,7 +1,7 @@
 import {req} from "../../../helpers/req";
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../../src/settings";
 import {encodeToBase64} from "../../../../src/common/helpers/auth-helpers";
-import {createUsers} from "../../../helpers/dataset-helpers/usersDatasets";
+import {createUsers} from "../../../helpers/user-helpers";
 import {OutputUserType} from "../../../../src/features/users/input-output-types/user-types";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import {db} from "../../../../src/db/mongo-db";

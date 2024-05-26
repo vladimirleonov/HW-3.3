@@ -1,8 +1,8 @@
-import {req} from "../req"
-import {HTTP_CODES, SETTINGS} from "../../../src/settings"
-import {encodeToBase64} from "../../../src/common/helpers/auth-helpers"
-import {AUTH_DATA} from "../../../src/settings"
-import {OutputUserType} from "../../../src/features/users/input-output-types/user-types";
+import {req} from "./req"
+import {HTTP_CODES, SETTINGS} from "../../src/settings"
+import {encodeToBase64} from "../../src/common/helpers/auth-helpers"
+import {AUTH_DATA} from "../../src/settings"
+import {OutputUserType} from "../../src/features/users/input-output-types/user-types";
 
 
 export const createUser = async (): Promise<OutputUserType> => {

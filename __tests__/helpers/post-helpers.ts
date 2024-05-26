@@ -1,9 +1,9 @@
-import { PostDbType } from "../../../src/db/db-types/post-db-types"
-import {req} from "../req";
-import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings";
-import {encodeToBase64} from "../../../src/common/helpers/auth-helpers";
-import {OutputBlogType} from "../../../src/features/blogs/input-output-types/blog-types";
-import {OutputPostType} from "../../../src/features/posts/input-output-types/post-types";
+import { PostDbType } from "../../src/db/db-types/post-db-types"
+import {req} from "./req";
+import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../src/settings";
+import {encodeToBase64} from "../../src/common/helpers/auth-helpers";
+import {OutputBlogType} from "../../src/features/blogs/input-output-types/blog-types";
+import {OutputPostType} from "../../src/features/posts/input-output-types/post-types";
 
 export const createPost= async (blogId: string, count: number = 2): Promise<PostDbType> => {
     const res = await req

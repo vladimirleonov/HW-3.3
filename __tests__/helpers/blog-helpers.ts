@@ -1,7 +1,7 @@
-import {OutputBlogType} from "../../../src/features/blogs/input-output-types/blog-types";
-import {req} from "../req";
-import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings";
-import {encodeToBase64} from "../../../src/common/helpers/auth-helpers";
+import {OutputBlogType} from "../../src/features/blogs/input-output-types/blog-types";
+import {req} from "./req";
+import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../src/settings";
+import {encodeToBase64} from "../../src/common/helpers/auth-helpers";
 
 
 export const createBlog = async (count: number = 2): Promise<OutputBlogType> => {

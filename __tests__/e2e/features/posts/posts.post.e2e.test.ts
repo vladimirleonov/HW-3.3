@@ -3,7 +3,7 @@ import {HTTP_CODES, SETTINGS} from "../../../../src/settings"
 import {InputPostType} from "../../../../src/features/posts/input-output-types/post-types"
 import {encodeToBase64} from "../../../../src/common/helpers/auth-helpers"
 import {AUTH_DATA} from "../../../../src/settings"
-import {createBlogs} from "../../../helpers/dataset-helpers/blogsDatasets"
+import {createBlogs} from "../../../helpers/blog-helpers"
 import {OutputBlogType} from "../../../../src/features/blogs/input-output-types/blog-types";
 import {testSeeder} from "../../../testSeeder";
 import {MongoMemoryServer} from "mongodb-memory-server";
