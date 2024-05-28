@@ -11,6 +11,8 @@ export const authService = {
             return {error: generateErrorMessage('password', 'Wrong login or password')}
         }
 
+
+
         return {success: true}
     }
 }
