@@ -1,6 +1,5 @@
 import {PostDbType} from "../../../db/db-types/post-db-types"
 import {InputPostType} from "../input-output-types/post-types"
-//import {db, postCollection} from "../../../db/mongo-db"
 import {db} from "../../../db/mongo-db"
 import {DeleteResult, InsertOneResult, ObjectId, UpdateResult} from "mongodb"
 
@@ -23,12 +22,6 @@ export const postMongoRepository = {
                 }
             }
         )
-
-        // if (updatedInfo.matchedCount === 0) {
-        //     return {error: "Post not found"}
-        // }
-        //
-        // return {id: id.toString()}
 
         return updatedInfo.matchedCount === 1
     },

@@ -1,5 +1,4 @@
 import {db} from "../../../db/mongo-db"
-//import {blogCollection, db} from "../../../db/mongo-db"
 import {BlogDBType} from "../../../db/db-types/blog-db-types"
 import {OutputBlogsPaginationType, OutputBlogType} from "../input-output-types/blog-types"
 import {ObjectId} from "mongodb"

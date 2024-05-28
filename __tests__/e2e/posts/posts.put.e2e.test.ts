@@ -1,15 +1,14 @@
-import {req} from "../../../helpers/req"
-import {HTTP_CODES, SETTINGS} from "../../../../src/settings"
-import {InputPostType} from "../../../../src/features/posts/input-output-types/post-types"
-import {AUTH_DATA} from "../../../../src/settings"
-import {createBlogs} from "../../../helpers/blog-helpers"
-import {OutputBlogType} from "../../../../src/features/blogs/input-output-types/blog-types";
-import {testSeeder} from "../../../testSeeder";
+import {req} from "../../helpers/req"
+import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings"
+import {InputPostType, OutputPostType} from "../../../src/features/posts/input-output-types/post-types"
+import {base64Service} from "../../../src/common/adapters/base64Service";
+import {createBlogs} from "../../helpers/blog-helpers"
+import {createPosts} from "../../helpers/post-helpers"
+import {OutputBlogType} from "../../../src/features/blogs/input-output-types/blog-types";
 import {MongoMemoryServer} from "mongodb-memory-server";
-import {db} from "../../../../src/db/mongo-db";
-import {base64Service} from "../../../../src/common/adapters/base64Service";
+import {db} from "../../../src/db/mongo-db";
 
-describe('POST /posts', () => {
+describe('PUT /posts', () => {
     beforeAll(async () => {
         const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
         await db.run(mongoServer.getUri())
@@ -20,12 +19,13 @@ describe('POST /posts', () => {
     beforeEach(async () => {
         await db.drop()
     })
-    it('- POST post unauthorized: STATUS 401', async () => {
+    it('- PUT post unauthorized: STATUS 401', async () => {
         const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
-        const blogId = blogs[0].id
+        const blogId: string = blogs[0].id.toString()
 
-        const newPost: InputPostType = {
+        const postForUpdating: InputPostType = {
             title: 'title2',
             shortDescription: 'shortDescription2',
             content: 'content2',
@@ -33,70 +33,46 @@ describe('POST /posts', () => {
         }
 
         await req
-            .post(SETTINGS.PATH.POSTS)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.FAKE_AUTH)}`)
-            .send(newPost)
-            .expect(401)
+            .send(postForUpdating)
+            .expect(HTTP_CODES.UNAUTHORIZED)
     })
-    it('+ POST post with correct input data: STATUS 201', async () => {
+    it('+ PUT post with correct input data: STATUS 204', async () => {
         const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
-        const blogId: string = blogs[0].id
+        const blogId: string = blogs[0].id.toString()
 
-        const newPost: InputPostType = testSeeder.createPostDTO(blogId)
+        const postForUpdating: InputPostType = {
+            title: 'title2',
+            shortDescription: 'shortDescription2',
+            content: 'content2',
+            blogId: blogId
+        }
 
-        const res = await req
-            .post(SETTINGS.PATH.POSTS)
+        await req
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
-            .send(newPost)
-            .expect(HTTP_CODES.CREATED)
-
-        expect(res.body.title).toEqual(newPost.title)
-        expect(res.body.shortDescription).toEqual(newPost.shortDescription)
-        expect(res.body.content).toEqual(newPost.content)
-        expect(res.body.blogId).toEqual(newPost.blogId)
-        expect(res.body.blogName).toEqual(blogs[0].name)
+            .send(postForUpdating)
+            .expect(HTTP_CODES.NO_CONTENT)
     })
-    it('- POST post when title not passed: STATUS 400', async () => {
+    it('- PUT post when title not passed', async () => {
         const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
-        const blogId = blogs[0].id
+        const blogId: string = blogs[0].id.toString()
 
-        const newPost: any = {
+        const postForUpdating: any = {
             shortDescription: 'shortDescription2',
             content: 'content2',
             blogId: blogId
         }
 
         const res = await req
-            .post(SETTINGS.PATH.POSTS)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
-            .send(newPost)
-            .expect(400)
-
-        expect(res.body.errorsMessages[0]).toEqual(
-            {
-                field: 'title',
-                message: 'title is missing or not a string'
-            }
-        )
-    })
-    it('- POST post when title is not a string: STATUS 400', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-
-        const blogId = blogs[0].id
-
-        const newPost: InputPostType = {
-            title: 123 as any,
-            shortDescription: 'shortDescription2',
-            content: 'content2',
-            blogId: blogId
-        }
-
-        const res = await req
-            .post(SETTINGS.PATH.POSTS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
-            .send(newPost)
+            .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
 
         expect(res.body.errorsMessages[0]).toEqual(
@@ -106,12 +82,39 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST post with incorrect title length: STATUS 400', async () => {
+    it('- PUT post when title is not a string: STATUS 400', async () => {
         const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
-        const blogId = blogs[0].id
+        const blogId: string = blogs[0].id.toString()
 
-        const newPost: InputPostType = {
+        const postForUpdating: InputPostType = {
+            title: 123 as any,
+            shortDescription: 'shortDescription2',
+            content: 'content2',
+            blogId: blogId
+        }
+
+        const res = await req
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
+            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .send(postForUpdating)
+            .expect(HTTP_CODES.BAD_REQUEST)
+
+        expect(res.body.errorsMessages[0]).toEqual(
+            {
+                field: 'title',
+                message: 'title is missing or not a string'
+            }
+        )
+    })
+    it('- PUT post when title is too long: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
+
+        const blogId: string = blogs[0].id.toString()
+
+        const postForUpdating: InputPostType = {
             title: 'title2'.repeat(10),
             shortDescription: 'shortDescription2',
             content: 'content2',
@@ -119,9 +122,9 @@ describe('POST /posts', () => {
         }
 
         const res = await req
-            .post(SETTINGS.PATH.POSTS)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
-            .send(newPost)
+            .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
 
         expect(res.body.errorsMessages[0]).toEqual(
@@ -131,21 +134,22 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST post when shortDescription not passed: STATUS 400', async () => {
+    it('- PUT post when shortDescription not passed: STATUS 400', async () => {
         const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
-        const blogId = blogs[0].id
+        const blogId: string = blogs[0].id.toString()
 
-        const newPost: any = {
+        const postForUpdating: any = {
             title: "title2",
             content: 'content2',
             blogId: blogId
         }
 
         const res = await req
-            .post(SETTINGS.PATH.POSTS)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
-            .send(newPost)
+            .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
 
         expect(res.body.errorsMessages[0]).toEqual(
@@ -155,12 +159,13 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST post when shortDescription is not a string: STATUS 400', async () => {
+    it('- PUT post when shortDescription is not a string: STATUS 400', async () => {
         const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
-        const blogId = blogs[0].id
+        const blogId: string = blogs[0].id.toString()
 
-        const newPost: InputPostType = {
+        const postForUpdating: InputPostType = {
             title: "title2",
             shortDescription: 123 as any,
             content: 'content2',
@@ -168,9 +173,9 @@ describe('POST /posts', () => {
         }
 
         const res = await req
-            .post(SETTINGS.PATH.POSTS)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
-            .send(newPost)
+            .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
 
         expect(res.body.errorsMessages[0]).toEqual(
@@ -180,12 +185,13 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST post with incorrect shortDescription length: STATUS 400', async () => {
+    it('- PUT post when shortDescription is too long: STATUS 400', async () => {
         const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
-        const blogId = blogs[0].id
+        const blogId: string = blogs[0].id.toString()
 
-        const newPost: InputPostType = {
+        const postForUpdating: InputPostType = {
             title: 'title2',
             shortDescription: 'shortDescription2'.repeat(10),
             content: 'content2',
@@ -193,9 +199,9 @@ describe('POST /posts', () => {
         }
 
         const res = await req
-            .post(SETTINGS.PATH.POSTS)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
-            .send(newPost)
+            .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
 
         expect(res.body.errorsMessages[0]).toEqual(
@@ -205,21 +211,22 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST post when content not passed: STATUS 400', async () => {
+    it('- PUT post when content not passed: STATUS 400', async () => {
         const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
-        const blogId = blogs[0].id
+        const blogId: string = blogs[0].id.toString()
 
-        const newPost: any = {
+        const postForUpdating: any = {
             title: "title2",
-            shortDescription: 'shortDescription2',
+            shortDescription: "shortDescription2",
             blogId: blogId
         }
 
         const res = await req
-            .post(SETTINGS.PATH.POSTS)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
-            .send(newPost)
+            .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
 
         expect(res.body.errorsMessages[0]).toEqual(
@@ -229,22 +236,23 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST post when content is not a string: STATUS 400', async () => {
+    it('- PUT post when content is not a string: STATUS 400', async () => {
         const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
-        const blogId = blogs[0].id
+        const blogId: string = blogs[0].id.toString()
 
-        const newPost: InputPostType = {
+        const postForUpdating: InputPostType = {
             title: "title2",
-            shortDescription: 'shortDescription2',
+            shortDescription: "shortDescription2",
             content: 123 as any,
             blogId: blogId
         }
 
         const res = await req
-            .post(SETTINGS.PATH.POSTS)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
-            .send(newPost)
+            .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
 
         expect(res.body.errorsMessages[0]).toEqual(
@@ -254,12 +262,13 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST post with incorrect content length: STATUS 400', async () => {
+    it('- PUT post when content is too long: STATUS 400', async () => {
         const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
 
-        const blogId = blogs[0].id
+        const blogId: string = blogs[0].id.toString()
 
-        const newPost: InputPostType = {
+        const postForUpdating: InputPostType = {
             title: 'title2',
             shortDescription: 'shortDescription2',
             content: 'content2'.repeat(130),
@@ -267,9 +276,9 @@ describe('POST /posts', () => {
         }
 
         const res = await req
-            .post(SETTINGS.PATH.POSTS)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
-            .send(newPost)
+            .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
 
         expect(res.body.errorsMessages[0]).toEqual(
@@ -279,17 +288,20 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST post when blogId not passed: STATUS 400', async () => {
-        const newPost: any = {
-            title: 'title2',
-            shortDescription: 'shortDescription2',
-            content: 'content2',
+    it('- PUT post when blogId not passed: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
+
+        const postForUpdating: any = {
+            title: "title2",
+            shortDescription: "shortDescription2",
+            content: "content2",
         }
 
         const res = await req
-            .post(SETTINGS.PATH.POSTS)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
-            .send(newPost)
+            .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
 
         expect(res.body.errorsMessages[0]).toEqual(
@@ -299,18 +311,21 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST post when blogId is not a string: STATUS 400', async () => {
-        const newPost: InputPostType = {
-            title: 'title2',
-            shortDescription: 'shortDescription2',
-            content: 'content2',
+    it('- PUT post when blogId is not a string: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
+
+        const postForUpdating: InputPostType = {
+            title: "title2",
+            shortDescription: "shortDescription2",
+            content: "content2",
             blogId: 123 as any
         }
 
         const res = await req
-            .post(SETTINGS.PATH.POSTS)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
-            .send(newPost)
+            .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
 
         expect(res.body.errorsMessages[0]).toEqual(
@@ -320,8 +335,11 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST post when blogId is invalid: STATUS 400', async () => {
-        const newPost: InputPostType = {
+    it('- PUT post when blogId is invalid: STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
+
+        const postForUpdating: InputPostType = {
             title: 'title2',
             shortDescription: 'shortDescription2',
             content: 'content2',
@@ -329,9 +347,9 @@ describe('POST /posts', () => {
         }
 
         const res = await req
-            .post(SETTINGS.PATH.POSTS)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
-            .send(newPost)
+            .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
 
         expect(res.body.errorsMessages[0]).toEqual(
@@ -341,18 +359,21 @@ describe('POST /posts', () => {
             }
         )
     })
-    it('- POST post with incorrect data (first errors): STATUS 400', async () => {
-        const newPost: any = {
+    it('- PUT post with incorrect data (first errors): STATUS 400', async () => {
+        const blogs: OutputBlogType[] = await createBlogs()
+        const posts: OutputPostType[] = await createPosts(blogs)
+
+        const postForUpdating: InputPostType = {
             title: "",
             shortDescription: 123 as any,
             content: 123 as any,
-            blogId: 123
+            blogId: 123 as any
         }
 
         const res = await req
-            .post(SETTINGS.PATH.POSTS)
+            .put(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
             .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
-            .send(newPost)
+            .send(postForUpdating)
             .expect(HTTP_CODES.BAD_REQUEST)
 
         expect(res.body.errorsMessages).toEqual([

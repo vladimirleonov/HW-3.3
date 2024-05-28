@@ -5,6 +5,7 @@ import {base64Service} from "../../src/common/adapters/base64Service";
 import {OutputBlogType} from "../../src/features/blogs/input-output-types/blog-types";
 import {OutputPostType} from "../../src/features/posts/input-output-types/post-types";
 
+
 export const createPost= async (blogId: string, count: number = 2): Promise<PostDbType> => {
     const res = await req
         .post(SETTINGS.PATH.POSTS)

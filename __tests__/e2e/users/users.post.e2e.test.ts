@@ -1,11 +1,11 @@
-import {req} from "../../../helpers/req"
-import {HTTP_CODES, SETTINGS} from "../../../../src/settings"
-import {base64Service} from "../../../../src/common/adapters/base64Service";
-import {AUTH_DATA} from "../../../../src/settings"
-import {InputUserType} from "../../../../src/features/users/input-output-types/user-types";
-import {testSeeder} from "../../../testSeeder";
+import {req} from "../../helpers/req"
+import {HTTP_CODES, SETTINGS} from "../../../src/settings"
+import {base64Service} from "../../../src/common/adapters/base64Service";
+import {AUTH_DATA} from "../../../src/settings"
+import {InputUserType} from "../../../src/features/users/input-output-types/user-types";
+import {testSeeder} from "../../testSeeder";
 import {MongoMemoryServer} from "mongodb-memory-server";
-import {db} from "../../../../src/db/mongo-db";
+import {db} from "../../../src/db/mongo-db";
 
 describe('POST /users', () => {
     beforeAll(async () => {

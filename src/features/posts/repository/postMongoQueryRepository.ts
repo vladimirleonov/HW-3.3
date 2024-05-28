@@ -1,6 +1,5 @@
 import {PostDbType} from "../../../db/db-types/post-db-types"
 import {OutputPostPaginationType, OutputPostType} from "../input-output-types/post-types"
-//import {postCollection} from "../../../db/mongo-db"
 import {ObjectId} from "mongodb"
 
 import {SanitizedDefaultQueryParamsType} from "../../../common/helpers/queryParamsSanitizer";

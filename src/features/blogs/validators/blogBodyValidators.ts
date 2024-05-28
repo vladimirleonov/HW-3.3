@@ -26,17 +26,3 @@ export const blogBodyValidator = [
     blogDescriptionInputValidator,
     blogWebsiteUrlInputValidator
 ]
-
-
-// blogId param validator
-
-// export const validateBlogId = async (blogId: string) => {
-//     const blog: BlogDBType | null = await blogMongoQueryRepository.findById(new ObjectId(blogId))
-//     if (!blog) {
-//         throw new Error('Blog not found')
-//     }
-//     return blogId === blog._id.toString()
-// }
-//
-// export const blogIdParamValidator = param('blogId')
-//     .custom(validateBlogId)

@@ -9,12 +9,10 @@ import {postMongoQueryRepository} from "../../posts/repository/postMongoQueryRep
 export const createBlogPostController = async (req: Request<InputBlogIdParamType, OutputPostType, InputBlogPostType>, res: Response<OutputPostType>) => {
     try {
         const createdInfo = await postService.createBlogPost(req.body, req.params.blogId);
-        //? error
         if(createdInfo.error) {
             res.status(HTTP_CODES.NOT_FOUND)
         }
 
-        //? !
         const foundInfo = await postMongoQueryRepository.findForOutputById(createdInfo.id!)
 
         res.status(HTTP_CODES.CREATED).send(foundInfo.post)

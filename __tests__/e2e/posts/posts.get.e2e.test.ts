@@ -1,12 +1,12 @@
-import {req} from "../../../helpers/req"
-import {SETTINGS} from "../../../../src/settings"
-import {createBlogs} from "../../../helpers/blog-helpers"
-import {createPosts} from "../../../helpers/post-helpers"
+import {req} from "../../helpers/req"
+import {SETTINGS} from "../../../src/settings"
+import {createBlogs} from "../../helpers/blog-helpers"
+import {createPosts} from "../../helpers/post-helpers"
 import {ObjectId} from "mongodb"
-import {OutputPostType} from "../../../../src/features/posts/input-output-types/post-types";
-import {OutputBlogType} from "../../../../src/features/blogs/input-output-types/blog-types";
+import {OutputPostType} from "../../../src/features/posts/input-output-types/post-types";
+import {OutputBlogType} from "../../../src/features/blogs/input-output-types/blog-types";
 import {MongoMemoryServer} from "mongodb-memory-server";
-import {db} from "../../../../src/db/mongo-db";
+import {db} from "../../../src/db/mongo-db";
 
 describe('GET /posts', () => {
     beforeAll(async () => {

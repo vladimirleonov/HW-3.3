@@ -2,9 +2,8 @@ import {Request, Response} from "express";
 import {HTTP_CODES} from "../../../settings";
 import {LoginInputType} from "../input-output-types/auth-types";
 import {authService} from "../services/authService";
-import {ErrorsMessagesType} from "../../../common/helpers/generateErrorMessages";
 
-export const loginUserController = async (req: Request<{}, ErrorsMessagesType, LoginInputType>, res: Response) => {
+export const loginUserController = async (req: Request<{}, {}, LoginInputType>, res: Response) => {
     try {
         const result = await authService.login(req.body)
         if (result.error) {

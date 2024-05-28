@@ -1,10 +1,10 @@
-import {req} from "../../../helpers/req";
-import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../../src/settings";
-import {base64Service} from "../../../../src/common/adapters/base64Service";
-import {createUsers} from "../../../helpers/user-helpers";
-import {OutputUserType} from "../../../../src/features/users/input-output-types/user-types";
+import {req} from "../../helpers/req";
+import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings";
+import {base64Service} from "../../../src/common/adapters/base64Service";
+import {createUsers} from "../../helpers/user-helpers";
+import {OutputUserType} from "../../../src/features/users/input-output-types/user-types";
 import {MongoMemoryServer} from "mongodb-memory-server";
-import {db} from "../../../../src/db/mongo-db";
+import {db} from "../../../src/db/mongo-db";
 
 describe('GET /users', () => {
     beforeAll(async () => {

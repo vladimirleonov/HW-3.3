@@ -1,11 +1,11 @@
-import {req} from "../../../helpers/req"
-import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../../src/settings"
-import {InputBlogType} from "../../../../src/features/blogs/input-output-types/blog-types"
-import {base64Service} from "../../../../src/common/adapters/base64Service";
-import {createBlogs} from "../../../helpers/blog-helpers"
-import {testSeeder} from "../../../testSeeder";
+import {req} from "../../helpers/req"
+import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings"
+import {InputBlogType} from "../../../src/features/blogs/input-output-types/blog-types"
+import {base64Service} from "../../../src/common/adapters/base64Service";
+import {createBlogs} from "../../helpers/blog-helpers"
+import {testSeeder} from "../../testSeeder";
 import {MongoMemoryServer} from "mongodb-memory-server";
-import {db} from "../../../../src/db/mongo-db";
+import {db} from "../../../src/db/mongo-db";
 
 describe('PUT /blogs', () => {
     beforeAll(async () => {
@@ -18,7 +18,7 @@ describe('PUT /blogs', () => {
     beforeEach(async () => {
         await db.drop()
     })
-    it('- PUT blogs unauthorized: STATUS 401', async () => {
+    it('- PUT blog unauthorized: STATUS 401', async () => {
         const blogs = await createBlogs()
 
         const blogForUpdate = testSeeder.createBlogDTO()
@@ -29,7 +29,7 @@ describe('PUT /blogs', () => {
             .send(blogForUpdate)
             .expect(HTTP_CODES.UNAUTHORIZED)
     })
-    it('+ PUT blogs with correct input data: STATUS 204', async () => {
+    it('+ PUT blog with correct input data: STATUS 204', async () => {
         const blogs = await createBlogs()
 
         const blogDataForUpdate: InputBlogType = {
@@ -44,7 +44,7 @@ describe('PUT /blogs', () => {
             .send(blogDataForUpdate)
             .expect(HTTP_CODES.NO_CONTENT)
     })
-    it('- PUT blogs when name not passed: STATUS 400', async () => {
+    it('- PUT blog when name not passed: STATUS 400', async () => {
         const blogs = await createBlogs()
 
         const blogDataForUpdate: any = {
@@ -65,7 +65,7 @@ describe('PUT /blogs', () => {
             }
         )
     })
-    it('- PUT blogs when name is not a string: STATUS 400', async () => {
+    it('- PUT blog when name is not a string: STATUS 400', async () => {
         const blogs = await createBlogs()
 
         const blogDataForUpdate: InputBlogType = {
@@ -87,7 +87,7 @@ describe('PUT /blogs', () => {
             }
         )
     })
-    it('- PUT blogs with incorrect name length: STATUS 400', async () => {
+    it('- PUT blog with incorrect name length: STATUS 400', async () => {
         const blogs = await createBlogs()
 
         const blogDataForUpdate: InputBlogType = {
@@ -109,7 +109,7 @@ describe('PUT /blogs', () => {
             }
         )
     })
-    it('- PUT blogs when description is not passed: STATUS 400', async () => {
+    it('- PUT blog when description is not passed: STATUS 400', async () => {
         const blogs = await createBlogs()
 
         const blogDataForUpdate: any = {
@@ -130,7 +130,7 @@ describe('PUT /blogs', () => {
             }
         )
     })
-    it('- PUT blogs when description is not a string: STATUS 400', async () => {
+    it('- PUT blog when description is not a string: STATUS 400', async () => {
         const blogs = await createBlogs()
 
         const blogDataForUpdate: InputBlogType = {
@@ -152,7 +152,7 @@ describe('PUT /blogs', () => {
             }
         )
     })
-    it('- PUT blogs with incorrect description length: STATUS 400', async () => {
+    it('- PUT blog with incorrect description length: STATUS 400', async () => {
         const blogs = await createBlogs()
 
         const blogDataForUpdate: InputBlogType = {
@@ -175,7 +175,7 @@ describe('PUT /blogs', () => {
             }
         )
     })
-    it('- PUT blogs when websiteUrl not passed: STATUS 400', async () => {
+    it('- PUT blog when websiteUrl not passed: STATUS 400', async () => {
         const blogs = await createBlogs()
 
         const blogDataForUpdate: any = {
@@ -196,7 +196,7 @@ describe('PUT /blogs', () => {
             }
         )
     })
-    it('- PUT blogs when websiteUrl is not a string: STATUS 400', async () => {
+    it('- PUT blog when websiteUrl is not a string: STATUS 400', async () => {
         const blogs = await createBlogs()
 
         const blogDataForUpdate: InputBlogType = {
@@ -218,7 +218,7 @@ describe('PUT /blogs', () => {
             }
         )
     })
-    it('- PUT blogs with incorrect websiteUrl length: STATUS 400', async () => {
+    it('- PUT blog with incorrect websiteUrl length: STATUS 400', async () => {
         const blogs = await createBlogs()
 
         const blogDataForUpdate: InputBlogType = {
@@ -241,7 +241,7 @@ describe('PUT /blogs', () => {
             }
         )
     })
-    it('- PUT blogs with incorrect websiteUrl: STATUS 400', async () => {
+    it('- PUT blog with incorrect websiteUrl: STATUS 400', async () => {
         const blogs = await createBlogs()
 
         const blogDataForUpdate: InputBlogType = {
@@ -263,7 +263,7 @@ describe('PUT /blogs', () => {
             }
         )
     })
-    it('- PUT blogs with incorrect data (first errors): STATUS 400', async () => {
+    it('- PUT blog with incorrect data (first errors): STATUS 400', async () => {
         const blogs = await createBlogs()
 
         const blogDataForUpdate: InputBlogType = {

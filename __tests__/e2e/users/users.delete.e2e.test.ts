@@ -1,11 +1,11 @@
-import {req} from "../../../helpers/req"
-import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../../src/settings"
-import {base64Service} from "../../../../src/common/adapters/base64Service";
+import {req} from "../../helpers/req"
+import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings"
+import {base64Service} from "../../../src/common/adapters/base64Service";
 import {ObjectId} from "mongodb"
-import {OutputUserType} from "../../../../src/features/users/input-output-types/user-types";
-import {createUser} from "../../../helpers/user-helpers";
+import {OutputUserType} from "../../../src/features/users/input-output-types/user-types";
+import {createUser} from "../../helpers/user-helpers";
 import {MongoMemoryServer} from "mongodb-memory-server";
-import {db} from "../../../../src/db/mongo-db";
+import {db} from "../../../src/db/mongo-db";
 
 describe('DELETE /posts', () => {
     beforeAll(async () => {

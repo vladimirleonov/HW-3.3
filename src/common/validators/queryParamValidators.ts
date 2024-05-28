@@ -1,5 +1,3 @@
-// query param validator
-
 import {query} from "express-validator";
 
 export const sortByQueryValidator = query('sortBy')

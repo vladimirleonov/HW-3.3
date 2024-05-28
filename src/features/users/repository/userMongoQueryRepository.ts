@@ -1,4 +1,3 @@
-//import {userCollection} from "../../../db/mongo-db"
 import {SanitizedUsersQueryParamsType} from "../helpers/sanitizeUsersQueryParams";
 import {OutputUserPaginationType, OutputUserType} from "../input-output-types/user-types";
 import {UserDbType} from "../../../db/db-types/user-db-types";

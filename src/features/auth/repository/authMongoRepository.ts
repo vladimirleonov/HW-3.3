@@ -1,4 +1,3 @@
-//import {db, userCollection} from "../../../db/mongo-db";
 import {db} from "../../../db/mongo-db";
 import {UserDbType} from "../../../db/db-types/user-db-types";
 

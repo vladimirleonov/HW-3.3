@@ -1,5 +1,4 @@
 import {UserDbType} from "../../../db/db-types/user-db-types";
-//import {userCollection} from "../../../db/mongo-db";
 import {DeleteResult, InsertOneResult, ObjectId} from "mongodb";
 import {db} from "../../../db/mongo-db";
 

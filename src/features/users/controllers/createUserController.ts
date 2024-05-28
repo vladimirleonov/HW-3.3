@@ -13,7 +13,6 @@ export const createUserController = async (req: Request<{}, OutputUserType| Erro
             return
         }
 
-        //? !
         const foundInfo = await userMongoQueryRepository.findForOutputById(createdInfo.id!)
 
         res.status(HTTP_CODES.CREATED).send(foundInfo.user)
