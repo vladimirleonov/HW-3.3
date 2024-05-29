@@ -5,6 +5,9 @@ import {ObjectId} from "mongodb";
 
 export const commentMongoQueryRepository = {
     async findForOutputById (id: string): Promise<CommentOutputType | null> {
+        if(!this.isValidObjectId(id)) {
+            return null
+        }
         const comment: CommentDbType | null = await db.getCollections().commentCollection.findOne({_id: new ObjectId(id)})
         if (!comment) {
             return null
@@ -17,5 +20,8 @@ export const commentMongoQueryRepository = {
             id: _id.toString(),
             ...rest
         }
+    },
+    isValidObjectId(id: string): boolean {
+        return ObjectId.isValid(id)
     }
 }

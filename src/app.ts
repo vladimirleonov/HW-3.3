@@ -6,6 +6,7 @@ import {blogsRouter} from "./features/blogs"
 import {usersRouter} from "./features/users"
 import {testingRouter} from "./features/testing"
 import {authRouter} from "./features/auth"
+import {commentsRouter} from "./features/comments";
 
 const app: Express = express()
 
@@ -20,6 +21,7 @@ app.use(SETTINGS.PATH.AUTH, authRouter)
 app.use(SETTINGS.PATH.BLOGS, blogsRouter)
 app.use(SETTINGS.PATH.POSTS, postsRouter)
 app.use(SETTINGS.PATH.USERS, usersRouter)
+app.use(SETTINGS.PATH.COMMENTS, commentsRouter)
 app.use(SETTINGS.PATH.TESTING, testingRouter)
 
 
