@@ -3,6 +3,7 @@ import {SETTINGS} from "../settings"
 import {BlogDBType} from "./db-types/blog-db-types"
 import {PostDbType} from "./db-types/post-db-types";
 import {UserDbType} from "./db-types/user-db-types";
+import {CommentDbType} from "./db-types/comment-db-types";
 
 export const db = {
     client: {} as MongoClient,
@@ -51,7 +52,8 @@ export const db = {
         return {
             blogCollection: this.getDBName().collection<BlogDBType>(SETTINGS.BLOG_COLLECTION_NAME as string),
             postCollection: this.getDBName().collection<PostDbType>(SETTINGS.POST_COLLECTION_NAME as string),
-            userCollection: this.getDBName().collection<UserDbType>(SETTINGS.USER_COLLECTION_NAME as string)
+            userCollection: this.getDBName().collection<UserDbType>(SETTINGS.USER_COLLECTION_NAME as string),
+            commentCollection: this.getDBName().collection<CommentDbType>(SETTINGS.COMMENT_COLLECTION_NAME as string)
         }
     }
 }

@@ -29,7 +29,11 @@ export const postMongoRepository = {
         const deletedInfo: DeleteResult = await db.getCollections().postCollection.deleteOne({_id: new ObjectId(id)})
         return deletedInfo.deletedCount === 1
     },
-    async findById(id: ObjectId): Promise<PostDbType | null> {
-        return await db.getCollections().postCollection.findOne({_id: id})
+    async findById(id: string): Promise<PostDbType | null> {
+        if(!this.isValidObjectId(id)) return null
+        return await db.getCollections().postCollection.findOne({_id: new ObjectId(id)})
+    },
+    isValidObjectId(id: string): boolean {
+        return ObjectId.isValid(id)
     }
 }

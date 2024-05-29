@@ -1,3 +1,7 @@
+export type PostIdParamType = {
+    postId: string
+}
+
 export type InputPostType = {
     title: string
     shortDescription: string

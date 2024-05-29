@@ -3,7 +3,10 @@ import {DeleteResult, InsertOneResult, ObjectId} from "mongodb";
 import {db} from "../../../db/mongo-db";
 
 export const userMongoRepository = {
-    async findUserByField(field: string, value: string) {
+    async findUserById(id: string): Promise<UserDbType | null> {
+        return await db.getCollections().userCollection.findOne({_id: new ObjectId(id)})
+    },
+    async findUserByField(field: string, value: string): Promise<UserDbType | null> {
         return await db.getCollections().userCollection.findOne({[field]: value})
     },
     async create(newUser: UserDbType): Promise<string> {
