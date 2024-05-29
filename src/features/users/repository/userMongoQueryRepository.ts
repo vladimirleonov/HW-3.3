@@ -1,5 +1,9 @@
 import {SanitizedUsersQueryParamsType} from "../helpers/sanitizeUsersQueryParams";
-import {OutputUserPaginationType, OutputUserType} from "../input-output-types/user-types";
+import {
+    OutputUserPaginationType,
+    UserWithIdAndCreatedAtOutputType,
+    UserWithUserIdOutputType
+} from "../input-output-types/user-types";
 import {UserDbType} from "../../../db/db-types/user-db-types";
 import {ObjectId} from "mongodb";
 import {db} from "../../../db/mongo-db";
@@ -33,20 +37,34 @@ export const userMongoQueryRepository = {
             page: query.pageNumber,
             pageSize: query.pageSize,
             totalCount,
-            items: users.map((user: UserDbType) => this.mapToOutput(user))
+            items: users.map((user: UserDbType) => this.mapToOutputWithIdAndCreatedAt(user))
         }
     },
-    async findForOutputById(id: string): Promise<{error?: string, user?: OutputUserType}> {
+    async findForOutputById(id: string): Promise<{error?: string, user?: UserWithIdAndCreatedAtOutputType}> {
         const user: UserDbType | null = await db.getCollections().userCollection.findOne({_id: new ObjectId(id)})
         if (!user) {
             return {error: 'User not found'}
         }
-        return {user: this.mapToOutput(user)}
+        return {user: this.mapToOutputWithIdAndCreatedAt(user)}
     },
-    mapToOutput({_id, password, ...rest}: UserDbType): OutputUserType {
+    async findForOutputWithUserIdWithoutCreated(id: string): Promise<{error?: string, user?: UserWithUserIdOutputType}> {
+        const user: UserDbType | null = await db.getCollections().userCollection.findOne({_id: new ObjectId(id)})
+        //? check error
+        if (!user) {
+            return {error: 'User not found'}
+        }
+        return {user: this.mapToOutputWithUserIdWithoutCreated(user)}
+    },
+    mapToOutputWithIdAndCreatedAt({_id, password, ...rest}: UserDbType): UserWithIdAndCreatedAtOutputType {
         return {
             id: _id.toString(),
             ...rest
+        }
+    },
+    mapToOutputWithUserIdWithoutCreated({_id, password, createdAt, ...rest}: UserDbType): UserWithUserIdOutputType {
+        return {
+            ...rest,
+            userId: _id.toString(),
         }
     }
 }

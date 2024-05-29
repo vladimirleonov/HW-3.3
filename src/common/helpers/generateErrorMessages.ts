@@ -1,12 +1,5 @@
-type ErrorMessageType = {
-    field: string
-    message: string
-}
+import {ErrorsMessagesType} from "../types/errorsMessages";
 
-export type ErrorsMessagesType = {
-    errorsMessages: ErrorMessageType[]
-}
-
-export const generateErrorMessage = (field: string, message: string): ErrorsMessagesType => {
+export const generateErrorsMessages = (field: string, message: string): ErrorsMessagesType => {
     return { errorsMessages: [{ field, message }] };
 }

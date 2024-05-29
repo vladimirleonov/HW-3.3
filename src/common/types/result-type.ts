@@ -1,4 +1,4 @@
-enum ResultStatus {
+export enum ResultStatus {
     Success = 'Success',
     NotFound = 'NotFound',
     Forbidden = 'Forbidden',
@@ -6,9 +6,9 @@ enum ResultStatus {
     BadRequest = 'BadRequest',
 }
 
-export type Result <T = null> = {
+export type Result<T = null> = {
     status: ResultStatus,
     errorMessage?: string,
-    extensions?: [{field: 'id', message: ''}],
-    date: T
+    extensions?: [{field: string, message: string}],
+    data: T
 }
