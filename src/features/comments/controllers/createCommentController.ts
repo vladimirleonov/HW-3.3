@@ -9,7 +9,8 @@ import {ErrorsMessagesType} from "../../../common/types/errorsMessages";
 
 export const createCommentController = async (req: Request<PostIdParamType, CommentOutputType, CommentInputType>, res: Response<CommentOutputType|ErrorsMessagesType>) => {
     try {
-        const result: Result<string | null> = await commentService.createComment(req.params.postId, req.body, req.user.userId!);
+        // ? req.user?.userId!
+        const result: Result<string | null> = await commentService.createComment(req.params.postId, req.body, req.user?.userId!);
         if (result.status === ResultStatus.NotFound) {
             res.status(HTTP_CODES.NOT_FOUND).send()
             return

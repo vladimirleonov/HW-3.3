@@ -1,3 +1,8 @@
+export type CommentIdParamType = {
+    commentId: string
+}
+
+
 export type CommentInputType = {
     content: string
 }

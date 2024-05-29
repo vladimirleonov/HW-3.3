@@ -3,19 +3,19 @@ import {PostDbType} from "../../../db/db-types/post-db-types";
 import {Result, ResultStatus} from "../../../common/types/result-type";
 import {CommentDbType} from "../../../db/db-types/comment-db-types";
 import {ObjectId} from "mongodb";
-import {CommentInputType} from "../input-output-types/comment-types";
+import {CommentInputType, CommentOutputType} from "../input-output-types/comment-types";
 import {UserDbType} from "../../../db/db-types/user-db-types";
 import {userMongoRepository} from "../../users/repository/userMongoRepository";
 import {blogMongoRepository} from "../../blogs/repository/blogMongoRepository";
 import {commentMongoRepository} from "../repository/commentMongoRepository";
 
 export const commentService = {
-    async createComment (postId: string, input: CommentInputType, userId: string): Promise<Result<string | null>> {
+    async createComment(postId: string, input: CommentInputType, userId: string): Promise<Result<string | null>> {
         const post: PostDbType | null = await postMongoRepository.findById(postId)
-        if(!post) {
+        if (!post) {
             return {
                 status: ResultStatus.NotFound,
-                extensions: [{ field: 'post', message: "Post with specified postId doesn't exist"}],
+                extensions: [{field: 'post', message: "Post with specified postId doesn't exist"}],
                 data: null
             }
         }
@@ -25,7 +25,7 @@ export const commentService = {
         if (!user) {
             return {
                 status: ResultStatus.Unauthorized,
-                extensions: [{ field: 'user', message: "User doesn't exist"}],
+                extensions: [{field: 'user', message: "User doesn't exist"}],
                 data: null
             }
         }
@@ -46,6 +46,38 @@ export const commentService = {
         return {
             status: ResultStatus.Success,
             data: createdId
+        }
+    },
+    async deleteComment(id: string, userId: string): Promise<Result<null | boolean>> {
+        const isDeleted: boolean = await commentMongoRepository.delete(id)
+        if (!isDeleted) {
+            return {
+                status: ResultStatus.NotFound,
+                extensions: [{field: 'commentId', message: "User doesn't exist"}],
+                data: null
+            }
+        }
+
+        const comment: CommentDbType | null = await commentMongoRepository.findById(id)
+        if (!comment) {
+            return {
+                status: ResultStatus.NotFound,
+                extensions: [{field: 'userId', message: "Comment doesn't exist"}],
+                data: null
+            }
+        }
+
+        if (comment.commentatorInfo.userId !== userId) {
+            return {
+                status: ResultStatus.Forbidden,
+                extensions: [{field: 'userId', message: "It's not your comment"}],
+                data: null
+            }
+        }
+
+        return {
+            status: ResultStatus.Success,
+            data: true
         }
     }
 }
