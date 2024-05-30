@@ -47,7 +47,7 @@ export const userMongoQueryRepository = {
         }
         return {user: this.mapToOutputWithIdAndCreatedAt(user)}
     },
-    async findForOutputWithUserIdWithoutCreated(id: string): Promise<{error?: string, user?: UserWithUserIdOutputType}> {
+    async findForOutputWithUserIdWithoutCreatedAt(id: string): Promise<{error?: string, user?: UserWithUserIdOutputType}> {
         const user: UserDbType | null = await db.getCollections().userCollection.findOne({_id: new ObjectId(id)})
         //? check error
         if (!user) {

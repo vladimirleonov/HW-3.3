@@ -29,9 +29,5 @@ export const authService = {
             status: ResultStatus.Success,
             data: token
         }
-    },
-    async authMe(userId: string)  {
-        console.log("id", userId)
-
     }
 }

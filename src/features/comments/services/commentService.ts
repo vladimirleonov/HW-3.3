@@ -83,16 +83,8 @@ export const commentService = {
         }
     },
     async deleteComment(id: string, userId: string): Promise<Result> {
-        const isDeleted: boolean = await commentMongoRepository.delete(id)
-        if (!isDeleted) {
-            return {
-                status: ResultStatus.NotFound,
-                extensions: [{field: 'commentId', message: "User doesn't exist"}],
-                data: null
-            }
-        }
-
         const comment: CommentDbType | null = await commentMongoRepository.findById(id)
+        console.log(comment)
         if (!comment) {
             return {
                 status: ResultStatus.NotFound,
@@ -105,6 +97,14 @@ export const commentService = {
             return {
                 status: ResultStatus.Forbidden,
                 extensions: [{field: 'userId', message: "Comment doesn't belongs to user"}],
+                data: null
+            }
+        }
+
+        const isDeleted: boolean = await commentMongoRepository.delete(id)
+        if (!isDeleted) {
+            return {
+                status: ResultStatus.InternalError,
                 data: null
             }
         }

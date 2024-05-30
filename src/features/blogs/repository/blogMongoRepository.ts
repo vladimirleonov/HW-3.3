@@ -17,7 +17,6 @@ export const blogMongoRepository = {
     },
     async delete(id: string): Promise<boolean> {
         const deletedInfo: DeleteResult = await db.getCollections().blogCollection.deleteOne({_id: new ObjectId(id)})
-
         return deletedInfo.deletedCount === 1
     },
     async findById(id: string): Promise<BlogDBType | null> {

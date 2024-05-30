@@ -18,3 +18,11 @@ export type CommentOutputType = {
     commentatorInfo: commentatorInfoType,
     createdAt: string,
 }
+
+export type OutputCommentsPaginationType = {
+    pagesCount: number,
+    page: number,
+    pageSize: number,
+    totalCount: number,
+    items: CommentOutputType[]
+}

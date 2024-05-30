@@ -12,10 +12,13 @@ import {queryPostsParamsValidator} from "./validators/queryPostsParamsValidator"
 import {commentBodyValidator} from "../comments/validators/commentBodyValidator";
 import {bearerAuthMiddleware} from "../../common/middlewares/bearerAuthMiddleware";
 import {createCommentController} from "../comments/controllers/createCommentController";
+import {getPostCommentsController} from "../comments/controllers/getPostCommentsController";
+import {queryPostCommentsParamsValidator} from "../comments/validators/queryPostCommentsParamsValidator";
 
 export const postsRouter = Router()
 
 postsRouter.get('/', queryPostsParamsValidator, inputCheckErrorsMiddleware, getPostsController)
+postsRouter.get('/:postId/comments', queryPostCommentsParamsValidator, inputCheckErrorsMiddleware, getPostCommentsController)
 postsRouter.post('/', postInputValidator, basicMiddleware, inputCheckErrorsMiddleware, createPostController)
 postsRouter.post('/:postId/comments', commentBodyValidator, bearerAuthMiddleware, inputCheckErrorsMiddleware, createCommentController)
 postsRouter.get('/:id', idParamValidator, inputCheckErrorsMiddleware, getPostController)

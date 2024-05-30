@@ -10,7 +10,7 @@ export const authMeUserController = async (req: Request<{}, {}, AuthMeUserOutput
         return
     }
     //? result format from repository and naming in repository
-    const foundInfo = await userMongoQueryRepository.findForOutputWithUserIdWithoutCreated(req.user.userId!)
+    const foundInfo = await userMongoQueryRepository.findForOutputWithUserIdWithoutCreatedAt(req.user.userId!)
     //? check user
     res.status(HTTP_CODES.OK).send(foundInfo.user)
 }

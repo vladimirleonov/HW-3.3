@@ -5,6 +5,7 @@ import {InputUserType} from "../input-output-types/user-types";
 import {ObjectId} from "mongodb";
 import {ErrorsMessagesType} from "../../../common/types/errorsMessages";
 import {generateErrorsMessages} from "../../../common/helpers/generateErrorMessages";
+import {cryptoService} from "../../../common/adapters/cryptoService";
 
 export const userService = {
     async createUser (input: InputUserType): Promise<{id?: string, error?: ErrorsMessagesType}> {
@@ -25,7 +26,7 @@ export const userService = {
         }
 
         const saltRounds: number = 10
-        const hash: string = await bcrypt.hash(password, saltRounds)
+        const hash: string = await cryptoService.createHash(password, saltRounds)
 
         const newUser: UserDbType = {
             _id: new ObjectId(),
