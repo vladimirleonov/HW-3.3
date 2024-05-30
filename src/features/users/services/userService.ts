@@ -3,8 +3,8 @@ import {UserDbType} from "../../../db/db-types/user-db-types";
 import bcrypt from 'bcrypt'
 import {InputUserType} from "../input-output-types/user-types";
 import {ObjectId} from "mongodb";
-import {ErrorsMessagesType, generateErrorMessage} from "../../../common/helpers/generateErrorMessages";
-
+import {ErrorsMessagesType} from "../../../common/types/errorsMessages";
+import {generateErrorsMessages} from "../../../common/helpers/generateErrorMessages";
 
 export const userService = {
     async createUser (input: InputUserType): Promise<{id?: string, error?: ErrorsMessagesType}> {
@@ -17,11 +17,11 @@ export const userService = {
         ])
 
         if (foundUserByLogin) {
-            return {error: generateErrorMessage('login', 'login should be unique')}
+            return {error: generateErrorsMessages('login', 'login should be unique')}
         }
 
         if (foundUserByEmail) {
-            return {error: generateErrorMessage('email', 'email should be unique')}
+            return {error: generateErrorsMessages('email', 'email should be unique')}
         }
 
         const saltRounds: number = 10

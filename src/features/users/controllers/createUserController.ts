@@ -1,11 +1,11 @@
 import { Request, Response } from "express"
-import {InputUserType, OutputUserType} from "../input-output-types/user-types";
+import {InputUserType, UserWithIdAndCreatedAtOutputType} from "../input-output-types/user-types";
 import {userService} from "../services/userService";
 import {userMongoQueryRepository} from "../repository/userMongoQueryRepository";
 import {HTTP_CODES} from "../../../settings";
-import {ErrorsMessagesType} from "../../../common/helpers/generateErrorMessages";
+import {ErrorsMessagesType} from "../../../common/types/errorsMessages";
 
-export const createUserController = async (req: Request<{}, OutputUserType| ErrorsMessagesType, InputUserType>, res: Response<OutputUserType | ErrorsMessagesType>) => {
+export const createUserController = async (req: Request<{}, UserWithIdAndCreatedAtOutputType| ErrorsMessagesType, InputUserType>, res: Response<UserWithIdAndCreatedAtOutputType | ErrorsMessagesType>) => {
     try {
         const createdInfo = await userService.createUser(req.body)
         if (createdInfo.error) {

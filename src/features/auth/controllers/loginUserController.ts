@@ -9,7 +9,7 @@ export const loginUserController = async (req: Request<{}, LoginOutputType|Error
     try {
         const result: Result<string | null> = await authService.login(req.body)
         if (result.extensions && result.extensions.length > 0) {
-            res.status(HTTP_CODES.BAD_REQUEST).send({
+            res.status(HTTP_CODES.UNAUTHORIZED).send({
                 errorsMessages: [
                     result.extensions[0],
                 ]

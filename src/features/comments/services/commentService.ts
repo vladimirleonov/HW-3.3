@@ -3,10 +3,9 @@ import {PostDbType} from "../../../db/db-types/post-db-types";
 import {Result, ResultStatus} from "../../../common/types/result-type";
 import {CommentDbType} from "../../../db/db-types/comment-db-types";
 import {ObjectId} from "mongodb";
-import {CommentInputType, CommentOutputType} from "../input-output-types/comment-types";
+import {CommentInputType} from "../input-output-types/comment-types";
 import {UserDbType} from "../../../db/db-types/user-db-types";
 import {userMongoRepository} from "../../users/repository/userMongoRepository";
-import {blogMongoRepository} from "../../blogs/repository/blogMongoRepository";
 import {commentMongoRepository} from "../repository/commentMongoRepository";
 
 export const commentService = {
@@ -48,7 +47,42 @@ export const commentService = {
             data: createdId
         }
     },
-    async deleteComment(id: string, userId: string): Promise<Result<null | boolean>> {
+    async updateComment(id: string, input: CommentInputType, userId: string): Promise<Result> {
+        // ? можно делать в контроллере эту проверку? делать там лучш и здесь для работы с данными поста
+        // но нужен здесь для проверок
+        const comment: CommentDbType | null = await commentMongoRepository.findById(id)
+        if (!comment) {
+            return {
+                status: ResultStatus.NotFound,
+                extensions: [{field: 'comment', message: "Comment with id doesn't exist"}],
+                data: null
+            }
+        }
+
+        console.log("userId", userId)
+        console.log("comment.commentatorInfo.userId", comment.commentatorInfo.userId)
+        if (userId !== comment.commentatorInfo.userId) {
+            return {
+                status: ResultStatus.Forbidden,
+                extensions: [{field: 'user', message: "Comment doesn't belongs to user"}],
+                data: null
+            }
+        }
+
+        const isUpdated: boolean = await commentMongoRepository.update(id, input)
+        //? проверять !isUpdated или нет
+        if (!isUpdated) {
+            return {
+                status: ResultStatus.InternalError,
+                data: null
+            }
+        }
+        return {
+            status: ResultStatus.Success,
+            data: null
+        }
+    },
+    async deleteComment(id: string, userId: string): Promise<Result> {
         const isDeleted: boolean = await commentMongoRepository.delete(id)
         if (!isDeleted) {
             return {
@@ -70,14 +104,14 @@ export const commentService = {
         if (comment.commentatorInfo.userId !== userId) {
             return {
                 status: ResultStatus.Forbidden,
-                extensions: [{field: 'userId', message: "It's not your comment"}],
+                extensions: [{field: 'userId', message: "Comment doesn't belongs to user"}],
                 data: null
             }
         }
 
         return {
             status: ResultStatus.Success,
-            data: true
+            data: null
         }
     }
 }
