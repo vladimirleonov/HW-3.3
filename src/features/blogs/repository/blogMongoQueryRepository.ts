@@ -31,12 +31,16 @@ export const blogMongoQueryRepository = {
             items: blogs.map((blog: BlogDBType) => this.mapToOutput(blog))
         }
     },
-    async findForOutputById(id: string): Promise<{error?: string, blog?: OutputBlogType}> {
+    // async findForOutputById(id: string): Promise<{error?: string, blog?: OutputBlogType}> {
+    //     const blog: BlogDBType | null = await db.getCollections().blogCollection.findOne({_id: new ObjectId(id)})
+    //     if (!blog) {
+    //         return {error: 'Post not found'}
+    //     }
+    //     return {blog: this.mapToOutput(blog)}
+    // },
+    async findForOutputById(id: string): Promise<OutputBlogType | null> {
         const blog: BlogDBType | null = await db.getCollections().blogCollection.findOne({_id: new ObjectId(id)})
-        if (!blog) {
-            return {error: 'Post not found'}
-        }
-        return {blog: this.mapToOutput(blog)}
+        return blog ? this.mapToOutput(blog) : null
     },
     mapToOutput({_id, ...rest}: BlogDBType): OutputBlogType {
         return {

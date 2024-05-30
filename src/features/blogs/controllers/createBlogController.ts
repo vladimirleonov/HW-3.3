@@ -9,9 +9,10 @@ export const createBlogController = async (req: Request<{}, OutputBlogType, Inpu
     try {
         const result: Result<string> = await blogService.createBlog(req.body)
 
-        const foundInfo= await blogMongoQueryRepository.findForOutputById(result.data)
+        const blog: OutputBlogType | null = await blogMongoQueryRepository.findForOutputById(result.data)
 
-        res.status(HTTP_CODES.CREATED).send(foundInfo.blog);
+        //? !
+        res.status(HTTP_CODES.CREATED).send(blog!);
     } catch (err) {
         console.error(err)
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()

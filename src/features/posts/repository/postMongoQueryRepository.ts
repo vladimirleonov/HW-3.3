@@ -31,13 +31,18 @@ export const postMongoQueryRepository = {
             items: posts.map((post: PostDbType) => this.mapToOutput(post))
         }
     },
-    async findForOutputById(id: string): Promise<{ error?: string, post?: OutputPostType }> {
+    // async findForOutputById(id: string): Promise<{ error?: string, post?: OutputPostType }> {
+    //     const post: PostDbType | null = await db.getCollections().postCollection
+    //         .findOne({_id: new ObjectId(id)})
+    //     if (!post) {
+    //         return {error: 'Post not found'}
+    //     }
+    //     return {post: this.mapToOutput(post)}
+    // },
+    async findForOutputById(id: string): Promise<OutputPostType | null> {
         const post: PostDbType | null = await db.getCollections().postCollection
             .findOne({_id: new ObjectId(id)})
-        if (!post) {
-            return {error: 'Post not found'}
-        }
-        return {post: this.mapToOutput(post)}
+        return post ? this.mapToOutput(post) : null
     },
     mapToOutput({_id, blogId, ...rest}: PostDbType): OutputPostType {
         return {

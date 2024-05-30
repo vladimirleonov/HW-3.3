@@ -4,6 +4,7 @@ import {InputBlogPostType, InputPostType} from "../input-output-types/post-types
 import {PostDbType} from "../../../db/db-types/post-db-types";
 import {BlogDBType} from "../../../db/db-types/blog-db-types";
 import {blogMongoRepository} from "../../blogs/repository/blogMongoRepository";
+import {Result, ResultStatus} from "../../../common/types/result-type";
 
 export const postService = {
     async createPost({blogId, ...restInput}: InputPostType): Promise<string> {
@@ -23,10 +24,14 @@ export const postService = {
 
         return await postMongoRepository.create(newPost)
     },
-    async createBlogPost(input: InputBlogPostType, blogId: string): Promise<{ error?: string, id?: string }> {
+    async createBlogPost(input: InputBlogPostType, blogId: string): Promise<Result<null | string>> {
         const blog: BlogDBType | null = await blogMongoRepository.findById(blogId);
         if (!blog) {
-            return {error: 'Blog doesn\'t exists'}
+            return {
+                status: ResultStatus.NotFound,
+                extensions: [{ field: 'blogId', message: `Blog with id ${blogId} not found` }],
+                data: null
+            }
         }
 
         const newPost: PostDbType = {
@@ -39,7 +44,10 @@ export const postService = {
 
         const createdBlogId: string = await postMongoRepository.createBlogPost(newPost);
 
-        return {id: createdBlogId}
+        return {
+            status: ResultStatus.Success,
+            data: createdBlogId
+        }
     },
     async deletePost(postId: string): Promise<boolean> {
         return postMongoRepository.delete(postId)
