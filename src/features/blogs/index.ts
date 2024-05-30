@@ -1,7 +1,7 @@
 import {Router} from "express"
 import {getBlogsController} from "./controllers/getBlogsController"
 import {createBlogController} from "./controllers/createBlogController"
-import {findBlogController} from "./controllers/findBlogController"
+import {getBlogController} from "./controllers/getBlogController"
 import {updateBlogController} from "./controllers/updateBlogController"
 import {deleteBlogController} from "./controllers/deleteBlogController"
 import {inputCheckErrorsMiddleware} from "../../common/middlewares/inputCheckErrorsMiddleware"
@@ -23,6 +23,6 @@ blogsRouter.get('/', queryBlogsParamsValidator, inputCheckErrorsMiddleware, getB
 blogsRouter.post('/', blogBodyValidator, basicMiddleware, inputCheckErrorsMiddleware, createBlogController)
 blogsRouter.get('/:blogId/posts', blogIdParamValidator, queryBlogPostsParamsValidator, inputCheckErrorsMiddleware, getBlogPostsController)
 blogsRouter.post('/:blogId/posts', blogIdParamValidator, BlogPostInputValidator, basicMiddleware, inputCheckErrorsMiddleware, createBlogPostController)
-blogsRouter.get('/:id', idParamValidator, inputCheckErrorsMiddleware, findBlogController)
+blogsRouter.get('/:id', idParamValidator, inputCheckErrorsMiddleware, getBlogController)
 blogsRouter.put('/:id', idParamValidator, blogBodyValidator, basicMiddleware, inputCheckErrorsMiddleware, updateBlogController)
 blogsRouter.delete('/:id', idParamValidator, basicMiddleware, inputCheckErrorsMiddleware, deleteBlogController)

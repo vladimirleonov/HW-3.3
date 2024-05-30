@@ -4,7 +4,7 @@ import {HTTP_CODES} from '../../../settings'
 import {InputIdParamType} from "../../../common/input-output-types/common-types";
 import {postMongoQueryRepository} from "../repository/postMongoQueryRepository";
 
-export const findPostController = async (req: Request<InputIdParamType, OutputPostType>, res: Response<OutputPostType>) => {
+export const getPostController = async (req: Request<InputIdParamType, OutputPostType>, res: Response<OutputPostType>) => {
     try {
         const foundInfo = await postMongoQueryRepository.findForOutputById(req.params.id)
 

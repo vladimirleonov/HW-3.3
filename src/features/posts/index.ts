@@ -1,7 +1,7 @@
 import {Router} from "express"
 import {getPostsController} from "./controllers/getPostsController"
 import {createPostController} from "./controllers/createPostController"
-import {findPostController} from "./controllers/findPostController"
+import {getPostController} from "./controllers/getPostController"
 import {deletePostController} from "./controllers/deletePostController"
 import {updatePostController} from "./controllers/updatePostController"
 import {postInputValidator} from "./validators/postBodyValidators"
@@ -18,6 +18,6 @@ export const postsRouter = Router()
 postsRouter.get('/', queryPostsParamsValidator, inputCheckErrorsMiddleware, getPostsController)
 postsRouter.post('/', postInputValidator, basicMiddleware, inputCheckErrorsMiddleware, createPostController)
 postsRouter.post('/:postId/comments', commentBodyValidator, bearerAuthMiddleware, inputCheckErrorsMiddleware, createCommentController)
-postsRouter.get('/:id', idParamValidator, inputCheckErrorsMiddleware, findPostController)
+postsRouter.get('/:id', idParamValidator, inputCheckErrorsMiddleware, getPostController)
 postsRouter.put('/:id', idParamValidator, postInputValidator, basicMiddleware, inputCheckErrorsMiddleware, updatePostController)
 postsRouter.delete('/:id', idParamValidator, basicMiddleware, inputCheckErrorsMiddleware, deletePostController)
