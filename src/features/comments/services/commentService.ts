@@ -3,13 +3,13 @@ import {PostDbType} from "../../../db/db-types/post-db-types";
 import {Result, ResultStatus} from "../../../common/types/result-type";
 import {CommentDbType} from "../../../db/db-types/comment-db-types";
 import {ObjectId} from "mongodb";
-import {CommentInputType} from "../input-output-types/comment-types";
+import {CommentBodyInputType} from "../input-output-types/comment-types";
 import {UserDbType} from "../../../db/db-types/user-db-types";
 import {userMongoRepository} from "../../users/repository/userMongoRepository";
 import {commentMongoRepository} from "../repository/commentMongoRepository";
 
 export const commentService = {
-    async createComment(postId: string, input: CommentInputType, userId: string): Promise<Result<string | null>> {
+    async createComment(postId: string, input: CommentBodyInputType, userId: string): Promise<Result<string | null>> {
         const post: PostDbType | null = await postMongoRepository.findById(postId)
         if (!post) {
             return {
@@ -47,7 +47,7 @@ export const commentService = {
             data: createdId
         }
     },
-    async updateComment(id: string, input: CommentInputType, userId: string): Promise<Result> {
+    async updateComment(id: string, input: CommentBodyInputType, userId: string): Promise<Result> {
         // ? можно делать в контроллере эту проверку? делать там лучш и здесь для работы с данными поста
         // но нужен здесь для проверок
         const comment: CommentDbType | null = await commentMongoRepository.findById(id)

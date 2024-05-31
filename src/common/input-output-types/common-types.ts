@@ -1,12 +1,12 @@
 import {BlogDBType} from "../../db/db-types/blog-db-types";
 
-export type InputDefaultQueryParamsType = {
+export type DefaultQueryParamsInputType = {
     sortBy?: keyof BlogDBType,
     sortDirection?: 'asc' | 'desc',
     pageNumber?: number,
     pageSize?: number
 }
 
-export type InputIdParamType = {
+export type IdParamInputType = {
     id: string
 }

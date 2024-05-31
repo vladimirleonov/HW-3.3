@@ -1,5 +1,5 @@
 import {PostDbType} from "../../../db/db-types/post-db-types"
-import {InputPostType} from "../input-output-types/post-types"
+import {PostBodyInputType} from "../input-output-types/post-types"
 import {db} from "../../../db/mongo-db"
 import {DeleteResult, InsertOneResult, ObjectId, UpdateResult} from "mongodb"
 
@@ -12,7 +12,7 @@ export const postMongoRepository = {
         const insertedInfo: InsertOneResult<PostDbType> = await db.getCollections().postCollection.insertOne(newPost)
         return insertedInfo.insertedId.toString()
     },
-    async update(id: string, {blogId, ...restInput}: InputPostType): Promise<boolean> {
+    async update(id: string, {blogId, ...restInput}: PostBodyInputType): Promise<boolean> {
         const updatedInfo: UpdateResult<PostDbType> = await db.getCollections().postCollection.updateOne(
             {_id: new ObjectId(id)},
             {

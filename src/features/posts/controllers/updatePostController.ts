@@ -1,10 +1,10 @@
 import {Request, Response} from 'express'
-import {InputPostType, OutputPostType} from "../input-output-types/post-types"
+import {PostBodyInputType, PostOutputType} from "../input-output-types/post-types"
 import {HTTP_CODES} from "../../../settings"
-import {InputIdParamType} from "../../../common/input-output-types/common-types";
+import {IdParamInputType} from "../../../common/input-output-types/common-types";
 import {postService} from "../services/postService";
 
-export const updatePostController = async (req: Request<InputIdParamType, OutputPostType, InputPostType>, res: Response<OutputPostType>) => {
+export const updatePostController = async (req: Request<IdParamInputType, PostOutputType, PostBodyInputType>, res: Response<PostOutputType>) => {
     try {
         const isUpdated: boolean = await postService.updatePost(req.params.id, req.body)
 

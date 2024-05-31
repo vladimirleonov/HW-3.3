@@ -1,17 +1,20 @@
 import {postMongoRepository} from "../repository/postMongoRepository";
 import {ObjectId} from "mongodb";
-import {InputBlogPostType, InputPostType} from "../input-output-types/post-types";
+import {BlogPostInputType, PostBodyInputType} from "../input-output-types/post-types";
 import {PostDbType} from "../../../db/db-types/post-db-types";
 import {BlogDBType} from "../../../db/db-types/blog-db-types";
 import {blogMongoRepository} from "../../blogs/repository/blogMongoRepository";
 import {Result, ResultStatus} from "../../../common/types/result-type";
 
 export const postService = {
-    async createPost({blogId, ...restInput}: InputPostType): Promise<string> {
+    async createPost({blogId, ...restInput}: PostBodyInputType): Promise<Result<string | null>> {
         const blog: BlogDBType | null = await blogMongoRepository.findById(blogId);
-
         if(!blog) {
-            throw new Error('not found')
+            return {
+                status: ResultStatus.NotFound,
+                extensions: [{ field: 'blogId', message: `Blog with id ${blogId} not found` }],
+                data: null
+            }
         }
 
         const newPost: PostDbType = {
@@ -22,9 +25,14 @@ export const postService = {
             createdAt: new Date().toISOString()
         }
 
-        return await postMongoRepository.create(newPost)
+        const createdPostId: string = await postMongoRepository.create(newPost)
+
+        return {
+            status: ResultStatus.Success,
+            data: createdPostId
+        }
     },
-    async createBlogPost(input: InputBlogPostType, blogId: string): Promise<Result<null | string>> {
+    async createBlogPost(input: BlogPostInputType, blogId: string): Promise<Result<string | null>> {
         const blog: BlogDBType | null = await blogMongoRepository.findById(blogId);
         if (!blog) {
             return {
@@ -49,10 +57,18 @@ export const postService = {
             data: createdBlogId
         }
     },
-    async deletePost(postId: string): Promise<boolean> {
-        return postMongoRepository.delete(postId)
+    async deletePost(postId: string): Promise<Result<boolean>> {
+        const isDeleted: boolean = await postMongoRepository.delete(postId)
+        return {
+            status: ResultStatus.Success,
+            data: isDeleted
+        }
     },
-    async updatePost(postId: string, input: InputPostType): Promise<boolean> {
-        return postMongoRepository.update(postId, input)
+    async updatePost(postId: string, input: PostBodyInputType): Promise<Result<boolean>> {
+        const isUpdated = await postMongoRepository.update(postId, input)
+        return {
+            status: ResultStatus.Success,
+            data: isUpdated
+        }
     }
 }

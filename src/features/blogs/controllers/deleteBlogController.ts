@@ -1,10 +1,10 @@
 import {Request, Response} from 'express'
-import {InputIdParamType} from '../../../common/input-output-types/common-types'
+import {IdParamInputType} from '../../../common/input-output-types/common-types'
 import {HTTP_CODES} from '../../../settings'
 import {blogService} from "../services/blogService";
 import {Result, ResultStatus} from "../../../common/types/result-type";
 
-export const deleteBlogController = async (req: Request<InputIdParamType>, res: Response) => {
+export const deleteBlogController = async (req: Request<IdParamInputType>, res: Response) => {
     try {
         const deletedInfo: Result<boolean> = await blogService.deleteBlog(req.params.id)
 

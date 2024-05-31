@@ -1,10 +1,10 @@
 import { Request, Response } from "express"
 import { HTTP_CODES } from "../../../settings"
 import {SanitizedUsersQueryParamsType, sanitizeUsersQueryParams} from "../helpers/sanitizeUsersQueryParams";
-import {InputUsersQueryParamsType, OutputUserPaginationType} from "../input-output-types/user-types";
+import {UsersQueryParamsInputType, OutputUserPaginationType} from "../input-output-types/user-types";
 import {userMongoQueryRepository} from "../repository/userMongoQueryRepository";
 
-export const getUsersController = async (req: Request<{}, OutputUserPaginationType, {}, InputUsersQueryParamsType>, res: Response<OutputUserPaginationType>) => {
+export const getUsersController = async (req: Request<{}, OutputUserPaginationType, {}, UsersQueryParamsInputType>, res: Response<OutputUserPaginationType>) => {
     try {
         const sanitizedQuery: SanitizedUsersQueryParamsType = sanitizeUsersQueryParams(req.query)
         const users: OutputUserPaginationType = await userMongoQueryRepository.findAllForOutput(sanitizedQuery)

@@ -1,9 +1,8 @@
-export type CommentIdParamType = {
+export type CommentIdParamInputType = {
     commentId: string
 }
 
-
-export type CommentInputType = {
+export type CommentBodyInputType = {
     content: string
 }
 
@@ -19,7 +18,7 @@ export type CommentOutputType = {
     createdAt: string,
 }
 
-export type OutputCommentsPaginationType = {
+export type CommentsPaginationOutputType = {
     pagesCount: number,
     page: number,
     pageSize: number,

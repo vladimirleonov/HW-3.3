@@ -1,4 +1,4 @@
-import {InputDefaultQueryParamsType} from "../input-output-types/common-types";
+import {DefaultQueryParamsInputType} from "../input-output-types/common-types";
 
 export type SanitizedDefaultQueryParamsType = {
     sortBy: string,
@@ -7,7 +7,7 @@ export type SanitizedDefaultQueryParamsType = {
     pageSize: number
 };
 
-export const sanitizeDefaultQueryParams = (query: InputDefaultQueryParamsType): SanitizedDefaultQueryParamsType => {
+export const sanitizeDefaultQueryParams = (query: DefaultQueryParamsInputType): SanitizedDefaultQueryParamsType => {
     return {
         sortBy: query.sortBy || 'createdAt',
         sortDirection: query.sortDirection || "desc",

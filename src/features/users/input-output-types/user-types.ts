@@ -1,11 +1,11 @@
-import {InputDefaultQueryParamsType} from "../../../common/input-output-types/common-types";
+import {DefaultQueryParamsInputType} from "../../../common/input-output-types/common-types";
 
-export type InputUsersQueryParamsType = InputDefaultQueryParamsType & {
+export type UsersQueryParamsInputType = DefaultQueryParamsInputType & {
     searchLoginTerm?: string
     searchEmailTerm?: string
 }
 
-export type InputUserType = {
+export type UserBodyInputType = {
     login: string
     password: string
     email: string

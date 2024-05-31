@@ -1,16 +1,14 @@
 import {userMongoRepository} from "../repository/userMongoRepository";
 import {UserDbType} from "../../../db/db-types/user-db-types";
-import bcrypt from 'bcrypt'
-import {InputUserType} from "../input-output-types/user-types";
+import {UserBodyInputType} from "../input-output-types/user-types";
 import {ObjectId} from "mongodb";
-import {ErrorsMessagesType} from "../../../common/types/errorsMessages";
-import {generateErrorsMessages} from "../../../common/helpers/generateErrorMessages";
 import {cryptoService} from "../../../common/adapters/cryptoService";
+import {Result, ResultStatus} from "../../../common/types/result-type";
 
 export const userService = {
-    async createUser (input: InputUserType): Promise<{id?: string, error?: ErrorsMessagesType}> {
+    async createUser(input: UserBodyInputType): Promise<Result<string | null>> {
 
-        const { login, email, password } = input;
+        const {login, email, password}: UserBodyInputType = input;
 
         const [foundUserByLogin, foundUserByEmail]: [UserDbType | null, UserDbType | null] = await Promise.all([
             userMongoRepository.findUserByField('login', login),
@@ -18,11 +16,20 @@ export const userService = {
         ])
 
         if (foundUserByLogin) {
-            return {error: generateErrorsMessages('login', 'login should be unique')}
+            return {
+                status: ResultStatus.BadRequest,
+                extensions: [{field: 'login', message: 'login should be unique'}],
+                data: null
+            }
         }
 
         if (foundUserByEmail) {
-            return {error: generateErrorsMessages('email', 'email should be unique')}
+            //return {error: generateErrorsMessages('email', 'email should be unique')}
+            return {
+                status: ResultStatus.BadRequest,
+                extensions: [{field: 'email', message: 'email should be unique'}],
+                data: null
+            }
         }
 
         const saltRounds: number = 10
@@ -36,9 +43,16 @@ export const userService = {
             createdAt: new Date().toISOString()
         }
         const userId: string = await userMongoRepository.create(newUser)
-        return {id: userId}
+        return {
+            status: ResultStatus.Success,
+            data: userId
+        }
     },
-    deleteUser (id: string): Promise<boolean> {
-        return userMongoRepository.delete(id)
+    async deleteUser(id: string): Promise<Result<boolean>> {
+        const isDeleted: boolean = await userMongoRepository.delete(id)
+        return {
+            status: ResultStatus.Success,
+            data: isDeleted
+        }
     }
 }

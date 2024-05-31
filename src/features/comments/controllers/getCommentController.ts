@@ -1,10 +1,10 @@
 import {Request, Response} from 'express';
 import {commentMongoQueryRepository} from "../repository/commentMongoQueryRepository";
-import {InputIdParamType} from "../../../common/input-output-types/common-types";
+import {IdParamInputType} from "../../../common/input-output-types/common-types";
 import {CommentOutputType} from "../input-output-types/comment-types";
 import {HTTP_CODES} from "../../../settings";
 
-export const getCommentController = async (req: Request<InputIdParamType, CommentOutputType>, res: Response<CommentOutputType>) => {
+export const getCommentController = async (req: Request<IdParamInputType, CommentOutputType>, res: Response<CommentOutputType>) => {
     try {
         const comment: CommentOutputType | null = await commentMongoQueryRepository.findForOutputById(req.params.id);
         if (!comment) {

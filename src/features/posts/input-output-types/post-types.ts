@@ -2,20 +2,20 @@ export type PostIdParamType = {
     postId: string
 }
 
-export type InputPostType = {
+export type PostBodyInputType = {
     title: string
     shortDescription: string
     content: string
     blogId: string
 }
 
-export type InputBlogPostType = {
+export type BlogPostInputType = {
     title: string,
     shortDescription: string,
     content: string
 }
 
-export type OutputPostType = {
+export type PostOutputType = {
     id: string
     title: string
     shortDescription: string
@@ -25,10 +25,10 @@ export type OutputPostType = {
     createdAt: string
 }
 
-export type OutputPostPaginationType = {
+export type PostPaginationOutputType = {
     pagesCount: number,
     page: number,
     pageSize: number,
     totalCount: number,
-    items: OutputPostType[]
+    items: PostOutputType[]
 }

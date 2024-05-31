@@ -1,9 +1,9 @@
 import { Request, Response } from "express"
 import {HTTP_CODES} from "../../../settings";
 import {userService} from "../services/userService";
-import {InputIdParamType} from "../../../common/input-output-types/common-types";
+import {IdParamInputType} from "../../../common/input-output-types/common-types";
 
-export const deleteUserController = async (req: Request<InputIdParamType>, res: Response) => {
+export const deleteUserController = async (req: Request<IdParamInputType>, res: Response) => {
     try {
         const isDeleted = await userService.deleteUser(req.params.id)
 

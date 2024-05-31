@@ -4,7 +4,7 @@ import {createPostController} from "./controllers/createPostController"
 import {getPostController} from "./controllers/getPostController"
 import {deletePostController} from "./controllers/deletePostController"
 import {updatePostController} from "./controllers/updatePostController"
-import {postInputValidator} from "./validators/postBodyValidators"
+import {postBodyValidator} from "./validators/postBodyValidators"
 import {inputCheckErrorsMiddleware} from "../../common/middlewares/inputCheckErrorsMiddleware"
 import {basicMiddleware} from "../../common/middlewares/basicMiddleware"
 import {idParamValidator} from "../../common/validators/idParamValidator";
@@ -19,8 +19,8 @@ export const postsRouter = Router()
 
 postsRouter.get('/', queryPostsParamsValidator, inputCheckErrorsMiddleware, getPostsController)
 postsRouter.get('/:postId/comments', queryPostCommentsParamsValidator, inputCheckErrorsMiddleware, getPostCommentsController)
-postsRouter.post('/', postInputValidator, basicMiddleware, inputCheckErrorsMiddleware, createPostController)
+postsRouter.post('/', postBodyValidator, basicMiddleware, inputCheckErrorsMiddleware, createPostController)
 postsRouter.post('/:postId/comments', commentBodyValidator, bearerAuthMiddleware, inputCheckErrorsMiddleware, createCommentController)
 postsRouter.get('/:id', idParamValidator, inputCheckErrorsMiddleware, getPostController)
-postsRouter.put('/:id', idParamValidator, postInputValidator, basicMiddleware, inputCheckErrorsMiddleware, updatePostController)
+postsRouter.put('/:id', idParamValidator, postBodyValidator, basicMiddleware, inputCheckErrorsMiddleware, updatePostController)
 postsRouter.delete('/:id', idParamValidator, basicMiddleware, inputCheckErrorsMiddleware, deletePostController)

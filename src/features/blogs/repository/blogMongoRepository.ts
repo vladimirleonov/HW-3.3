@@ -1,6 +1,6 @@
 import {db} from "../../../db/mongo-db"
 import {BlogDBType} from "../../../db/db-types/blog-db-types"
-import {InputBlogType} from "../input-output-types/blog-types"
+import {BlogBodyInputType} from "../input-output-types/blog-types"
 import {DeleteResult, InsertOneResult, ObjectId, UpdateResult} from "mongodb"
 
 export const blogMongoRepository = {
@@ -8,7 +8,7 @@ export const blogMongoRepository = {
         const insertedInfo: InsertOneResult<BlogDBType> = await db.getCollections().blogCollection.insertOne(newBlog)
         return insertedInfo.insertedId.toString()
     },
-    async update(id: string, input: InputBlogType): Promise<boolean> {
+    async update(id: string, input: BlogBodyInputType): Promise<boolean> {
         const updatedInfo: UpdateResult<BlogDBType> = await db.getCollections().blogCollection.updateOne(
             {_id: new ObjectId(id)},
             {$set: {...input}})

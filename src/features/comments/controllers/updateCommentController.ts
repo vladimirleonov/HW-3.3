@@ -1,10 +1,10 @@
 import {Request, Response} from 'express'
 import {commentService} from "../services/commentService";
 import {HTTP_CODES} from "../../../settings";
-import {CommentIdParamType, CommentInputType} from "../input-output-types/comment-types";
+import {CommentIdParamInputType, CommentBodyInputType} from "../input-output-types/comment-types";
 import {Result, ResultStatus} from "../../../common/types/result-type";
 
-export const updateCommentController = async (req: Request<CommentIdParamType, {}, CommentInputType>, res: Response) => {
+export const updateCommentController = async (req: Request<CommentIdParamInputType, {}, CommentBodyInputType>, res: Response) => {
     try {
         // ?
         if (!req.user || !req.user.userId) {

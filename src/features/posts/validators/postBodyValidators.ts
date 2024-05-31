@@ -34,14 +34,14 @@ const postBlogIdInputValidator = body('blogId')
     .isLength({min: 1}).withMessage('blogId is empty')
     .custom(validateBlogId).withMessage('invalid blogId!')
 
-export const postInputValidator = [
+export const postBodyValidator = [
     postTitleInputValidator,
     postShortDescriptionInputValidator,
     postContentInputValidator,
     postBlogIdInputValidator
 ]
 
-export const BlogPostInputValidator = [
+export const BlogPostBodyValidator = [
     postTitleInputValidator,
     postShortDescriptionInputValidator,
     postContentInputValidator

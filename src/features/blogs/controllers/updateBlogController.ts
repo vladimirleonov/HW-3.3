@@ -1,11 +1,11 @@
 import {Request, Response} from 'express'
-import {InputIdParamType} from '../../../common/input-output-types/common-types'
+import {IdParamInputType} from '../../../common/input-output-types/common-types'
 import {HTTP_CODES} from '../../../settings'
-import {InputBlogType, OutputBlogType} from "../input-output-types/blog-types";
+import {BlogBodyInputType, BlogOutputType} from "../input-output-types/blog-types";
 import {blogService} from "../services/blogService";
 import {Result, ResultStatus} from "../../../common/types/result-type";
 
-export const updateBlogController = async (req: Request<InputIdParamType, OutputBlogType, InputBlogType>, res: Response<OutputBlogType>) => {
+export const updateBlogController = async (req: Request<IdParamInputType, BlogOutputType, BlogBodyInputType>, res: Response<BlogOutputType>) => {
     try {
         const result: Result<boolean> = await blogService.updateBlog(req.params.id, req.body)
 

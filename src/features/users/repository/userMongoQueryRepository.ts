@@ -40,20 +40,20 @@ export const userMongoQueryRepository = {
             items: users.map((user: UserDbType) => this.mapToOutputWithIdAndCreatedAt(user))
         }
     },
-    async findForOutputById(id: string): Promise<{error?: string, user?: UserWithIdAndCreatedAtOutputType}> {
+    // async findForOutputById(id: string): Promise<{error?: string, user?: UserWithIdAndCreatedAtOutputType}> {
+    //     const user: UserDbType | null = await db.getCollections().userCollection.findOne({_id: new ObjectId(id)})
+    //     if (!user) {
+    //         return {error: 'User not found'}
+    //     }
+    //     return {user: this.mapToOutputWithIdAndCreatedAt(user)}
+    // },
+    async findForOutputById(id: string): Promise<UserWithIdAndCreatedAtOutputType | null> {
         const user: UserDbType | null = await db.getCollections().userCollection.findOne({_id: new ObjectId(id)})
-        if (!user) {
-            return {error: 'User not found'}
-        }
-        return {user: this.mapToOutputWithIdAndCreatedAt(user)}
+        return user ? this.mapToOutputWithIdAndCreatedAt(user) : null
     },
-    async findForOutputWithUserIdWithoutCreatedAt(id: string): Promise<{error?: string, user?: UserWithUserIdOutputType}> {
+    async findForOutputWithUserIdWithoutCreatedAt(id: string): Promise<UserWithUserIdOutputType | null> {
         const user: UserDbType | null = await db.getCollections().userCollection.findOne({_id: new ObjectId(id)})
-        //? check error
-        if (!user) {
-            return {error: 'User not found'}
-        }
-        return {user: this.mapToOutputWithUserIdWithoutCreated(user)}
+        return user ? this.mapToOutputWithUserIdWithoutCreated(user) : null
     },
     mapToOutputWithIdAndCreatedAt({_id, password, ...rest}: UserDbType): UserWithIdAndCreatedAtOutputType {
         return {

@@ -1,10 +1,10 @@
 import {Request, Response} from 'express'
 import {commentService} from "../services/commentService";
-import {CommentIdParamType} from "../input-output-types/comment-types";
+import {CommentIdParamInputType} from "../input-output-types/comment-types";
 import {HTTP_CODES} from "../../../settings";
 import {Result, ResultStatus} from "../../../common/types/result-type";
 
-export const deleteCommentController = async (req: Request<CommentIdParamType>, res: Response) => {
+export const deleteCommentController = async (req: Request<CommentIdParamInputType>, res: Response) => {
     try {
         // ?
         if (!req.user || !req.user.userId) {

@@ -1,10 +1,10 @@
 import {Request, Response} from 'express'
-import {OutputPostType} from '../input-output-types/post-types'
+import {PostOutputType} from '../input-output-types/post-types'
 import {HTTP_CODES} from '../../../settings'
-import {InputIdParamType} from "../../../common/input-output-types/common-types";
+import {IdParamInputType} from "../../../common/input-output-types/common-types";
 import {postMongoQueryRepository} from "../repository/postMongoQueryRepository";
 
-export const getPostController = async (req: Request<InputIdParamType, OutputPostType>, res: Response<OutputPostType>) => {
+export const getPostController = async (req: Request<IdParamInputType, PostOutputType>, res: Response<PostOutputType>) => {
     try {
         const foundInfo = await postMongoQueryRepository.findForOutputById(req.params.id)
 

@@ -1,9 +1,9 @@
 import {Request, Response} from 'express'
-import {InputIdParamType} from '../../../common/input-output-types/common-types'
+import {IdParamInputType} from '../../../common/input-output-types/common-types'
 import {HTTP_CODES} from '../../../settings'
 import {postService} from "../services/postService";
 
-export const deletePostController = async (req: Request<InputIdParamType>, res: Response) => {
+export const deletePostController = async (req: Request<IdParamInputType>, res: Response) => {
     try {
         const deletedInfo: boolean = await postService.deletePost(req.params.id)
         if (!deletedInfo) {

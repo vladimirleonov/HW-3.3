@@ -1,11 +1,11 @@
 import {db} from "../../../db/mongo-db"
 import {BlogDBType} from "../../../db/db-types/blog-db-types"
-import {OutputBlogsPaginationType, OutputBlogType} from "../input-output-types/blog-types"
+import {BlogsPaginationOutputType, BlogOutputType} from "../input-output-types/blog-types"
 import {ObjectId} from "mongodb"
 import {SanitizedBlogsQueryParamsType} from "../helpers/sanitizeBlogsQueryParams";
 
 export const blogMongoQueryRepository = {
-    async findAllForOutput(query: SanitizedBlogsQueryParamsType): Promise<OutputBlogsPaginationType> {
+    async findAllForOutput(query: SanitizedBlogsQueryParamsType): Promise<BlogsPaginationOutputType> {
         const searchFilter = query.searchNameTerm
             ? { name : { $regex: query.searchNameTerm, $options: 'i' }}
             : {}
@@ -38,11 +38,11 @@ export const blogMongoQueryRepository = {
     //     }
     //     return {blog: this.mapToOutput(blog)}
     // },
-    async findForOutputById(id: string): Promise<OutputBlogType | null> {
+    async findForOutputById(id: string): Promise<BlogOutputType | null> {
         const blog: BlogDBType | null = await db.getCollections().blogCollection.findOne({_id: new ObjectId(id)})
         return blog ? this.mapToOutput(blog) : null
     },
-    mapToOutput({_id, ...rest}: BlogDBType): OutputBlogType {
+    mapToOutput({_id, ...rest}: BlogDBType): BlogOutputType {
         return {
             ...rest,
             id: _id.toString()

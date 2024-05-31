@@ -1,4 +1,4 @@
-import {InputBlogsQueryParamsType} from "../input-output-types/blog-types";
+import {BlogsQueryParamsInputType} from "../input-output-types/blog-types";
 import {
     SanitizedDefaultQueryParamsType,
     sanitizeDefaultQueryParams
@@ -8,7 +8,7 @@ export type SanitizedBlogsQueryParamsType = SanitizedDefaultQueryParamsType & {
     searchNameTerm: string | null,
 };
 
-export const sanitizeBlogsQueryParams = (query: InputBlogsQueryParamsType): SanitizedBlogsQueryParamsType => {
+export const sanitizeBlogsQueryParams = (query: BlogsQueryParamsInputType): SanitizedBlogsQueryParamsType => {
     return {
         searchNameTerm: query.searchNameTerm || null,
         ...sanitizeDefaultQueryParams(query)

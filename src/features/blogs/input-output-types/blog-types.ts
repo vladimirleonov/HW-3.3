@@ -1,20 +1,22 @@
-import {InputDefaultQueryParamsType} from "../../../common/input-output-types/common-types";
+import {
+    DefaultQueryParamsInputType,
+} from "../../../common/input-output-types/common-types";
 
-export type InputBlogIdParamType = {
+export type BlogIdParamInputType = {
     blogId: string
 }
 
-export type InputBlogsQueryParamsType = InputDefaultQueryParamsType & {
+export type BlogsQueryParamsInputType = DefaultQueryParamsInputType & {
     searchNameTerm?: string
 }
 
-export type InputBlogType = {
+export type BlogBodyInputType = {
     name: string
     description: string
     websiteUrl: string
 }
 
-export type OutputBlogType = {
+export type BlogOutputType = {
     id: string
     name: string
     description: string
@@ -23,10 +25,10 @@ export type OutputBlogType = {
     isMembership: boolean
 }
 
-export type OutputBlogsPaginationType = {
+export type BlogsPaginationOutputType = {
     pagesCount: number,
     page: number,
     pageSize: number,
     totalCount: number,
-    items: OutputBlogType[]
+    items: BlogOutputType[]
 }

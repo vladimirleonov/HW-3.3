@@ -1,12 +1,12 @@
 import {PostDbType} from "../../../db/db-types/post-db-types"
-import {OutputPostPaginationType, OutputPostType} from "../input-output-types/post-types"
+import {PostPaginationOutputType, PostOutputType} from "../input-output-types/post-types"
 import {ObjectId} from "mongodb"
 
 import {SanitizedDefaultQueryParamsType} from "../../../common/helpers/queryParamsSanitizer";
 import {db} from "../../../db/mongo-db";
 
 export const postMongoQueryRepository = {
-    async findAllForOutput(query: SanitizedDefaultQueryParamsType, blogId?: string): Promise<OutputPostPaginationType> {
+    async findAllForOutput(query: SanitizedDefaultQueryParamsType, blogId?: string): Promise<PostPaginationOutputType> {
         const byId = blogId ? {blogId: new ObjectId(blogId)} : {}
 
         const filter = {
@@ -39,12 +39,12 @@ export const postMongoQueryRepository = {
     //     }
     //     return {post: this.mapToOutput(post)}
     // },
-    async findForOutputById(id: string): Promise<OutputPostType | null> {
+    async findForOutputById(id: string): Promise<PostOutputType | null> {
         const post: PostDbType | null = await db.getCollections().postCollection
             .findOne({_id: new ObjectId(id)})
         return post ? this.mapToOutput(post) : null
     },
-    mapToOutput({_id, blogId, ...rest}: PostDbType): OutputPostType {
+    mapToOutput({_id, blogId, ...rest}: PostDbType): PostOutputType {
         return {
             id: _id.toString(),
             blogId: blogId.toString(),

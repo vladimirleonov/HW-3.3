@@ -2,13 +2,13 @@ import {Request, Response} from 'express';
 import {HTTP_CODES} from "../../../settings";
 import {OutputPostPaginationType} from "../../posts/input-output-types/post-types";
 import {postMongoQueryRepository} from "../../posts/repository/postMongoQueryRepository";
-import {InputBlogIdParamType, InputBlogsQueryParamsType} from "../input-output-types/blog-types";
+import {BlogIdParamInputType, BlogsQueryParamsInputType} from "../input-output-types/blog-types";
 import {
     SanitizedDefaultQueryParamsType,
     sanitizeDefaultQueryParams
 } from "../../../common/helpers/queryParamsSanitizer";
 
-export const getBlogPostsController = async (req: Request<InputBlogIdParamType, OutputPostPaginationType, {}, InputBlogsQueryParamsType>, res: Response<OutputPostPaginationType>) => {
+export const getBlogPostsController = async (req: Request<BlogIdParamInputType, OutputPostPaginationType, {}, BlogsQueryParamsInputType>, res: Response<OutputPostPaginationType>) => {
     try {
         const sanitizedQuery: SanitizedDefaultQueryParamsType = sanitizeDefaultQueryParams(req.query)
         const posts: OutputPostPaginationType = await postMongoQueryRepository.findAllForOutput(sanitizedQuery, req.params.blogId)
