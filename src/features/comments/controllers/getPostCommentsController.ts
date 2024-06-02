@@ -12,7 +12,7 @@ import {HTTP_CODES} from "../../../settings";
 export const getPostCommentsController = async (req: Request<PostIdParamType, CommentsPaginationOutputType>, res: Response<CommentsPaginationOutputType>) => {
     const sanitizedQuery: SanitizedDefaultQueryParamsType = sanitizeDefaultQueryParams(req.query)
 
-    //? service may
+    //? service may be
     const post = await postMongoQueryRepository.findForOutputById(req.params.postId)
     if (!post) {
         res.status(HTTP_CODES.NOT_FOUND).send()
