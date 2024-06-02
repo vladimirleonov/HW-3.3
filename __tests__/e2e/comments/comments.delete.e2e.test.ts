@@ -5,6 +5,7 @@ import {
 } from "../../../src/features/comments/input-output-types/comment-types"
 import {base64Service} from "../../../src/common/adapters/base64Service";
 import {AUTH_DATA} from "../../../src/settings"
+import {testSeeder} from "../../testSeeder";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import {db} from "../../../src/db/mongo-db";
 import {createPost} from "../../helpers/post-helpers";
@@ -13,10 +14,10 @@ import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blo
 import {createBlog} from "../../helpers/blog-helpers";
 import {loginUser} from "../../helpers/auth-helpers";
 import {LoginOutputType} from "../../../src/features/auth/input-output-types/auth-types";
-import {createComment} from "../../helpers/comment-helpers";
 import {ObjectId} from "mongodb";
+import {createComment} from "../../helpers/comment-helpers";
 
-describe('PUT /comments', () => {
+describe('DELETE /comments', () => {
     beforeAll(async () => {
         const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
         await db.run(mongoServer.getUri())
@@ -27,7 +28,7 @@ describe('PUT /comments', () => {
     beforeEach(async () => {
         await db.drop()
     })
-    it('+ PUT comment with correct input data: STATUS 204', async () => {
+    it('+ DELETE comment with correct input data: STATUS 204', async () => {
         const blog: BlogOutputType = await createBlog()
         const blogId: string = blog.id
 
@@ -38,38 +39,12 @@ describe('PUT /comments', () => {
 
         const comment: CommentOutputType = await createComment(postId, authData.accessToken)
 
-        const newComment: CommentBodyInputType = {
-            content: 'newCommentnewCommentnewCommentnewComment'
-        }
-
         await req
-            .put(`${SETTINGS.PATH.COMMENTS}/${comment.id}`)
+            .delete(`${SETTINGS.PATH.COMMENTS}/${comment.id}`)
             .set('authorization', `Bearer ${authData.accessToken}`)
-            .send(newComment)
             .expect(HTTP_CODES.NO_CONTENT)
     })
-    it('- PUT comment when when content must be more than 20 characters long: STATUS 400', async () => {
-        const blog: BlogOutputType = await createBlog()
-        const blogId: string = blog.id
-
-        const post: PostOutputType = await createPost(blogId)
-        const postId: string = post.id
-
-        const authData: LoginOutputType = await loginUser()
-
-        const comment: CommentOutputType = await createComment(postId, authData.accessToken)
-
-        const newComment: CommentBodyInputType = {
-            content: 'newCommentnew'
-        }
-
-        await req
-            .put(`${SETTINGS.PATH.COMMENTS}/${comment.id}`)
-            .set('authorization', `Bearer ${authData.accessToken}`)
-            .send(newComment)
-            .expect(HTTP_CODES.BAD_REQUEST)
-    })
-    it('- PUT comment unauthorized: STATUS 401', async () => {
+    it('- DELETE comment unauthorized: STATUS 401', async () => {
         const blog: BlogOutputType = await createBlog()
         const blogId: string = blog.id
 
@@ -81,12 +56,11 @@ describe('PUT /comments', () => {
         const comment: CommentOutputType = await createComment(postId, authData.accessToken)
 
         await req
-            .put(`${SETTINGS.PATH.COMMENTS}/${postId}`)
-            .set('authorization', `Basic asdfdafqeasdasdqwe`)
-            .send(comment)
+            .delete(`${SETTINGS.PATH.COMMENTS}/${comment.id}`)
+            .set('authorization', `Bearer asdafafafafsgfdgfd`)
             .expect(HTTP_CODES.UNAUTHORIZED)
     })
-    it('- PUT comment when content does not belongs to user: STATUS 403', async () => {
+    it('- DELETE comment when content does not belongs to user: STATUS 403', async () => {
         const blog: BlogOutputType = await createBlog()
         const blogId: string = blog.id
 
@@ -111,17 +85,13 @@ describe('PUT /comments', () => {
                 password: 'testtest1'
             }).expect(HTTP_CODES.OK)
 
-        const newComment: CommentBodyInputType = {
-            content: 'newCommentnewCommentnewComment'
-        }
 
         await req
-            .put(`${SETTINGS.PATH.COMMENTS}/${comment.id}`)
+            .delete(`${SETTINGS.PATH.COMMENTS}/${comment.id}`)
             .set('authorization', `Bearer ${loginRes.body.accessToken}`)
-            .send(newComment)
             .expect(HTTP_CODES.FORBIDDEN)
     })
-    it('- PUT comment not found: STATUS 204', async () => {
+    it('- DELETE comment if comment with specified postId does not exist: STATUS 404', async () => {
         const blog: BlogOutputType = await createBlog()
         const blogId: string = blog.id
 
@@ -132,14 +102,9 @@ describe('PUT /comments', () => {
 
         const comment: CommentOutputType = await createComment(postId, authData.accessToken)
 
-        const newComment: CommentBodyInputType = {
-            content: 'newCommentnewCommentnewCommentnewComment'
-        }
-
         await req
-            .put(`${SETTINGS.PATH.COMMENTS}/${new ObjectId()}`)
+            .delete(`${SETTINGS.PATH.COMMENTS}/${new ObjectId()}`)
             .set('authorization', `Bearer ${authData.accessToken}`)
-            .send(newComment)
             .expect(HTTP_CODES.NOT_FOUND)
     })
 })

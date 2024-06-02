@@ -1,7 +1,7 @@
 import {req} from "../../helpers/req"
 import {HTTP_CODES, SETTINGS} from "../../../src/settings"
 import {
-    CommentBodyInputType
+    CommentBodyInputType, CommentOutputType
 } from "../../../src/features/comments/input-output-types/comment-types"
 import {base64Service} from "../../../src/common/adapters/base64Service";
 import {AUTH_DATA} from "../../../src/settings"
@@ -14,7 +14,7 @@ import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blo
 import {createBlog} from "../../helpers/blog-helpers";
 import {loginUser} from "../../helpers/auth-helpers";
 import {LoginOutputType} from "../../../src/features/auth/input-output-types/auth-types";
-import {createComments} from "../../helpers/comment-helpers";
+import {createComment, createComments} from "../../helpers/comment-helpers";
 import {ObjectId} from "mongodb";
 
 describe('GET /comments', () => {
@@ -28,7 +28,7 @@ describe('GET /comments', () => {
     beforeEach(async () => {
         await db.drop()
     })
-    it('+ GET comments for specified post: STATUS 200', async () => {
+    it('+ GET comment by id: STATUS 200', async () => {
         const blog: BlogOutputType = await createBlog()
         const blogId: string = blog.id
 
@@ -37,18 +37,15 @@ describe('GET /comments', () => {
 
         const authData: LoginOutputType = await loginUser()
 
-        await createComments(2, postId, authData.accessToken)
+        const comment: CommentOutputType = await createComment(postId, authData.accessToken)
 
         await req
-            .get(`${SETTINGS.PATH.POSTS}/${postId}/comments`)
+            .get(`${SETTINGS.PATH.COMMENTS}/${comment.id}`)
             .expect(HTTP_CODES.OK)
     })
-    it('- GET comments for non-existent post: STATUS 404', async () => {
-
-        const res = await req
-            .get(`${SETTINGS.PATH.POSTS}/${new ObjectId()}/comments`)
+    it('- GET comment not found: STATUS 404', async () => {
+        await req
+            .get(`${SETTINGS.PATH.COMMENTS}/${new ObjectId()}`)
             .expect(HTTP_CODES.NOT_FOUND)
-
-        console.log(res.body)
     })
 })
