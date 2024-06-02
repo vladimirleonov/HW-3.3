@@ -14,6 +14,7 @@ import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blo
 import {createBlog} from "../../helpers/blog-helpers";
 import {loginUser} from "../../helpers/auth-helpers";
 import {LoginOutputType} from "../../../src/features/auth/input-output-types/auth-types";
+import {ObjectId} from "mongodb";
 
 describe('POST /comments', () => {
     beforeAll(async () => {
@@ -26,22 +27,7 @@ describe('POST /comments', () => {
     beforeEach(async () => {
         await db.drop()
     })
-    it('- POST comment unauthorized: STATUS 401', async () => {
-        const blog: BlogOutputType = await createBlog()
-        const blogId: string = blog.id
-
-        const post: PostOutputType = await createPost(blogId)
-        const postId: string = post.id
-
-        const newComment: CommentBodyInputType = testSeeder.createCommentDTO()
-
-        await req
-            .post(`${SETTINGS.PATH.POSTS}/${postId}/comments`)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.FAKE_AUTH)}`)
-            .send(newComment)
-            .expect(HTTP_CODES.UNAUTHORIZED)
-    })
-    it('+ POST comment with correct input data: STATUS 200', async () => {
+    it('+ POST comment with correct input data: STATUS 201', async () => {
         const blog: BlogOutputType = await createBlog()
         const blogId: string = blog.id
 
@@ -83,5 +69,31 @@ describe('POST /comments', () => {
                 message: 'content must be more than 20 characters long'
             }
         )
+    })
+    it('- POST comment unauthorized: STATUS 401', async () => {
+        const blog: BlogOutputType = await createBlog()
+        const blogId: string = blog.id
+
+        const post: PostOutputType = await createPost(blogId)
+        const postId: string = post.id
+
+        const newComment: CommentBodyInputType = testSeeder.createCommentDTO()
+
+        await req
+            .post(`${SETTINGS.PATH.POSTS}/${postId}/comments`)
+            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.FAKE_AUTH)}`)
+            .send(newComment)
+            .expect(HTTP_CODES.UNAUTHORIZED)
+    })
+    it('- POST comment if post with specified postId does not exist: STATUS 404', async () => {
+        const newComment: CommentBodyInputType = testSeeder.createCommentDTO()
+
+        const authData: LoginOutputType = await loginUser()
+
+        await req
+            .post(`${SETTINGS.PATH.POSTS}/${new ObjectId()}/comments`)
+            .set('authorization', `Bearer ${authData.accessToken}`)
+            .send(newComment)
+            .expect(HTTP_CODES.NOT_FOUND)
     })
 })

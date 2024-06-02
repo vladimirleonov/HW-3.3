@@ -5,7 +5,6 @@ import {
 } from "../../../src/features/comments/input-output-types/comment-types"
 import {base64Service} from "../../../src/common/adapters/base64Service";
 import {AUTH_DATA} from "../../../src/settings"
-import {testSeeder} from "../../testSeeder";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import {db} from "../../../src/db/mongo-db";
 import {createPost} from "../../helpers/post-helpers";
@@ -65,7 +64,7 @@ describe('PUT /comments', () => {
             .send(newComment)
             .expect(HTTP_CODES.NO_CONTENT)
     })
-    it('- PUT comment when content must be more than 20 characters long: STATUS 400', async () => {
+    it('- PUT comment when content does not belongs to user: STATUS 403', async () => {
         const blog: BlogOutputType = await createBlog()
         const blogId: string = blog.id
 
