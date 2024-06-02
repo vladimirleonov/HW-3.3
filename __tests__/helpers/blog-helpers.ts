@@ -38,8 +38,6 @@ export const createBlogs = async (count: number = 2): Promise<BlogOutputType[]> 
 }
 
 
-
-
 // export const createBlogs = (count: number = 2): {blogs: BlogDBType[]} => {
 //     const blogs: BlogDBType[] = []
 //

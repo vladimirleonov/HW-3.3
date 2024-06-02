@@ -6,7 +6,7 @@ import {BlogOutputType} from "../../src/features/blogs/input-output-types/blog-t
 import {PostOutputType} from "../../src/features/posts/input-output-types/post-types";
 
 
-export const createPost= async (blogId: string, count: number = 2): Promise<PostOutputType> => {
+export const createPost= async (blogId: string): Promise<PostOutputType> => {
     const res = await req
         .post(SETTINGS.PATH.POSTS)
         .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)

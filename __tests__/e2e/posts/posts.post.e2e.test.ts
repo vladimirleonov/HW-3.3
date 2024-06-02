@@ -23,7 +23,7 @@ describe('POST /posts', () => {
     it('- POST post unauthorized: STATUS 401', async () => {
         const blogs: BlogOutputType[] = await createBlogs()
 
-        const blogId = blogs[0].id
+        const blogId: string = blogs[0].id
 
         const newPost: PostBodyInputType = {
             title: 'title2',
@@ -60,7 +60,7 @@ describe('POST /posts', () => {
     it('- POST post when title not passed: STATUS 400', async () => {
         const blogs: BlogOutputType[] = await createBlogs()
 
-        const blogId = blogs[0].id
+        const blogId: string = blogs[0].id
 
         const newPost: any = {
             shortDescription: 'shortDescription2',
@@ -84,7 +84,7 @@ describe('POST /posts', () => {
     it('- POST post when title is not a string: STATUS 400', async () => {
         const blogs: BlogOutputType[] = await createBlogs()
 
-        const blogId = blogs[0].id
+        const blogId: string = blogs[0].id
 
         const newPost: PostBodyInputType = {
             title: 123 as any,
@@ -109,7 +109,7 @@ describe('POST /posts', () => {
     it('- POST post with incorrect title length: STATUS 400', async () => {
         const blogs: BlogOutputType[] = await createBlogs()
 
-        const blogId = blogs[0].id
+        const blogId: string = blogs[0].id
 
         const newPost: PostBodyInputType = {
             title: 'title2'.repeat(10),
@@ -134,7 +134,7 @@ describe('POST /posts', () => {
     it('- POST post when shortDescription not passed: STATUS 400', async () => {
         const blogs: BlogOutputType[] = await createBlogs()
 
-        const blogId = blogs[0].id
+        const blogId: string = blogs[0].id
 
         const newPost: any = {
             title: "title2",
@@ -158,7 +158,7 @@ describe('POST /posts', () => {
     it('- POST post when shortDescription is not a string: STATUS 400', async () => {
         const blogs: BlogOutputType[] = await createBlogs()
 
-        const blogId = blogs[0].id
+        const blogId: string = blogs[0].id
 
         const newPost: PostBodyInputType = {
             title: "title2",
@@ -183,7 +183,7 @@ describe('POST /posts', () => {
     it('- POST post with incorrect shortDescription length: STATUS 400', async () => {
         const blogs: BlogOutputType[] = await createBlogs()
 
-        const blogId = blogs[0].id
+        const blogId: string = blogs[0].id
 
         const newPost: PostBodyInputType = {
             title: 'title2',
@@ -208,7 +208,7 @@ describe('POST /posts', () => {
     it('- POST post when content not passed: STATUS 400', async () => {
         const blogs: BlogOutputType[] = await createBlogs()
 
-        const blogId = blogs[0].id
+        const blogId: string = blogs[0].id
 
         const newPost: any = {
             title: "title2",
@@ -232,7 +232,7 @@ describe('POST /posts', () => {
     it('- POST post when content is not a string: STATUS 400', async () => {
         const blogs: BlogOutputType[] = await createBlogs()
 
-        const blogId = blogs[0].id
+        const blogId: string = blogs[0].id
 
         const newPost: PostBodyInputType = {
             title: "title2",
@@ -257,7 +257,7 @@ describe('POST /posts', () => {
     it('- POST post with incorrect content length: STATUS 400', async () => {
         const blogs: BlogOutputType[] = await createBlogs()
 
-        const blogId = blogs[0].id
+        const blogId: string = blogs[0].id
 
         const newPost: PostBodyInputType = {
             title: 'title2',
