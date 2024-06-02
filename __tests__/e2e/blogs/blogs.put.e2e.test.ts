@@ -1,6 +1,6 @@
 import {req} from "../../helpers/req"
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings"
-import {InputBlogType} from "../../../src/features/blogs/input-output-types/blog-types"
+import {BlogBodyInputType} from "../../../src/features/blogs/input-output-types/blog-types"
 import {base64Service} from "../../../src/common/adapters/base64Service";
 import {createBlogs} from "../../helpers/blog-helpers"
 import {testSeeder} from "../../testSeeder";
@@ -32,7 +32,7 @@ describe('PUT /blogs', () => {
     it('+ PUT blog with correct input data: STATUS 204', async () => {
         const blogs = await createBlogs()
 
-        const blogDataForUpdate: InputBlogType = {
+        const blogDataForUpdate: BlogBodyInputType = {
             name: 'name2',
             description: 'description2',
             websiteUrl: 'https://youtube.com'
@@ -68,7 +68,7 @@ describe('PUT /blogs', () => {
     it('- PUT blog when name is not a string: STATUS 400', async () => {
         const blogs = await createBlogs()
 
-        const blogDataForUpdate: InputBlogType = {
+        const blogDataForUpdate: BlogBodyInputType = {
             name: 123 as any,
             description: 'description2',
             websiteUrl: 'https://youtube.com'
@@ -90,7 +90,7 @@ describe('PUT /blogs', () => {
     it('- PUT blog with incorrect name length: STATUS 400', async () => {
         const blogs = await createBlogs()
 
-        const blogDataForUpdate: InputBlogType = {
+        const blogDataForUpdate: BlogBodyInputType = {
             name: 'name2'.repeat(5),
             description: 'description2',
             websiteUrl: 'https://youtube.com'
@@ -133,7 +133,7 @@ describe('PUT /blogs', () => {
     it('- PUT blog when description is not a string: STATUS 400', async () => {
         const blogs = await createBlogs()
 
-        const blogDataForUpdate: InputBlogType = {
+        const blogDataForUpdate: BlogBodyInputType = {
             name: 'name2',
             description: 123 as any,
             websiteUrl: 'https://youtube.com'
@@ -155,7 +155,7 @@ describe('PUT /blogs', () => {
     it('- PUT blog with incorrect description length: STATUS 400', async () => {
         const blogs = await createBlogs()
 
-        const blogDataForUpdate: InputBlogType = {
+        const blogDataForUpdate: BlogBodyInputType = {
             name: 'name2',
             description: 'description2'.repeat(50),
             websiteUrl: 'https://youtube.com'
@@ -199,7 +199,7 @@ describe('PUT /blogs', () => {
     it('- PUT blog when websiteUrl is not a string: STATUS 400', async () => {
         const blogs = await createBlogs()
 
-        const blogDataForUpdate: InputBlogType = {
+        const blogDataForUpdate: BlogBodyInputType = {
             name: 'name2',
             description: 'description2',
             websiteUrl: 123 as any
@@ -221,7 +221,7 @@ describe('PUT /blogs', () => {
     it('- PUT blog with incorrect websiteUrl length: STATUS 400', async () => {
         const blogs = await createBlogs()
 
-        const blogDataForUpdate: InputBlogType = {
+        const blogDataForUpdate: BlogBodyInputType = {
             name: 'name2',
             description: 'description2',
             websiteUrl: 'https://' + 'youtube'.repeat(20) + '.com'
@@ -244,7 +244,7 @@ describe('PUT /blogs', () => {
     it('- PUT blog with incorrect websiteUrl: STATUS 400', async () => {
         const blogs = await createBlogs()
 
-        const blogDataForUpdate: InputBlogType = {
+        const blogDataForUpdate: BlogBodyInputType = {
             name: 'name2',
             description: 'description2',
             websiteUrl: 'http://youtube.com'
@@ -266,7 +266,7 @@ describe('PUT /blogs', () => {
     it('- PUT blog with incorrect data (first errors): STATUS 400', async () => {
         const blogs = await createBlogs()
 
-        const blogDataForUpdate: InputBlogType = {
+        const blogDataForUpdate: BlogBodyInputType = {
             name: "",
             description: null as any,
             websiteUrl: 123 as any

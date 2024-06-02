@@ -11,60 +11,24 @@ export type UserBodyInputType = {
     email: string
 }
 
-// export type BaseUserType = {
-//     login: string;
-//     email: string;
-//     createdAt: string;
-// };
-//
-// export type UserWithIdOutputType = BaseUserType & {
-//     id: string;
-// };
-//
-// export type DefaultUserOutputType = BaseUserType;
-
-// export type OutputUserWithoutIdType = {
-//     id: string
-//     login: string
-//     email: string
-//     createdAt: string
-// }
-//
-// export type OutputUserWithoutIdType BaseUserType = {
-//     login: string
-//     email: string
-//     createdAt: string
-// }
-
-// export type OutputUserType = {
-//     id: string
-//     login: string
-//     email: string
-//     createdAt: string
-// }
-
 export type BaseUserOutputType = {
     login: string;
     email: string;
 };
 
-export type UserWithUserIdOutputType = BaseUserOutputType & {
+export type AuthenticatedUserOutputType = BaseUserOutputType & {
     userId: string;
 };
 
-export type UserWithCreatedAtOutputType = BaseUserOutputType & {
-    createdAt: string;
-};
-
-export type UserWithIdAndCreatedAtOutputType = BaseUserOutputType & {
+export type DetailedUserOutputType = BaseUserOutputType & {
     id: string;
     createdAt: string;
 };
 
-export type OutputUserPaginationType = {
+export type UserPaginationOutputType = {
     pagesCount: number,
     page: number,
     pageSize: number,
     totalCount: number,
-    items: UserWithIdAndCreatedAtOutputType[]
+    items: DetailedUserOutputType[]
 }

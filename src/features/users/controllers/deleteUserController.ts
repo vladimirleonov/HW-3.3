@@ -2,12 +2,13 @@ import { Request, Response } from "express"
 import {HTTP_CODES} from "../../../settings";
 import {userService} from "../services/userService";
 import {IdParamInputType} from "../../../common/input-output-types/common-types";
+import {Result, ResultStatus} from "../../../common/types/result-type";
 
 export const deleteUserController = async (req: Request<IdParamInputType>, res: Response) => {
     try {
-        const isDeleted = await userService.deleteUser(req.params.id)
+        const result: Result<boolean> = await userService.deleteUser(req.params.id)
 
-        if (!isDeleted) {
+        if (result.status === ResultStatus.NotFound) {
             res.status(HTTP_CODES.NOT_FOUND).send()
             return
         }

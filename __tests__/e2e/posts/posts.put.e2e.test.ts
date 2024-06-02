@@ -1,10 +1,10 @@
 import {req} from "../../helpers/req"
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings"
-import {InputPostType, OutputPostType} from "../../../src/features/posts/input-output-types/post-types"
+import {PostBodyInputType, PostOutputType} from "../../../src/features/posts/input-output-types/post-types"
 import {base64Service} from "../../../src/common/adapters/base64Service";
 import {createBlogs} from "../../helpers/blog-helpers"
 import {createPosts} from "../../helpers/post-helpers"
-import {OutputBlogType} from "../../../src/features/blogs/input-output-types/blog-types";
+import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import {db} from "../../../src/db/mongo-db";
 
@@ -20,12 +20,12 @@ describe('PUT /posts', () => {
         await db.drop()
     })
     it('- PUT post unauthorized: STATUS 401', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+        const blogs: BlogOutputType[] = await createBlogs()
+        const posts: PostOutputType[] = await createPosts(blogs)
 
         const blogId: string = blogs[0].id.toString()
 
-        const postForUpdating: InputPostType = {
+        const postForUpdating: PostBodyInputType = {
             title: 'title2',
             shortDescription: 'shortDescription2',
             content: 'content2',
@@ -39,12 +39,12 @@ describe('PUT /posts', () => {
             .expect(HTTP_CODES.UNAUTHORIZED)
     })
     it('+ PUT post with correct input data: STATUS 204', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+        const blogs: BlogOutputType[] = await createBlogs()
+        const posts: PostOutputType[] = await createPosts(blogs)
 
         const blogId: string = blogs[0].id.toString()
 
-        const postForUpdating: InputPostType = {
+        const postForUpdating: PostBodyInputType = {
             title: 'title2',
             shortDescription: 'shortDescription2',
             content: 'content2',
@@ -58,8 +58,8 @@ describe('PUT /posts', () => {
             .expect(HTTP_CODES.NO_CONTENT)
     })
     it('- PUT post when title not passed', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+        const blogs: BlogOutputType[] = await createBlogs()
+        const posts: PostOutputType[] = await createPosts(blogs)
 
         const blogId: string = blogs[0].id.toString()
 
@@ -83,12 +83,12 @@ describe('PUT /posts', () => {
         )
     })
     it('- PUT post when title is not a string: STATUS 400', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+        const blogs: BlogOutputType[] = await createBlogs()
+        const posts: PostOutputType[] = await createPosts(blogs)
 
         const blogId: string = blogs[0].id.toString()
 
-        const postForUpdating: InputPostType = {
+        const postForUpdating: PostBodyInputType = {
             title: 123 as any,
             shortDescription: 'shortDescription2',
             content: 'content2',
@@ -109,12 +109,12 @@ describe('PUT /posts', () => {
         )
     })
     it('- PUT post when title is too long: STATUS 400', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+        const blogs: BlogOutputType[] = await createBlogs()
+        const posts: PostOutputType[] = await createPosts(blogs)
 
         const blogId: string = blogs[0].id.toString()
 
-        const postForUpdating: InputPostType = {
+        const postForUpdating: PostBodyInputType = {
             title: 'title2'.repeat(10),
             shortDescription: 'shortDescription2',
             content: 'content2',
@@ -135,8 +135,8 @@ describe('PUT /posts', () => {
         )
     })
     it('- PUT post when shortDescription not passed: STATUS 400', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+        const blogs: BlogOutputType[] = await createBlogs()
+        const posts: PostOutputType[] = await createPosts(blogs)
 
         const blogId: string = blogs[0].id.toString()
 
@@ -160,12 +160,12 @@ describe('PUT /posts', () => {
         )
     })
     it('- PUT post when shortDescription is not a string: STATUS 400', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+        const blogs: BlogOutputType[] = await createBlogs()
+        const posts: PostOutputType[] = await createPosts(blogs)
 
         const blogId: string = blogs[0].id.toString()
 
-        const postForUpdating: InputPostType = {
+        const postForUpdating: PostBodyInputType = {
             title: "title2",
             shortDescription: 123 as any,
             content: 'content2',
@@ -186,12 +186,12 @@ describe('PUT /posts', () => {
         )
     })
     it('- PUT post when shortDescription is too long: STATUS 400', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+        const blogs: BlogOutputType[] = await createBlogs()
+        const posts: PostOutputType[] = await createPosts(blogs)
 
         const blogId: string = blogs[0].id.toString()
 
-        const postForUpdating: InputPostType = {
+        const postForUpdating: PostBodyInputType = {
             title: 'title2',
             shortDescription: 'shortDescription2'.repeat(10),
             content: 'content2',
@@ -212,8 +212,8 @@ describe('PUT /posts', () => {
         )
     })
     it('- PUT post when content not passed: STATUS 400', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+        const blogs: BlogOutputType[] = await createBlogs()
+        const posts: PostOutputType[] = await createPosts(blogs)
 
         const blogId: string = blogs[0].id.toString()
 
@@ -237,12 +237,12 @@ describe('PUT /posts', () => {
         )
     })
     it('- PUT post when content is not a string: STATUS 400', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+        const blogs: BlogOutputType[] = await createBlogs()
+        const posts: PostOutputType[] = await createPosts(blogs)
 
         const blogId: string = blogs[0].id.toString()
 
-        const postForUpdating: InputPostType = {
+        const postForUpdating: PostBodyInputType = {
             title: "title2",
             shortDescription: "shortDescription2",
             content: 123 as any,
@@ -263,12 +263,12 @@ describe('PUT /posts', () => {
         )
     })
     it('- PUT post when content is too long: STATUS 400', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+        const blogs: BlogOutputType[] = await createBlogs()
+        const posts: PostOutputType[] = await createPosts(blogs)
 
         const blogId: string = blogs[0].id.toString()
 
-        const postForUpdating: InputPostType = {
+        const postForUpdating: PostBodyInputType = {
             title: 'title2',
             shortDescription: 'shortDescription2',
             content: 'content2'.repeat(130),
@@ -289,8 +289,8 @@ describe('PUT /posts', () => {
         )
     })
     it('- PUT post when blogId not passed: STATUS 400', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+        const blogs: BlogOutputType[] = await createBlogs()
+        const posts: PostOutputType[] = await createPosts(blogs)
 
         const postForUpdating: any = {
             title: "title2",
@@ -312,10 +312,10 @@ describe('PUT /posts', () => {
         )
     })
     it('- PUT post when blogId is not a string: STATUS 400', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+        const blogs: BlogOutputType[] = await createBlogs()
+        const posts: PostOutputType[] = await createPosts(blogs)
 
-        const postForUpdating: InputPostType = {
+        const postForUpdating: PostBodyInputType = {
             title: "title2",
             shortDescription: "shortDescription2",
             content: "content2",
@@ -336,10 +336,10 @@ describe('PUT /posts', () => {
         )
     })
     it('- PUT post when blogId is invalid: STATUS 400', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+        const blogs: BlogOutputType[] = await createBlogs()
+        const posts: PostOutputType[] = await createPosts(blogs)
 
-        const postForUpdating: InputPostType = {
+        const postForUpdating: PostBodyInputType = {
             title: 'title2',
             shortDescription: 'shortDescription2',
             content: 'content2',
@@ -360,10 +360,10 @@ describe('PUT /posts', () => {
         )
     })
     it('- PUT post with incorrect data (first errors): STATUS 400', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+        const blogs: BlogOutputType[] = await createBlogs()
+        const posts: PostOutputType[] = await createPosts(blogs)
 
-        const postForUpdating: InputPostType = {
+        const postForUpdating: PostBodyInputType = {
             title: "",
             shortDescription: 123 as any,
             content: 123 as any,

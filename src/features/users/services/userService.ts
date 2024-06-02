@@ -50,9 +50,17 @@ export const userService = {
     },
     async deleteUser(id: string): Promise<Result<boolean>> {
         const isDeleted: boolean = await userMongoRepository.delete(id)
-        return {
-            status: ResultStatus.Success,
-            data: isDeleted
+        if (isDeleted) {
+            return {
+                status: ResultStatus.Success,
+                data: true
+            }
+        } else {
+            return {
+                status: ResultStatus.NotFound,
+                extensions: [{field: 'id', message: `User with id ${id} does not exist`}],
+                data: false
+            }
         }
     }
 }

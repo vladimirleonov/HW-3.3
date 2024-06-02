@@ -1,6 +1,6 @@
 import {req} from "../../helpers/req"
 import {HTTP_CODES, SETTINGS} from "../../../src/settings"
-import {InputBlogType} from "../../../src/features/blogs/input-output-types/blog-types"
+import {BlogBodyInputType} from "../../../src/features/blogs/input-output-types/blog-types"
 import {base64Service} from "../../../src/common/adapters/base64Service";
 import {AUTH_DATA} from "../../../src/settings"
 import {testSeeder} from "../../testSeeder";
@@ -61,7 +61,7 @@ describe('POST /blogs', () => {
         )
     })
     it('- POST blog when name is not a string: STATUS 400', async () => {
-        const newBlog: InputBlogType = {
+        const newBlog: BlogBodyInputType = {
             name: 123 as any,
             description: 'description1',
             websiteUrl: 'https://youtube.com'
@@ -81,7 +81,7 @@ describe('POST /blogs', () => {
         )
     })
     it('- POST blog with incorrect name length: STATUS 400', async () => {
-        const newBlog: InputBlogType = {
+        const newBlog: BlogBodyInputType = {
             name: 'name1'.repeat(5),
             description: 'description1',
             websiteUrl: 'https://youtube.com'
@@ -121,7 +121,7 @@ describe('POST /blogs', () => {
         )
     })
     it('- POST blog when description is not a string: STATUS 400', async () => {
-        const newBlog: InputBlogType = {
+        const newBlog: BlogBodyInputType = {
             name: 'name1',
             description: 123 as any,
             websiteUrl: 'https://youtube.com'
@@ -141,7 +141,7 @@ describe('POST /blogs', () => {
         )
     })
     it('- POST blog with incorrect description length: STATUS 400', async () => {
-        const newBlog: InputBlogType = {
+        const newBlog: BlogBodyInputType = {
             name: 'name1',
             description: 'description1'.repeat(50),
             websiteUrl: 'https://youtube.com'
@@ -181,7 +181,7 @@ describe('POST /blogs', () => {
         )
     })
     it('- POST blog when websiteUrl is not a string: STATUS 400', async () => {
-        const newBlog: InputBlogType = {
+        const newBlog: BlogBodyInputType = {
             name: 'name1',
             description: 'description1',
             websiteUrl: 123 as any
@@ -201,7 +201,7 @@ describe('POST /blogs', () => {
         )
     })
     it('- POST blog with incorrect websiteUrl length: STATUS 400', async () => {
-        const newBlog: InputBlogType = {
+        const newBlog: BlogBodyInputType = {
             name: 'name1',
             description: 'description1',
             websiteUrl: 'https://' + 'youtube'.repeat(20) + '.com'
@@ -222,7 +222,7 @@ describe('POST /blogs', () => {
         )
     })
     it('- POST blog with incorrect websiteUrl: STATUS 400', async () => {
-        const newBlog: InputBlogType = {
+        const newBlog: BlogBodyInputType = {
             name: 'name1',
             description: 'description1',
             websiteUrl: 'http://youtube.com'
@@ -243,7 +243,7 @@ describe('POST /blogs', () => {
         )
     })
     it('- POST blog with incorrect data (first errors): STATUS 400', async () => {
-        const newBlog: InputBlogType = {
+        const newBlog: BlogBodyInputType = {
             name: "",
             description: null as any,
             websiteUrl: 123 as any

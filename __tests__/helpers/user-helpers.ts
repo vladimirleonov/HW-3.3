@@ -2,10 +2,10 @@ import {req} from "./req"
 import {HTTP_CODES, SETTINGS} from "../../src/settings"
 import {base64Service} from "../../src/common/adapters/base64Service";
 import {AUTH_DATA} from "../../src/settings"
-import {OutputUserType} from "../../src/features/users/input-output-types/user-types";
+import {DetailedUserOutputType} from "../../src/features/users/input-output-types/user-types";
 
 
-export const createUser = async (): Promise<OutputUserType> => {
+export const createUser = async (): Promise<DetailedUserOutputType> => {
     const res = await req.post(SETTINGS.PATH.USERS)
         // .auth(ADMIN_LOGIN, ADMIN_PASS)
         .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
@@ -17,8 +17,8 @@ export const createUser = async (): Promise<OutputUserType> => {
     return res.body
 }
 
-export const createUsers = async (count: number = 2): Promise<OutputUserType[]> => {
-    const users: OutputUserType[] = []
+export const createUsers = async (count: number = 2): Promise<DetailedUserOutputType[]> => {
+    const users: DetailedUserOutputType[] = []
 
     for(let i = 0; i < count; i++) {
         const res = await req.post(SETTINGS.PATH.USERS)
@@ -32,7 +32,7 @@ export const createUsers = async (count: number = 2): Promise<OutputUserType[]> 
         users.push(res.body)
     }
     //sort by default
-    const sortedUsers: OutputUserType[] = users.sort((a: OutputUserType, b: OutputUserType) => b.createdAt.localeCompare(a.createdAt))
+    const sortedUsers: DetailedUserOutputType[] = users.sort((a: DetailedUserOutputType, b: DetailedUserOutputType) => b.createdAt.localeCompare(a.createdAt))
     return sortedUsers
 }
 

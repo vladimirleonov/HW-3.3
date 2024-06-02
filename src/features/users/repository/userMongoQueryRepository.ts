@@ -1,15 +1,15 @@
 import {SanitizedUsersQueryParamsType} from "../helpers/sanitizeUsersQueryParams";
 import {
-    OutputUserPaginationType,
-    UserWithIdAndCreatedAtOutputType,
-    UserWithUserIdOutputType
+    UserPaginationOutputType,
+    DetailedUserOutputType,
+    AuthenticatedUserOutputType
 } from "../input-output-types/user-types";
 import {UserDbType} from "../../../db/db-types/user-db-types";
 import {ObjectId} from "mongodb";
 import {db} from "../../../db/mongo-db";
 
 export const userMongoQueryRepository = {
-    async findAllForOutput(query: SanitizedUsersQueryParamsType): Promise<OutputUserPaginationType> {
+    async findAllForOutput(query: SanitizedUsersQueryParamsType): Promise<UserPaginationOutputType> {
         const searchLoginFilter = query.searchLoginTerm
             ? { login : { $regex: query.searchLoginTerm, $options: 'i' }}
             : {}
@@ -37,7 +37,7 @@ export const userMongoQueryRepository = {
             page: query.pageNumber,
             pageSize: query.pageSize,
             totalCount,
-            items: users.map((user: UserDbType) => this.mapToOutputWithIdAndCreatedAt(user))
+            items: users.map((user: UserDbType) => this.mapToDetailedUser(user))
         }
     },
     // async findForOutputById(id: string): Promise<{error?: string, user?: UserWithIdAndCreatedAtOutputType}> {
@@ -47,21 +47,21 @@ export const userMongoQueryRepository = {
     //     }
     //     return {user: this.mapToOutputWithIdAndCreatedAt(user)}
     // },
-    async findForOutputById(id: string): Promise<UserWithIdAndCreatedAtOutputType | null> {
+    async findDetailedUserById(id: string): Promise<DetailedUserOutputType | null> {
         const user: UserDbType | null = await db.getCollections().userCollection.findOne({_id: new ObjectId(id)})
-        return user ? this.mapToOutputWithIdAndCreatedAt(user) : null
+        return user ? this.mapToDetailedUser(user) : null
     },
-    async findForOutputWithUserIdWithoutCreatedAt(id: string): Promise<UserWithUserIdOutputType | null> {
+    async findAuthenticatedUserById(id: string): Promise<AuthenticatedUserOutputType | null> {
         const user: UserDbType | null = await db.getCollections().userCollection.findOne({_id: new ObjectId(id)})
-        return user ? this.mapToOutputWithUserIdWithoutCreated(user) : null
+        return user ? this.mapToAuthenticatedUser(user) : null
     },
-    mapToOutputWithIdAndCreatedAt({_id, password, ...rest}: UserDbType): UserWithIdAndCreatedAtOutputType {
+    mapToDetailedUser({_id, password, ...rest}: UserDbType): DetailedUserOutputType {
         return {
             id: _id.toString(),
             ...rest
         }
     },
-    mapToOutputWithUserIdWithoutCreated({_id, password, createdAt, ...rest}: UserDbType): UserWithUserIdOutputType {
+    mapToAuthenticatedUser({_id, password, createdAt, ...rest}: UserDbType): AuthenticatedUserOutputType {
         return {
             ...rest,
             userId: _id.toString(),

@@ -2,8 +2,8 @@ import { PostDbType } from "../../src/db/db-types/post-db-types"
 import {req} from "./req";
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../src/settings";
 import {base64Service} from "../../src/common/adapters/base64Service";
-import {OutputBlogType} from "../../src/features/blogs/input-output-types/blog-types";
-import {OutputPostType} from "../../src/features/posts/input-output-types/post-types";
+import {BlogOutputType} from "../../src/features/blogs/input-output-types/blog-types";
+import {PostOutputType} from "../../src/features/posts/input-output-types/post-types";
 
 
 export const createPost= async (blogId: string, count: number = 2): Promise<PostDbType> => {
@@ -21,11 +21,11 @@ export const createPost= async (blogId: string, count: number = 2): Promise<Post
     return res.body
 }
 
-export const createPosts= async (blogs: OutputBlogType[], count: number = 2): Promise<OutputPostType[]> => {
-    const posts: OutputPostType[] = []
+export const createPosts= async (blogs: BlogOutputType[], count: number = 2): Promise<PostOutputType[]> => {
+    const posts: PostOutputType[] = []
 
     for(let i: number = 0; i < count; i++) {
-        const blog: OutputBlogType = blogs[i % blogs.length]
+        const blog: BlogOutputType = blogs[i % blogs.length]
 
         const res = await req
             .post(SETTINGS.PATH.POSTS)
@@ -40,7 +40,7 @@ export const createPosts= async (blogs: OutputBlogType[], count: number = 2): Pr
         posts.push(res.body)
     }
 
-    const sortedPosts: OutputPostType[] = posts.sort((a: OutputPostType, b: OutputPostType) => b.createdAt.localeCompare(a.createdAt))
+    const sortedPosts: PostOutputType[] = posts.sort((a: PostOutputType, b: PostOutputType) => b.createdAt.localeCompare(a.createdAt))
     return sortedPosts
 }
 

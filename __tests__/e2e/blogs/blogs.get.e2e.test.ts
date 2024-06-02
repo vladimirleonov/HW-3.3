@@ -3,9 +3,9 @@ import {SETTINGS} from "../../../src/settings"
 import {HTTP_CODES} from "../../../src/settings"
 import {createBlogs} from '../../helpers/blog-helpers'
 import {ObjectId} from "mongodb"
-import {OutputBlogType} from "../../../src/features/blogs/input-output-types/blog-types";
+import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types";
 import {createPosts} from "../../helpers/post-helpers";
-import {OutputPostType} from "../../../src/features/posts/input-output-types/post-types";
+import {PostOutputType} from "../../../src/features/posts/input-output-types/post-types";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import {db} from "../../../src/db/mongo-db";
 
@@ -27,7 +27,7 @@ describe('GET /blogs', () => {
         expect(res.body.items.length).toBe(0)
     })
     it('+ GET blogs with default query parameters: STATUS 200', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
+        const blogs: BlogOutputType[] = await createBlogs()
 
         const res = await req.get(SETTINGS.PATH.BLOGS).expect(HTTP_CODES.OK)
 
@@ -37,7 +37,7 @@ describe('GET /blogs', () => {
         expect(res.body.totalCount).toBe(blogs.length);
 
         expect(res.body.items.length).toBe(blogs.length);
-        res.body.items.forEach((item: OutputBlogType, index: number) => {
+        res.body.items.forEach((item: BlogOutputType, index: number) => {
             expect(item.id).toBe(blogs[index].id);
             expect(item.name).toBe(blogs[index].name);
             expect(item.description).toBe(blogs[index].description);
@@ -47,7 +47,7 @@ describe('GET /blogs', () => {
         });
     })
     it('+ GET blogs with searchNameTerm: STATUS 200', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
+        const blogs: BlogOutputType[] = await createBlogs()
 
         const searchTerm = '2';
 
@@ -58,7 +58,7 @@ describe('GET /blogs', () => {
         const filteredBlogs = blogs.filter(blog => blog.name.toLowerCase().includes(searchTerm.toLowerCase()))
 
         expect(res.body.items.length).toBe(filteredBlogs.length);
-        res.body.items.forEach((item: OutputBlogType, index: number) => {
+        res.body.items.forEach((item: BlogOutputType, index: number) => {
             expect(item.id).toBe(filteredBlogs[index].id);
             expect(item.name).toBe(filteredBlogs[index].name);
             expect(item.description).toBe(filteredBlogs[index].description);
@@ -68,17 +68,17 @@ describe('GET /blogs', () => {
         });
     })
     it('+ GET blogs with sorting query parameters: STATUS 200', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
+        const blogs: BlogOutputType[] = await createBlogs()
 
         const res = await req.get(SETTINGS.PATH.BLOGS)
             .query({sortBy: 'name', sortDirection: 'asc'})
             .expect(HTTP_CODES.OK)
 
-        const sortedBlogs: OutputBlogType[] = blogs.sort((a: OutputBlogType, b: OutputBlogType) => a.name.localeCompare(b.name))
+        const sortedBlogs: BlogOutputType[] = blogs.sort((a: BlogOutputType, b: BlogOutputType) => a.name.localeCompare(b.name))
 
         expect(res.body.items.length).toBe(sortedBlogs.length);
 
-        res.body.items.forEach((item: OutputBlogType, index: number) => {
+        res.body.items.forEach((item: BlogOutputType, index: number) => {
             expect(item.id).toBe(sortedBlogs[index].id);
             expect(item.name).toBe(sortedBlogs[index].name);
             expect(item.description).toBe(sortedBlogs[index].description);
@@ -88,7 +88,7 @@ describe('GET /blogs', () => {
         })
     })
     it('+ GET blogs with pagination: STATUS 200', async () => {
-        const blogs: OutputBlogType[] = await createBlogs(7)
+        const blogs: BlogOutputType[] = await createBlogs(7)
 
         const pageNumber: number = 2;
         const pageSize: number = 4;
@@ -97,11 +97,11 @@ describe('GET /blogs', () => {
             .query({pageNumber, pageSize})
             .expect(HTTP_CODES.OK)
 
-        const paginatedBlogs: OutputBlogType[] = blogs.slice(Math.ceil((pageNumber - 1) * pageSize), pageNumber * pageSize);
+        const paginatedBlogs: BlogOutputType[] = blogs.slice(Math.ceil((pageNumber - 1) * pageSize), pageNumber * pageSize);
 
         expect(res.body.items.length).toBe(paginatedBlogs.length);
 
-        res.body.items.forEach((item: OutputBlogType, index: number) => {
+        res.body.items.forEach((item: BlogOutputType, index: number) => {
             expect(item.id).toBe(paginatedBlogs[index].id);
             expect(item.name).toBe(paginatedBlogs[index].name);
             expect(item.description).toBe(paginatedBlogs[index].description);
@@ -112,15 +112,15 @@ describe('GET /blogs', () => {
     })
     //blogs/{blogId}/posts
     it('+ GET posts for specific blog with default query parameters: STATUS 200', async () => {
-        const blogs: OutputBlogType[] = await createBlogs(2)
-        const posts: OutputPostType[] = await createPosts(blogs)
+        const blogs: BlogOutputType[] = await createBlogs(2)
+        const posts: PostOutputType[] = await createPosts(blogs)
 
         const blogId: string = blogs[0].id
 
         const res = await req.get(`${SETTINGS.PATH.BLOGS}/${blogId}/posts`)
             .expect(HTTP_CODES.OK)
 
-        const blogPosts: OutputPostType[] = posts.filter((post: OutputPostType) => post.blogId.toString() === blogId)
+        const blogPosts: PostOutputType[] = posts.filter((post: PostOutputType) => post.blogId.toString() === blogId)
 
         expect(res.body.pagesCount).toBe(1);
         expect(res.body.page).toBe(1);
@@ -128,7 +128,7 @@ describe('GET /blogs', () => {
         expect(res.body.totalCount).toBe(blogPosts.length);
 
         expect(res.body.items.length).toBe(blogPosts.length);
-        res.body.items.forEach((item: OutputPostType, index: number) => {
+        res.body.items.forEach((item: PostOutputType, index: number) => {
             expect(item.id).toBe(blogPosts[index].id);
             expect(item.title).toBe(blogPosts[index].title);
             expect(item.shortDescription).toBe(blogPosts[index].shortDescription);
@@ -139,8 +139,8 @@ describe('GET /blogs', () => {
         })
     })
     it('+ GET posts for specific blog with sorting query parameters: STATUS 200', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+        const blogs: BlogOutputType[] = await createBlogs()
+        const posts: PostOutputType[] = await createPosts(blogs)
 
         const blogId: string = blogs[0].id
 
@@ -148,10 +148,10 @@ describe('GET /blogs', () => {
             .query({sortBy: 'title', sortDirection: 'asc'})
             .expect(HTTP_CODES.OK)
 
-        const blogPosts: OutputPostType[] = posts.filter((post: OutputPostType) => post.blogId.toString() === blogId)
+        const blogPosts: PostOutputType[] = posts.filter((post: PostOutputType) => post.blogId.toString() === blogId)
 
         expect(res.body.items.length).toBe(blogPosts.length);
-        res.body.items.forEach((item: OutputPostType, index: number) => {
+        res.body.items.forEach((item: PostOutputType, index: number) => {
             expect(item.id).toBe(blogPosts[index].id);
             expect(item.title).toBe(blogPosts[index].title);
             expect(item.shortDescription).toBe(blogPosts[index].shortDescription);
@@ -162,8 +162,8 @@ describe('GET /blogs', () => {
         })
     })
     it('+ GET posts for specific blog with pagination: STATUS 200', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+        const blogs: BlogOutputType[] = await createBlogs()
+        const posts: PostOutputType[] = await createPosts(blogs)
 
         const blogId: string = blogs[0].id
 
@@ -174,12 +174,12 @@ describe('GET /blogs', () => {
             .query({pageNumber, pageSize})
             .expect(HTTP_CODES.OK)
 
-        const blogPosts: OutputPostType[] = posts.filter((post: OutputPostType) => post.blogId.toString() === blogId)
+        const blogPosts: PostOutputType[] = posts.filter((post: PostOutputType) => post.blogId.toString() === blogId)
 
-        const paginatedBlogPosts: OutputPostType[] = blogPosts.slice((pageNumber - 1) * pageSize, pageNumber * pageSize)
+        const paginatedBlogPosts: PostOutputType[] = blogPosts.slice((pageNumber - 1) * pageSize, pageNumber * pageSize)
 
         expect(res.body.items.length).toBe(paginatedBlogPosts.length);
-        res.body.items.forEach((item: OutputPostType, index: number) => {
+        res.body.items.forEach((item: PostOutputType, index: number) => {
             expect(item.id).toBe(paginatedBlogPosts[index].id);
             expect(item.title).toBe(paginatedBlogPosts[index].title);
             expect(item.shortDescription).toBe(paginatedBlogPosts[index].shortDescription);
@@ -191,7 +191,7 @@ describe('GET /blogs', () => {
     })
     //blogs/{id}
     it('+ GET blog with correct id: STATUS 200', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
+        const blogs: BlogOutputType[] = await createBlogs()
 
         const res = await req
             .get(`${SETTINGS.PATH.BLOGS}/${blogs[0].id}`)

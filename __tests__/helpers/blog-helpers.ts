@@ -1,10 +1,10 @@
-import {OutputBlogType} from "../../src/features/blogs/input-output-types/blog-types";
+import {BlogOutputType} from "../../src/features/blogs/input-output-types/blog-types";
 import {req} from "./req";
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../src/settings";
 import {base64Service} from "../../src/common/adapters/base64Service";
 
 
-export const createBlog = async (count: number = 2): Promise<OutputBlogType> => {
+export const createBlog = async (count: number = 2): Promise<BlogOutputType> => {
     const res =  await req
         .post(SETTINGS.PATH.BLOGS)
         .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.FAKE_AUTH)}`)
@@ -18,8 +18,8 @@ export const createBlog = async (count: number = 2): Promise<OutputBlogType> => 
     return res.body
 }
 
-export const createBlogs = async (count: number = 2): Promise<OutputBlogType[]> => {
-    const blogs: OutputBlogType[] = []
+export const createBlogs = async (count: number = 2): Promise<BlogOutputType[]> => {
+    const blogs: BlogOutputType[] = []
 
     for (let i: number = 1; i <= count; i++) {
         const res =  await req
@@ -33,7 +33,7 @@ export const createBlogs = async (count: number = 2): Promise<OutputBlogType[]> 
 
         blogs.push(res.body)
     }
-    const sortedBlogs: OutputBlogType[] = blogs.sort((a: OutputBlogType, b: OutputBlogType) => b.createdAt.localeCompare(a.createdAt))
+    const sortedBlogs: BlogOutputType[] = blogs.sort((a: BlogOutputType, b: BlogOutputType) => b.createdAt.localeCompare(a.createdAt))
     return sortedBlogs
 }
 

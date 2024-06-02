@@ -57,18 +57,34 @@ export const postService = {
             data: createdBlogId
         }
     },
-    async deletePost(postId: string): Promise<Result<boolean>> {
+    async deletePost(postId: string): Promise<Result<boolean | null>> {
         const isDeleted: boolean = await postMongoRepository.delete(postId)
-        return {
-            status: ResultStatus.Success,
-            data: isDeleted
+        if (!isDeleted) {
+            return {
+                status: ResultStatus.NotFound,
+                extensions: [{ field: 'postId', message: `Post with id ${postId} not found` }],
+                data: null
+            }
+        } else {
+            return {
+                status: ResultStatus.Success,
+                data: isDeleted
+            }
         }
     },
-    async updatePost(postId: string, input: PostBodyInputType): Promise<Result<boolean>> {
-        const isUpdated = await postMongoRepository.update(postId, input)
-        return {
-            status: ResultStatus.Success,
-            data: isUpdated
+    async updatePost(postId: string, input: PostBodyInputType): Promise<Result<boolean | null>> {
+        const isUpdated: boolean = await postMongoRepository.update(postId, input)
+        if (!isUpdated) {
+            return {
+                status: ResultStatus.NotFound,
+                extensions: [{ field: 'postId', message: `Post with id ${postId} not found` }],
+                data: null
+            }
+        } else {
+            return {
+                status: ResultStatus.Success,
+                data: isUpdated
+            }
         }
     }
 }

@@ -2,7 +2,7 @@ import {req} from "../../helpers/req";
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings";
 import {base64Service} from "../../../src/common/adapters/base64Service";
 import {createUsers} from "../../helpers/user-helpers";
-import {OutputUserType} from "../../../src/features/users/input-output-types/user-types";
+import {DetailedUserOutputType} from "../../../src/features/users/input-output-types/user-types";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import {db} from "../../../src/db/mongo-db";
 
@@ -28,7 +28,7 @@ describe('GET /users', () => {
             .expect(HTTP_CODES.OK)
     })
     it('+ GET users with default query parameters: STATUS 200', async () => {
-        const users: OutputUserType[] = await createUsers()
+        const users: DetailedUserOutputType[] = await createUsers()
 
         const res = await req.get(SETTINGS.PATH.USERS)
             .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
@@ -40,7 +40,7 @@ describe('GET /users', () => {
         expect(res.body.totalCount).toBe(users.length);
 
         expect(res.body.items.length).toBe(users.length)
-        res.body.items.forEach((item: OutputUserType, index: number) => {
+        res.body.items.forEach((item: DetailedUserOutputType, index: number) => {
             expect(item.id).toBe(users[index].id);
             expect(item.login).toBe(users[index].login);
             expect(item.email).toBe(users[index].email);
@@ -48,7 +48,7 @@ describe('GET /users', () => {
         })
     })
     it('+ GET users with sorting query parameters: STATUS 200', async () => {
-        const users: OutputUserType[] = await createUsers()
+        const users: DetailedUserOutputType[] = await createUsers()
 
         const sortBy: string = 'login'
         const sortDirection = 'asc'
@@ -58,10 +58,10 @@ describe('GET /users', () => {
             .query({sortBy, sortDirection})
             .expect(200)
 
-        const sortedUsers: OutputUserType[] = users.sort((a: OutputUserType, b: OutputUserType) => a.login.localeCompare(b.login))
+        const sortedUsers: DetailedUserOutputType[] = users.sort((a: DetailedUserOutputType, b: DetailedUserOutputType) => a.login.localeCompare(b.login))
 
         expect(res.body.items.length).toBe(sortedUsers.length)
-        res.body.items.forEach((item: OutputUserType, index: number) => {
+        res.body.items.forEach((item: DetailedUserOutputType, index: number) => {
             expect(item.id).toBe(sortedUsers[index].id);
             expect(item.login).toBe(sortedUsers[index].login);
             expect(item.email).toBe(sortedUsers[index].email);
@@ -69,7 +69,7 @@ describe('GET /users', () => {
         })
     })
     it('+ GET users with pagination: STATUS 200', async () => {
-        const users: OutputUserType[] = await createUsers(7)
+        const users: DetailedUserOutputType[] = await createUsers(7)
 
         const pageNumber: number = 2
         const pageSize: number = 3
@@ -79,10 +79,10 @@ describe('GET /users', () => {
             .query({pageNumber, pageSize})
             .expect(200)
 
-        const paginatedPosts: OutputUserType[] = users.slice((pageNumber - 1) * pageSize, pageNumber * pageSize)
+        const paginatedPosts: DetailedUserOutputType[] = users.slice((pageNumber - 1) * pageSize, pageNumber * pageSize)
 
         expect(res.body.items.length).toBe(paginatedPosts.length)
-        res.body.items.forEach((item: OutputUserType, index: number) => {
+        res.body.items.forEach((item: DetailedUserOutputType, index: number) => {
             expect(item.id).toBe(paginatedPosts[index].id);
             expect(item.login).toBe(paginatedPosts[index].login);
             expect(item.email).toBe(paginatedPosts[index].email);

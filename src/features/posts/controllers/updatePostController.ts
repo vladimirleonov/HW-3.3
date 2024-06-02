@@ -3,12 +3,13 @@ import {PostBodyInputType, PostOutputType} from "../input-output-types/post-type
 import {HTTP_CODES} from "../../../settings"
 import {IdParamInputType} from "../../../common/input-output-types/common-types";
 import {postService} from "../services/postService";
+import {Result, ResultStatus} from "../../../common/types/result-type";
 
 export const updatePostController = async (req: Request<IdParamInputType, PostOutputType, PostBodyInputType>, res: Response<PostOutputType>) => {
     try {
-        const isUpdated: boolean = await postService.updatePost(req.params.id, req.body)
+        const result: Result<boolean | null> = await postService.updatePost(req.params.id, req.body)
 
-        if (!isUpdated) {
+        if (result.status === ResultStatus.NotFound) {
             res.status(HTTP_CODES.NOT_FOUND).send()
             return
         }

@@ -2,7 +2,7 @@ import {req} from "../../helpers/req"
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings"
 import {base64Service} from "../../../src/common/adapters/base64Service";
 import {ObjectId} from "mongodb"
-import {OutputUserType} from "../../../src/features/users/input-output-types/user-types";
+import {DetailedUserOutputType} from "../../../src/features/users/input-output-types/user-types";
 import {createUser} from "../../helpers/user-helpers";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import {db} from "../../../src/db/mongo-db";
@@ -19,7 +19,7 @@ describe('DELETE /posts', () => {
         await db.drop()
     })
     it('- DELETE user unauthorized: STATUS 401', async () => {
-        const user: OutputUserType = await createUser()
+        const user: DetailedUserOutputType = await createUser()
 
         await req
             .delete(`${SETTINGS.PATH.USERS}/${user.id}`)
@@ -33,7 +33,7 @@ describe('DELETE /posts', () => {
             .expect(HTTP_CODES.NOT_FOUND)
     })
     it('+ DELETE user with correct input data: STATUS 204', async () => {
-        const user: OutputUserType = await createUser()
+        const user: DetailedUserOutputType = await createUser()
         console.log(user.id)
 
         await req

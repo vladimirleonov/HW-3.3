@@ -6,14 +6,14 @@ import {postMongoQueryRepository} from "../repository/postMongoQueryRepository";
 
 export const getPostController = async (req: Request<IdParamInputType, PostOutputType>, res: Response<PostOutputType>) => {
     try {
-        const foundInfo = await postMongoQueryRepository.findForOutputById(req.params.id)
+        const post: PostOutputType | null = await postMongoQueryRepository.findForOutputById(req.params.id)
 
-        if (foundInfo.error) {
+        if (!post) {
             res.status(HTTP_CODES.NOT_FOUND).send()
             return
         }
 
-        res.status(HTTP_CODES.OK).send(foundInfo.post)
+        res.status(HTTP_CODES.OK).send(post)
     } catch (err) {
         console.error(err)
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()

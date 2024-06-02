@@ -4,8 +4,8 @@ import {base64Service} from "../../../src/common/adapters/base64Service";
 import {createBlogs} from "../../helpers/blog-helpers"
 import {createPosts} from "../../helpers/post-helpers"
 import {ObjectId} from "mongodb"
-import {OutputBlogType} from "../../../src/features/blogs/input-output-types/blog-types";
-import {OutputPostType} from "../../../src/features/posts/input-output-types/post-types";
+import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types";
+import {PostOutputType} from "../../../src/features/posts/input-output-types/post-types";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import {db} from "../../../src/db/mongo-db";
 
@@ -21,8 +21,8 @@ describe('DELETE /posts', () => {
         await db.drop()
     })
     it('- DELETE post unauthorized: STATUS 401', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+        const blogs: BlogOutputType[] = await createBlogs()
+        const posts: PostOutputType[] = await createPosts(blogs)
 
         await req
             .delete(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)
@@ -30,8 +30,8 @@ describe('DELETE /posts', () => {
             .expect(HTTP_CODES.UNAUTHORIZED)
     })
     it('- DELETE post with incorrect input id: STATUS 404', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+        const blogs: BlogOutputType[] = await createBlogs()
+        const posts: PostOutputType[] = await createPosts(blogs)
 
         await req
             .delete(`${SETTINGS.PATH.POSTS}/${new ObjectId()}`)
@@ -39,8 +39,8 @@ describe('DELETE /posts', () => {
             .expect(HTTP_CODES.NOT_FOUND)
     })
     it('+ DELETE post with correct input data: STATUS 204', async () => {
-        const blogs: OutputBlogType[] = await createBlogs()
-        const posts: OutputPostType[] = await createPosts(blogs)
+        const blogs: BlogOutputType[] = await createBlogs()
+        const posts: PostOutputType[] = await createPosts(blogs)
 
         await req
             .delete(`${SETTINGS.PATH.POSTS}/${posts[0].id}`)

@@ -2,7 +2,7 @@ import {req} from "../../helpers/req"
 import {HTTP_CODES, SETTINGS} from "../../../src/settings"
 import {base64Service} from "../../../src/common/adapters/base64Service";
 import {AUTH_DATA} from "../../../src/settings"
-import {InputUserType} from "../../../src/features/users/input-output-types/user-types";
+import {UserBodyInputType} from "../../../src/features/users/input-output-types/user-types";
 import {testSeeder} from "../../testSeeder";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import {db} from "../../../src/db/mongo-db";
@@ -19,7 +19,7 @@ describe('POST /users', () => {
         await db.drop()
     })
     it('- POST user unauthorized: STATUS 401', async () => {
-        const newUser: InputUserType = testSeeder.createUserDTO()
+        const newUser: UserBodyInputType = testSeeder.createUserDTO()
 
         await req
             .post(SETTINGS.PATH.USERS)
@@ -28,7 +28,7 @@ describe('POST /users', () => {
             .expect(HTTP_CODES.UNAUTHORIZED)
     })
     it('+ POST user with correct input data: STATUS 201', async () => {
-        const newUser: InputUserType = testSeeder.createUserDTO()
+        const newUser: UserBodyInputType = testSeeder.createUserDTO()
 
         const res = await req
             .post(SETTINGS.PATH.USERS)
@@ -40,8 +40,8 @@ describe('POST /users', () => {
         expect(res.body.email).toEqual(newUser.email)
     })
     it('+ POST user when login not unique: STATUS 400', async () => {
-        const user1: InputUserType = testSeeder.createUserDTO()
-        const user2: InputUserType = testSeeder.createUserDTO()
+        const user1: UserBodyInputType = testSeeder.createUserDTO()
+        const user2: UserBodyInputType = testSeeder.createUserDTO()
 
         await req
             .post(SETTINGS.PATH.USERS)
