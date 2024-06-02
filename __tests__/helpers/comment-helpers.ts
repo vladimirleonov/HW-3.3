@@ -4,7 +4,7 @@ import {
 import {req} from "./req";
 import {HTTP_CODES, SETTINGS} from "../../src/settings";
 
-export const createComment = async (postId: string, accessToken: string): Promise<CommentOutputType[]> => {
+export const createComment = async (postId: string, accessToken: string): Promise<CommentOutputType> => {
     const res = await req
         .post(`${SETTINGS.PATH.POSTS}/${postId}/comments`)
         .set('authorization', `Bearer ${accessToken}`)
