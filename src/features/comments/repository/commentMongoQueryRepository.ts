@@ -18,7 +18,6 @@ export const commentMongoQueryRepository = {
         // await db.getCollections().commentCollection.deleteMany({ });
 
         const totalCount: number = await db.getCollections().commentCollection.countDocuments()
-        console.log("totalCount", totalCount)
 
         return {
             pagesCount: Math.ceil(totalCount / query.pageSize),

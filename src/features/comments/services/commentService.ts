@@ -40,7 +40,6 @@ export const commentService = {
         }
 
         const createdId: string = await commentMongoRepository.create(newComment)
-        console.log(createdId)
 
         return {
             status: ResultStatus.Success,
@@ -59,8 +58,6 @@ export const commentService = {
             }
         }
 
-        console.log("userId", userId)
-        console.log("comment.commentatorInfo.userId", comment.commentatorInfo.userId)
         if (userId !== comment.commentatorInfo.userId) {
             return {
                 status: ResultStatus.Forbidden,
@@ -84,7 +81,6 @@ export const commentService = {
     },
     async deleteComment(id: string, userId: string): Promise<Result> {
         const comment: CommentDbType | null = await commentMongoRepository.findById(id)
-        console.log(comment)
         if (!comment) {
             return {
                 status: ResultStatus.NotFound,

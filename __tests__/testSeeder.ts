@@ -33,5 +33,10 @@ export const testSeeder = {
             content: 'content2',
             blogId
         }
-    }
+    },
+    createCommentDTO() {
+        return {
+            content: 'contentcontentcontentcontent',
+        }
+    },
 }

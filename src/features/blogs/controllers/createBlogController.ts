@@ -13,6 +13,7 @@ export const createBlogController = async (req: Request<{}, BlogOutputType, Blog
 
         //? !
         res.status(HTTP_CODES.CREATED).send(blog!);
+
     } catch (err) {
         console.error(err)
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()

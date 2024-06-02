@@ -24,7 +24,7 @@ export const deleteCommentController = async (req: Request<CommentIdParamInputTy
 
         res.status(HTTP_CODES.NO_CONTENT).send()
     } catch (err) {
-        console.log(err)
+        console.error(err)
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
     }
 }

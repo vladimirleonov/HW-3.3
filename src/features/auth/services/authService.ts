@@ -23,7 +23,6 @@ export const authService = {
         }
 
         const token: string = bearerService.generateToken(jwtPayload)
-        console.log(token)
 
         return {
             status: ResultStatus.Success,

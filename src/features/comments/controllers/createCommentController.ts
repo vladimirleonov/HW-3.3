@@ -18,7 +18,6 @@ export const createCommentController = async (req: Request<PostIdParamType, Comm
 
         //?
         if (result.status === ResultStatus.Unauthorized) {
-            console.log('unaaaaa')
             res.status(HTTP_CODES.UNAUTHORIZED).send()
             return
         }

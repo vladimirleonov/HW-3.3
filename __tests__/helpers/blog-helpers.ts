@@ -7,13 +7,13 @@ import {base64Service} from "../../src/common/adapters/base64Service";
 export const createBlog = async (count: number = 2): Promise<BlogOutputType> => {
     const res =  await req
         .post(SETTINGS.PATH.BLOGS)
-        .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.FAKE_AUTH)}`)
+        .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
         .send({
             name: `name`,
             description: `description`,
             websiteUrl: `https://websiteUrl.com`
         })
-        .expect(HTTP_CODES.UNAUTHORIZED)
+        .expect(HTTP_CODES.CREATED)
 
     return res.body
 }

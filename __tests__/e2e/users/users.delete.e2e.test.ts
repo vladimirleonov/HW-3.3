@@ -34,7 +34,6 @@ describe('DELETE /posts', () => {
     })
     it('+ DELETE user with correct input data: STATUS 204', async () => {
         const user: DetailedUserOutputType = await createUser()
-        console.log(user.id)
 
         await req
             .delete(`${SETTINGS.PATH.USERS}/${user.id}`)
