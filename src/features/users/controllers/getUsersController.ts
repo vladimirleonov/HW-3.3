@@ -1,8 +1,8 @@
-import { Request, Response } from "express"
-import { HTTP_CODES } from "../../../settings"
-import {SanitizedUsersQueryParamsType, sanitizeUsersQueryParams} from "../helpers/sanitizeUsersQueryParams";
-import {UsersQueryParamsInputType, UserPaginationOutputType} from "../input-output-types/user-types";
-import {userMongoQueryRepository} from "../repository/userMongoQueryRepository";
+import {Request, Response} from "express"
+import {HTTP_CODES} from "../../../settings"
+import {SanitizedUsersQueryParamsType, sanitizeUsersQueryParams} from "../helpers/sanitizeUsersQueryParams"
+import {UsersQueryParamsInputType, UserPaginationOutputType} from "../input-output-types/user-types"
+import {userMongoQueryRepository} from "../repository/userMongoQueryRepository"
 
 export const getUsersController = async (req: Request<{}, UserPaginationOutputType, {}, UsersQueryParamsInputType>, res: Response<UserPaginationOutputType>) => {
     try {

@@ -6,16 +6,16 @@ import {updateBlogController} from "./controllers/updateBlogController"
 import {deleteBlogController} from "./controllers/deleteBlogController"
 import {inputCheckErrorsMiddleware} from "../../common/middlewares/inputCheckErrorsMiddleware"
 import {basicMiddleware} from "../../common/middlewares/basicMiddleware"
-import {queryBlogPostsParamsValidator} from "./validators/queryBlogPostsParamsValidator";
+import {queryBlogPostsParamsValidator} from "./validators/queryBlogPostsParamsValidator"
 import {queryBlogsParamsValidator} from "./validators/queryBlogsParamsValidator"
-import {idParamValidator} from "../../common/validators/idParamValidator";
-import {getBlogPostsController} from "./controllers/getBlogPostsController";
-import {createBlogPostController} from "./controllers/createBlogPostController";
+import {idParamValidator} from "../../common/validators/idParamValidator"
+import {getBlogPostsController} from "./controllers/getBlogPostsController"
+import {createBlogPostController} from "./controllers/createBlogPostController"
 import {
     BlogPostBodyValidator,
-} from "../posts/validators/postBodyValidators";
-import {blogIdParamValidator} from "./validators/blogIdParamValidator";
-import {blogBodyValidator} from "./validators/blogBodyValidators";
+} from "../posts/validators/postBodyValidators"
+import {blogIdParamValidator} from "./validators/blogIdParamValidator"
+import {blogBodyValidator} from "./validators/blogBodyValidators"
 
 export const blogsRouter: Router = Router()
 

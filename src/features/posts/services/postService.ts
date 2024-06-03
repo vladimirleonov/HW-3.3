@@ -1,18 +1,19 @@
-import {postMongoRepository} from "../repository/postMongoRepository";
-import {ObjectId} from "mongodb";
-import {BlogPostInputType, PostBodyInputType} from "../input-output-types/post-types";
-import {PostDbType} from "../../../db/db-types/post-db-types";
-import {BlogDBType} from "../../../db/db-types/blog-db-types";
-import {blogMongoRepository} from "../../blogs/repository/blogMongoRepository";
-import {Result, ResultStatus} from "../../../common/types/result-type";
+import {postMongoRepository} from "../repository/postMongoRepository"
+import {ObjectId} from "mongodb"
+import {BlogPostInputType, PostBodyInputType} from "../input-output-types/post-types"
+import {PostDbType} from "../../../db/db-types/post-db-types"
+import {BlogDBType} from "../../../db/db-types/blog-db-types"
+import {blogMongoRepository} from "../../blogs/repository/blogMongoRepository"
+import {Result, ResultStatus} from "../../../common/types/result-type"
+import {commentMongoRepository} from "../../comments/repository/commentMongoRepository"
 
 export const postService = {
     async createPost({blogId, ...restInput}: PostBodyInputType): Promise<Result<string | null>> {
-        const blog: BlogDBType | null = await blogMongoRepository.findById(blogId);
-        if(!blog) {
+        const blog: BlogDBType | null = await blogMongoRepository.findById(blogId)
+        if (!blog) {
             return {
                 status: ResultStatus.NotFound,
-                extensions: [{ field: 'blogId', message: `Blog with id ${blogId} not found` }],
+                extensions: [{field: 'blogId', message: `Blog with id ${blogId} not found`}],
                 data: null
             }
         }
@@ -33,11 +34,11 @@ export const postService = {
         }
     },
     async createBlogPost(input: BlogPostInputType, blogId: string): Promise<Result<string | null>> {
-        const blog: BlogDBType | null = await blogMongoRepository.findById(blogId);
+        const blog: BlogDBType | null = await blogMongoRepository.findById(blogId)
         if (!blog) {
             return {
                 status: ResultStatus.NotFound,
-                extensions: [{ field: 'blogId', message: `Blog with id ${blogId} not found` }],
+                extensions: [{field: 'blogId', message: `Blog with id ${blogId} not found`}],
                 data: null
             }
         }
@@ -50,7 +51,7 @@ export const postService = {
             createdAt: new Date().toISOString()
         }
 
-        const createdBlogId: string = await postMongoRepository.createBlogPost(newPost);
+        const createdBlogId: string = await postMongoRepository.createBlogPost(newPost)
 
         return {
             status: ResultStatus.Success,
@@ -62,10 +63,13 @@ export const postService = {
         if (!isDeleted) {
             return {
                 status: ResultStatus.NotFound,
-                extensions: [{ field: 'postId', message: `Post with id ${postId} not found` }],
+                extensions: [{field: 'postId', message: `Post with id ${postId} not found`}],
                 data: null
             }
         } else {
+            // add
+            await commentMongoRepository.deleteMany(postId)
+
             return {
                 status: ResultStatus.Success,
                 data: isDeleted
@@ -77,7 +81,7 @@ export const postService = {
         if (!isUpdated) {
             return {
                 status: ResultStatus.NotFound,
-                extensions: [{ field: 'postId', message: `Post with id ${postId} not found` }],
+                extensions: [{field: 'postId', message: `Post with id ${postId} not found`}],
                 data: null
             }
         } else {

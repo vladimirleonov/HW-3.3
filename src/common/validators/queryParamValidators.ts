@@ -11,12 +11,11 @@ export const sortDirectionQueryValidator = query('sortDirection')
 
 export const pageNumberQueryValidator = query('pageNumber')
     .optional()
-    .isInt({ min: 1 }).withMessage('pageNumber is not a positive integer')
+    .isInt({min: 1}).withMessage('pageNumber is not a positive integer')
 
 export const pageSizeQueryValidator = query('pageSize')
     .optional()
-    .isInt({ min: 1 }).withMessage('pageSize is not a positive integer')
-
+    .isInt({min: 1}).withMessage('pageSize is not a positive integer')
 
 
 export const searchNameTermQueryValidator = query('searchNameTerm')
@@ -24,7 +23,6 @@ export const searchNameTermQueryValidator = query('searchNameTerm')
     .isString().withMessage('searchNameTerm is not a string')
 
 
-    
 export const searchLoginTermQueryValidator = query('searchNameTerm')
     .optional()
     .isString().withMessage('searchLoginTerm is not a string')

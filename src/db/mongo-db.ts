@@ -42,13 +42,14 @@ export const db = {
 
             for (const collection of collections) {
                 const collectionName = collection.name;
-                await this.getDBName().collection(collectionName).deleteMany({})            }
+                await this.getDBName().collection(collectionName).deleteMany({})
+            }
         } catch (err) {
             console.error('Error in drop db', err)
             await this.stop()
         }
     },
-    getCollections(){
+    getCollections() {
         return {
             blogCollection: this.getDBName().collection<BlogDBType>(SETTINGS.BLOG_COLLECTION_NAME as string),
             postCollection: this.getDBName().collection<PostDbType>(SETTINGS.POST_COLLECTION_NAME as string),

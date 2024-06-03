@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express"
 import {AUTH_DATA, HTTP_CODES} from "../../settings"
-import {base64Service} from "../adapters/base64Service";
+import {base64Service} from "../adapters/base64Service"
 
 export const basicMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const auth: string | undefined = req.headers['authorization']

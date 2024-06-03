@@ -1,8 +1,8 @@
 import {
     CommentOutputType
-} from "../../src/features/comments/input-output-types/comment-types";
+} from "../../src/features/comments/input-output-types/comment-types"
 import {req} from "./req";
-import {HTTP_CODES, SETTINGS} from "../../src/settings";
+import {HTTP_CODES, SETTINGS} from "../../src/settings"
 
 export const createComment = async (postId: string, accessToken: string): Promise<CommentOutputType> => {
     const res = await req
@@ -20,7 +20,7 @@ export const createComments = async (count: number = 2, postId: string, accessTo
     const comments: CommentOutputType[] = []
 
     for (let i = 0; i < count; i++) {
-        const res =  await req
+        const res = await req
             .post(`${SETTINGS.PATH.POSTS}/${postId}/comments`)
             .set('authorization', `Bearer ${accessToken}`)
             .send({

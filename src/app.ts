@@ -6,7 +6,7 @@ import {blogsRouter} from "./features/blogs"
 import {usersRouter} from "./features/users"
 import {testingRouter} from "./features/testing"
 import {authRouter} from "./features/auth"
-import {commentsRouter} from "./features/comments";
+import {commentsRouter} from "./features/comments"
 
 const app: Express = express()
 

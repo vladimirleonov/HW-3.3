@@ -1,5 +1,5 @@
-import {DeleteResult} from "mongodb";
-import {db} from "../../../db/mongo-db";
+import {DeleteResult} from "mongodb"
+import {db} from "../../../db/mongo-db"
 
 export const testingRepository = {
     async deleteAllData(): Promise<boolean> {

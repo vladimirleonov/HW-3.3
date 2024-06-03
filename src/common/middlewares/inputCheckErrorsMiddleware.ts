@@ -11,12 +11,12 @@ export const inputCheckErrorsMiddleware = (req: Request, res: Response, next: Ne
     const result: Result<ValidationError> = validationResult(req)
     if (!result.isEmpty()) {
         const errors: ValidationErrorMessage[] = result.array({onlyFirstError: true}) as ValidationErrorMessage[]
-            res.status(HTTP_CODES.BAD_REQUEST).send({
-                errorsMessages: errors.map(error => ({
-                    message: error.msg,
-                    field: error.path
-                }))
-            })
+        res.status(HTTP_CODES.BAD_REQUEST).send({
+            errorsMessages: errors.map(error => ({
+                message: error.msg,
+                field: error.path
+            }))
+        })
         return
     }
     next()

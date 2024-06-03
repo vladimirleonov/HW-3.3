@@ -1,12 +1,12 @@
 import {req} from "../../helpers/req"
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings"
 import {PostBodyInputType, PostOutputType} from "../../../src/features/posts/input-output-types/post-types"
-import {base64Service} from "../../../src/common/adapters/base64Service";
+import {base64Service} from "../../../src/common/adapters/base64Service"
 import {createBlogs} from "../../helpers/blog-helpers"
 import {createPosts} from "../../helpers/post-helpers"
-import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types";
-import {MongoMemoryServer} from "mongodb-memory-server";
-import {db} from "../../../src/db/mongo-db";
+import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types"
+import {MongoMemoryServer} from "mongodb-memory-server"
+import {db} from "../../../src/db/mongo-db"
 
 describe('PUT /posts', () => {
     beforeAll(async () => {

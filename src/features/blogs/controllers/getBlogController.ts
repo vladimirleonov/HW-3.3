@@ -1,8 +1,8 @@
 import {Request, Response} from "express"
 import {IdParamInputType} from "../../../common/input-output-types/common-types"
 import {HTTP_CODES} from "../../../settings"
-import {blogMongoQueryRepository} from "../repository/blogMongoQueryRepository";
-import {BlogOutputType} from "../input-output-types/blog-types";
+import {blogMongoQueryRepository} from "../repository/blogMongoQueryRepository"
+import {BlogOutputType} from "../input-output-types/blog-types"
 
 export const getBlogController = async (req: Request<IdParamInputType>, res: Response) => {
     try {

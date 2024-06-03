@@ -10,8 +10,8 @@ export type PostBodyInputType = {
 }
 
 export type BlogPostInputType = {
-    title: string,
-    shortDescription: string,
+    title: string
+    shortDescription: string
     content: string
 }
 
@@ -26,9 +26,9 @@ export type PostOutputType = {
 }
 
 export type PostPaginationOutputType = {
-    pagesCount: number,
-    page: number,
-    pageSize: number,
-    totalCount: number,
+    pagesCount: number
+    page: number
+    pageSize: number
+    totalCount: number
     items: PostOutputType[]
 }

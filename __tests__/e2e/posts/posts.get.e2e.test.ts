@@ -3,10 +3,10 @@ import {SETTINGS} from "../../../src/settings"
 import {createBlogs} from "../../helpers/blog-helpers"
 import {createPosts} from "../../helpers/post-helpers"
 import {ObjectId} from "mongodb"
-import {PostOutputType} from "../../../src/features/posts/input-output-types/post-types";
-import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types";
-import {MongoMemoryServer} from "mongodb-memory-server";
-import {db} from "../../../src/db/mongo-db";
+import {PostOutputType} from "../../../src/features/posts/input-output-types/post-types"
+import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types"
+import {MongoMemoryServer} from "mongodb-memory-server"
+import {db} from "../../../src/db/mongo-db"
 
 describe('GET /posts', () => {
     beforeAll(async () => {
@@ -31,21 +31,21 @@ describe('GET /posts', () => {
 
         const res = await req.get(SETTINGS.PATH.POSTS).expect(200)
 
-        expect(res.body.pagesCount).toBe(1);
-        expect(res.body.page).toBe(1);
-        expect(res.body.pageSize).toBe(10);
-        expect(res.body.totalCount).toBe(posts.length);
+        expect(res.body.pagesCount).toBe(1)
+        expect(res.body.page).toBe(1)
+        expect(res.body.pageSize).toBe(10)
+        expect(res.body.totalCount).toBe(posts.length)
 
         expect(res.body.items.length).toBe(posts.length)
         res.body.items.forEach((item: PostOutputType, index: number) => {
             res.body.items.forEach((item: PostOutputType, index: number) => {
-                expect(item.id).toBe(posts[index].id);
-                expect(item.title).toBe(posts[index].title);
-                expect(item.shortDescription).toBe(posts[index].shortDescription);
-                expect(item.content).toBe(posts[index].content);
-                expect(item.blogId).toBe(posts[index].blogId.toString());
-                expect(item.blogName).toBe(posts[index].blogName);
-                expect(new Date(item.createdAt).toISOString()).toEqual(posts[index].createdAt);
+                expect(item.id).toBe(posts[index].id)
+                expect(item.title).toBe(posts[index].title)
+                expect(item.shortDescription).toBe(posts[index].shortDescription)
+                expect(item.content).toBe(posts[index].content)
+                expect(item.blogId).toBe(posts[index].blogId.toString())
+                expect(item.blogName).toBe(posts[index].blogName)
+                expect(new Date(item.createdAt).toISOString()).toEqual(posts[index].createdAt)
             })
         })
     })
@@ -64,13 +64,13 @@ describe('GET /posts', () => {
 
         expect(res.body.items.length).toBe(sortedPosts.length)
         res.body.items.forEach((item: PostOutputType, index: number) => {
-            expect(item.id).toBe(sortedPosts[index].id);
-            expect(item.title).toBe(sortedPosts[index].title);
-            expect(item.shortDescription).toBe(sortedPosts[index].shortDescription);
-            expect(item.content).toBe(sortedPosts[index].content);
-            expect(item.blogId).toBe(sortedPosts[index].blogId.toString());
-            expect(item.blogName).toBe(sortedPosts[index].blogName);
-            expect(new Date(item.createdAt).toISOString()).toEqual(sortedPosts[index].createdAt);
+            expect(item.id).toBe(sortedPosts[index].id)
+            expect(item.title).toBe(sortedPosts[index].title)
+            expect(item.shortDescription).toBe(sortedPosts[index].shortDescription)
+            expect(item.content).toBe(sortedPosts[index].content)
+            expect(item.blogId).toBe(sortedPosts[index].blogId.toString())
+            expect(item.blogName).toBe(sortedPosts[index].blogName)
+            expect(new Date(item.createdAt).toISOString()).toEqual(sortedPosts[index].createdAt)
         })
     })
     it('+ GET posts with pagination', async () => {
@@ -88,13 +88,13 @@ describe('GET /posts', () => {
 
         expect(res.body.items.length).toBe(paginatedPosts.length)
         res.body.items.forEach((item: PostOutputType, index: number) => {
-            expect(item.id).toBe(paginatedPosts[index].id);
-            expect(item.title).toBe(paginatedPosts[index].title);
-            expect(item.shortDescription).toBe(paginatedPosts[index].shortDescription);
-            expect(item.content).toBe(paginatedPosts[index].content);
-            expect(item.blogId).toBe(paginatedPosts[index].blogId.toString());
-            expect(item.blogName).toBe(paginatedPosts[index].blogName);
-            expect(new Date(item.createdAt).toISOString()).toEqual(paginatedPosts[index].createdAt);
+            expect(item.id).toBe(paginatedPosts[index].id)
+            expect(item.title).toBe(paginatedPosts[index].title)
+            expect(item.shortDescription).toBe(paginatedPosts[index].shortDescription)
+            expect(item.content).toBe(paginatedPosts[index].content)
+            expect(item.blogId).toBe(paginatedPosts[index].blogId.toString())
+            expect(item.blogName).toBe(paginatedPosts[index].blogName)
+            expect(new Date(item.createdAt).toISOString()).toEqual(paginatedPosts[index].createdAt)
         })
     })
     //posts/{id}

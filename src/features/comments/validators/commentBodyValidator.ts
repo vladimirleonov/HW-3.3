@@ -1,4 +1,4 @@
-import {body} from "express-validator";
+import {body} from "express-validator"
 
 export const commentBodyValidator = body('content')
     .isString().withMessage('content is missing or not a string')

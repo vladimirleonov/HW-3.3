@@ -1,12 +1,12 @@
 import {Request, Response, NextFunction} from 'express'
-import {HTTP_CODES} from "../../settings";
-import {bearerService} from "../adapters/bearerService";
-import {JwtPayload} from "jsonwebtoken";
+import {HTTP_CODES} from "../../settings"
+import {bearerService} from "../adapters/bearerService"
+import {JwtPayload} from "jsonwebtoken"
 
 export const bearerAuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const authHeader: string | undefined = req.headers.authorization;
+    const authHeader: string | undefined = req.headers.authorization
 
-    if(!authHeader || authHeader.indexOf('Bearer ') === -1) {
+    if (!authHeader || authHeader.indexOf('Bearer ') === -1) {
         res.status(HTTP_CODES.UNAUTHORIZED).send()
         return
     }

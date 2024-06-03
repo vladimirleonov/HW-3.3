@@ -1,4 +1,4 @@
-import {DefaultQueryParamsInputType} from "../input-output-types/common-types";
+import {DefaultQueryParamsInputType} from "../input-output-types/common-types"
 
 export type SanitizedDefaultQueryParamsType = {
     sortBy: string,

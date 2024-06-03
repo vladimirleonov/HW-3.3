@@ -1,11 +1,11 @@
-import {BlogOutputType} from "../../src/features/blogs/input-output-types/blog-types";
-import {req} from "./req";
-import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../src/settings";
-import {base64Service} from "../../src/common/adapters/base64Service";
+import {BlogOutputType} from "../../src/features/blogs/input-output-types/blog-types"
+import {req} from "./req"
+import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../src/settings"
+import {base64Service} from "../../src/common/adapters/base64Service"
 
 
 export const createBlog = async (count: number = 2): Promise<BlogOutputType> => {
-    const res =  await req
+    const res = await req
         .post(SETTINGS.PATH.BLOGS)
         .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
         .send({
@@ -22,7 +22,7 @@ export const createBlogs = async (count: number = 2): Promise<BlogOutputType[]> 
     const blogs: BlogOutputType[] = []
 
     for (let i: number = 1; i <= count; i++) {
-        const res =  await req
+        const res = await req
             .post(SETTINGS.PATH.BLOGS)
             .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send({
@@ -41,7 +41,7 @@ export const createBlogs = async (count: number = 2): Promise<BlogOutputType[]> 
 // export const createBlogs = (count: number = 2): {blogs: BlogDBType[]} => {
 //     const blogs: BlogDBType[] = []
 //
-//     for (let i: number = 1; i <= count; i++) {
+//     for (let i: number = 1 i <= count i++) {
 //         const currentDate: string = new Date().toISOString()
 //         blogs.push({
 //             _id: new ObjectId(),
@@ -59,7 +59,7 @@ export const createBlogs = async (count: number = 2): Promise<BlogOutputType[]> 
 // export const createBlogs = (count: number = 2): {blogs: BlogDBType[]} => {
 //     const blogs: BlogDBType[] = []
 //
-//     for (let i: number = 1; i <= count; i++) {
+//     for (let i: number = 1 i <= count i++) {
 //         const currentDate: string = new Date().toISOString()
 //         blogs.push({
 //             _id: new ObjectId(),

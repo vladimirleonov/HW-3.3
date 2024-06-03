@@ -3,11 +3,11 @@ import {HTTP_CODES, SETTINGS} from "../../../src/settings"
 import {PostBodyInputType} from "../../../src/features/posts/input-output-types/post-types"
 import {AUTH_DATA} from "../../../src/settings"
 import {createBlogs} from "../../helpers/blog-helpers"
-import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types";
-import {testSeeder} from "../../testSeeder";
-import {MongoMemoryServer} from "mongodb-memory-server";
-import {db} from "../../../src/db/mongo-db";
-import {base64Service} from "../../../src/common/adapters/base64Service";
+import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types"
+import {testSeeder} from "../../testSeeder"
+import {MongoMemoryServer} from "mongodb-memory-server"
+import {db} from "../../../src/db/mongo-db"
+import {base64Service} from "../../../src/common/adapters/base64Service"
 
 describe('POST /posts', () => {
     beforeAll(async () => {

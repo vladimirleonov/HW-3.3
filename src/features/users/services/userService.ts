@@ -1,14 +1,14 @@
-import {userMongoRepository} from "../repository/userMongoRepository";
-import {UserDbType} from "../../../db/db-types/user-db-types";
-import {UserBodyInputType} from "../input-output-types/user-types";
-import {ObjectId} from "mongodb";
-import {cryptoService} from "../../../common/adapters/cryptoService";
-import {Result, ResultStatus} from "../../../common/types/result-type";
+import {userMongoRepository} from "../repository/userMongoRepository"
+import {UserDbType} from "../../../db/db-types/user-db-types"
+import {UserBodyInputType} from "../input-output-types/user-types"
+import {ObjectId} from "mongodb"
+import {cryptoService} from "../../../common/adapters/cryptoService"
+import {Result, ResultStatus} from "../../../common/types/result-type"
 
 export const userService = {
     async createUser(input: UserBodyInputType): Promise<Result<string | null>> {
 
-        const {login, email, password}: UserBodyInputType = input;
+        const {login, email, password}: UserBodyInputType = input
 
         const [foundUserByLogin, foundUserByEmail]: [UserDbType | null, UserDbType | null] = await Promise.all([
             userMongoRepository.findUserByField('login', login),

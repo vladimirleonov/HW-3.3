@@ -1,19 +1,19 @@
-import {Request, Response, NextFunction} from "express";
-import {HTTP_CODES} from "../../../settings";
-import {BlogDBType} from "../../../db/db-types/blog-db-types";
-import {blogMongoRepository} from "../repository/blogMongoRepository";
+import {Request, Response, NextFunction} from "express"
+import {HTTP_CODES} from "../../../settings"
+import {BlogDBType} from "../../../db/db-types/blog-db-types"
+import {blogMongoRepository} from "../repository/blogMongoRepository"
 
 export const blogIdParamValidator = async (req: Request, res: Response, next: NextFunction) => {
-    const blogId: string = req.params.blogId;
+    const blogId: string = req.params.blogId
     try {
-        const blog: BlogDBType | null = await blogMongoRepository.findById(blogId);
+        const blog: BlogDBType | null = await blogMongoRepository.findById(blogId)
         if (!blog) {
-            return res.status(HTTP_CODES.NOT_FOUND).send({ error: 'Blog not found' });
+            return res.status(HTTP_CODES.NOT_FOUND).send({error: 'Blog not found'})
         }
     } catch (err) {
-        console.error(err);
-        return res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send();
+        console.error(err)
+        return res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
     }
 
-    return next();
+    return next()
 }

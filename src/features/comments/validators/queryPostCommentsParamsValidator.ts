@@ -3,7 +3,7 @@ import {
     pageSizeQueryValidator,
     sortByQueryValidator,
     sortDirectionQueryValidator
-} from "../../../common/validators/queryParamValidators";
+} from "../../../common/validators/queryParamValidators"
 
 export const queryPostCommentsParamsValidator = [
     sortByQueryValidator,

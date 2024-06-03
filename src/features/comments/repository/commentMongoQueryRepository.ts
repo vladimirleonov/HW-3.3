@@ -1,23 +1,28 @@
-import {db} from "../../../db/mongo-db";
-import {CommentDbType} from "../../../db/db-types/comment-db-types";
-import {CommentOutputType, CommentsPaginationOutputType} from "../input-output-types/comment-types";
-import {ObjectId} from "mongodb";
-import {SanitizedDefaultQueryParamsType} from "../../../common/helpers/queryParamsSanitizer";
+import {db} from "../../../db/mongo-db"
+import {CommentDbType} from "../../../db/db-types/comment-db-types"
+import {CommentOutputType, CommentsPaginationOutputType} from "../input-output-types/comment-types"
+import {ObjectId} from "mongodb"
+import {SanitizedDefaultQueryParamsType} from "../../../common/helpers/queryParamsSanitizer"
 
 export const commentMongoQueryRepository = {
     async findAllPostCommentsForOutput(query: SanitizedDefaultQueryParamsType, postId: string): Promise<CommentsPaginationOutputType> {
+        const byId = postId ? {postId: new ObjectId(postId)} : {}
+
+        const filter = {
+            ...byId
+        }
 
         const comments: CommentDbType[] = await db.getCollections().commentCollection
-            .find()
+            .find(filter)
             .sort(query.sortBy, query.sortDirection)
             .skip((query.pageNumber - 1) * query.pageSize)
             .limit(query.pageSize)
             .toArray()
 
         // console.log("delete many")
-        // await db.getCollections().commentCollection.deleteMany({ });
+        // await db.getCollections().commentCollection.deleteMany({ })
 
-        const totalCount: number = await db.getCollections().commentCollection.countDocuments()
+        const totalCount: number = await db.getCollections().commentCollection.countDocuments(filter)
 
         return {
             pagesCount: Math.ceil(totalCount / query.pageSize),
@@ -38,7 +43,7 @@ export const commentMongoQueryRepository = {
 
         return this.mapToOutput(comment)
     },
-    mapToOutput({_id, ...rest}: CommentDbType): CommentOutputType {
+    mapToOutput({_id, postId, ...rest}: CommentDbType): CommentOutputType {
         return {
             id: _id.toString(),
             ...rest

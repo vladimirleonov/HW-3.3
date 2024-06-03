@@ -1,12 +1,12 @@
-import {postMongoRepository} from "../../posts/repository/postMongoRepository";
-import {PostDbType} from "../../../db/db-types/post-db-types";
-import {Result, ResultStatus} from "../../../common/types/result-type";
-import {CommentDbType} from "../../../db/db-types/comment-db-types";
-import {ObjectId} from "mongodb";
-import {CommentBodyInputType} from "../input-output-types/comment-types";
-import {UserDbType} from "../../../db/db-types/user-db-types";
-import {userMongoRepository} from "../../users/repository/userMongoRepository";
-import {commentMongoRepository} from "../repository/commentMongoRepository";
+import {postMongoRepository} from "../../posts/repository/postMongoRepository"
+import {PostDbType} from "../../../db/db-types/post-db-types"
+import {Result, ResultStatus} from "../../../common/types/result-type"
+import {CommentDbType} from "../../../db/db-types/comment-db-types"
+import {ObjectId} from "mongodb"
+import {CommentBodyInputType} from "../input-output-types/comment-types"
+import {UserDbType} from "../../../db/db-types/user-db-types"
+import {userMongoRepository} from "../../users/repository/userMongoRepository"
+import {commentMongoRepository} from "../repository/commentMongoRepository"
 
 export const commentService = {
     async createComment(postId: string, input: CommentBodyInputType, userId: string): Promise<Result<string | null>> {
@@ -29,8 +29,19 @@ export const commentService = {
             }
         }
 
+        // const newComment: CommentDbType = {
+        //     _id: new ObjectId(),
+        //     content: input.content,
+        //     commentatorInfo: {
+        //         userId: userId,
+        //         userLogin: user.login
+        //     },
+        //     createdAt: new Date().toISOString()
+        // }
+
         const newComment: CommentDbType = {
             _id: new ObjectId(),
+            postId: new ObjectId(postId),
             content: input.content,
             commentatorInfo: {
                 userId: userId,
@@ -97,7 +108,7 @@ export const commentService = {
             }
         }
 
-        const isDeleted: boolean = await commentMongoRepository.delete(id)
+        const isDeleted: boolean = await commentMongoRepository.deleteOne(id)
         if (!isDeleted) {
             return {
                 status: ResultStatus.InternalError,

@@ -1,8 +1,8 @@
 import {Request, Response} from 'express'
 import {IdParamInputType} from '../../../common/input-output-types/common-types'
 import {HTTP_CODES} from '../../../settings'
-import {postService} from "../services/postService";
-import {Result, ResultStatus} from "../../../common/types/result-type";
+import {postService} from "../services/postService"
+import {Result, ResultStatus} from "../../../common/types/result-type"
 
 export const deletePostController = async (req: Request<IdParamInputType>, res: Response) => {
     try {

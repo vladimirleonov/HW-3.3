@@ -1,8 +1,8 @@
 import {Request, Response} from 'express'
-import {commentService} from "../services/commentService";
-import {HTTP_CODES} from "../../../settings";
-import {CommentIdParamInputType, CommentBodyInputType} from "../input-output-types/comment-types";
-import {Result, ResultStatus} from "../../../common/types/result-type";
+import {commentService} from "../services/commentService"
+import {HTTP_CODES} from "../../../settings"
+import {CommentIdParamInputType, CommentBodyInputType} from "../input-output-types/comment-types"
+import {Result, ResultStatus} from "../../../common/types/result-type"
 
 export const updateCommentController = async (req: Request<CommentIdParamInputType, {}, CommentBodyInputType>, res: Response) => {
     try {
@@ -19,7 +19,7 @@ export const updateCommentController = async (req: Request<CommentIdParamInputTy
             return
         }
 
-        if(result.status === ResultStatus.Forbidden){
+        if (result.status === ResultStatus.Forbidden) {
             res.status(HTTP_CODES.FORBIDDEN).send()
             return
         }

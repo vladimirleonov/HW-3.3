@@ -1,16 +1,16 @@
-import {Request, Response} from 'express';
+import {Request, Response} from 'express'
 
-import {BlogPostInputType, PostOutputType} from "../../posts/input-output-types/post-types";
-import {HTTP_CODES} from "../../../settings";
-import {BlogIdParamInputType} from "../input-output-types/blog-types";
-import {postService} from "../../posts/services/postService";
-import {postMongoQueryRepository} from "../../posts/repository/postMongoQueryRepository";
-import {Result, ResultStatus} from "../../../common/types/result-type";
+import {BlogPostInputType, PostOutputType} from "../../posts/input-output-types/post-types"
+import {HTTP_CODES} from "../../../settings"
+import {BlogIdParamInputType} from "../input-output-types/blog-types"
+import {postService} from "../../posts/services/postService"
+import {postMongoQueryRepository} from "../../posts/repository/postMongoQueryRepository"
+import {Result, ResultStatus} from "../../../common/types/result-type"
 
 export const createBlogPostController = async (req: Request<BlogIdParamInputType, PostOutputType, BlogPostInputType>, res: Response<PostOutputType>) => {
     try {
-        const result: Result <string | null> = await postService.createBlogPost(req.body, req.params.blogId);
-        if(result.status === ResultStatus.NotFound) {
+        const result: Result<string | null> = await postService.createBlogPost(req.body, req.params.blogId)
+        if (result.status === ResultStatus.NotFound) {
             res.status(HTTP_CODES.NOT_FOUND)
         }
 

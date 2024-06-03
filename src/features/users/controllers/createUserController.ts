@@ -1,12 +1,12 @@
-import { Request, Response } from "express"
-import {UserBodyInputType, DetailedUserOutputType} from "../input-output-types/user-types";
-import {userService} from "../services/userService";
-import {userMongoQueryRepository} from "../repository/userMongoQueryRepository";
-import {HTTP_CODES} from "../../../settings";
-import {ErrorsMessagesType} from "../../../common/types/errorsMessages";
-import {Result, ResultStatus} from "../../../common/types/result-type";
+import {Request, Response} from "express"
+import {UserBodyInputType, DetailedUserOutputType} from "../input-output-types/user-types"
+import {userService} from "../services/userService"
+import {userMongoQueryRepository} from "../repository/userMongoQueryRepository"
+import {HTTP_CODES} from "../../../settings"
+import {ErrorsMessagesType} from "../../../common/types/errorsMessages"
+import {Result, ResultStatus} from "../../../common/types/result-type"
 
-export const createUserController = async (req: Request<{}, DetailedUserOutputType| ErrorsMessagesType, UserBodyInputType>, res: Response<DetailedUserOutputType | ErrorsMessagesType>) => {
+export const createUserController = async (req: Request<{}, DetailedUserOutputType | ErrorsMessagesType, UserBodyInputType>, res: Response<DetailedUserOutputType | ErrorsMessagesType>) => {
     try {
         const result: Result<string | null> = await userService.createUser(req.body)
         // ?

@@ -10,6 +10,6 @@ export enum ResultStatus {
 export type Result<T = null> = {
     status: ResultStatus,
     errorMessage?: string,
-    extensions?: [{field: string, message: string}],
+    extensions?: [{ field: string, message: string }],
     data: T
 }

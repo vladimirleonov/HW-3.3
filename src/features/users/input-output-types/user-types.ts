@@ -1,4 +1,4 @@
-import {DefaultQueryParamsInputType} from "../../../common/input-output-types/common-types";
+import {DefaultQueryParamsInputType} from "../../../common/input-output-types/common-types"
 
 export type UsersQueryParamsInputType = DefaultQueryParamsInputType & {
     searchLoginTerm?: string
@@ -12,23 +12,23 @@ export type UserBodyInputType = {
 }
 
 export type BaseUserOutputType = {
-    login: string;
-    email: string;
-};
+    login: string
+    email: string
+}
 
 export type AuthenticatedUserOutputType = BaseUserOutputType & {
-    userId: string;
-};
+    userId: string
+}
 
 export type DetailedUserOutputType = BaseUserOutputType & {
-    id: string;
-    createdAt: string;
-};
+    id: string
+    createdAt: string
+}
 
 export type UserPaginationOutputType = {
-    pagesCount: number,
-    page: number,
-    pageSize: number,
-    totalCount: number,
+    pagesCount: number
+    page: number
+    pageSize: number
+    totalCount: number
     items: DetailedUserOutputType[]
 }

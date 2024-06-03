@@ -1,8 +1,8 @@
-import { Request, Response } from "express"
-import {HTTP_CODES} from "../../../settings";
-import {userService} from "../services/userService";
-import {IdParamInputType} from "../../../common/input-output-types/common-types";
-import {Result, ResultStatus} from "../../../common/types/result-type";
+import {Request, Response} from "express"
+import {HTTP_CODES} from "../../../settings"
+import {userService} from "../services/userService"
+import {IdParamInputType} from "../../../common/input-output-types/common-types"
+import {Result, ResultStatus} from "../../../common/types/result-type"
 
 export const deleteUserController = async (req: Request<IdParamInputType>, res: Response) => {
     try {

@@ -1,9 +1,9 @@
 import {Request, Response} from 'express'
 import {PostBodyInputType, PostOutputType} from "../input-output-types/post-types"
 import {HTTP_CODES} from "../../../settings"
-import {IdParamInputType} from "../../../common/input-output-types/common-types";
-import {postService} from "../services/postService";
-import {Result, ResultStatus} from "../../../common/types/result-type";
+import {IdParamInputType} from "../../../common/input-output-types/common-types"
+import {postService} from "../services/postService"
+import {Result, ResultStatus} from "../../../common/types/result-type"
 
 export const updatePostController = async (req: Request<IdParamInputType, PostOutputType, PostBodyInputType>, res: Response<PostOutputType>) => {
     try {

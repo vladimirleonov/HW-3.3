@@ -1,11 +1,11 @@
 import {req} from "../../helpers/req"
 import {HTTP_CODES, SETTINGS} from "../../../src/settings"
-import {base64Service} from "../../../src/common/adapters/base64Service";
+import {base64Service} from "../../../src/common/adapters/base64Service"
 import {AUTH_DATA} from "../../../src/settings"
-import {UserBodyInputType} from "../../../src/features/users/input-output-types/user-types";
-import {testSeeder} from "../../testSeeder";
-import {MongoMemoryServer} from "mongodb-memory-server";
-import {db} from "../../../src/db/mongo-db";
+import {UserBodyInputType} from "../../../src/features/users/input-output-types/user-types"
+import {testSeeder} from "../../testSeeder"
+import {MongoMemoryServer} from "mongodb-memory-server"
+import {db} from "../../../src/db/mongo-db"
 
 describe('POST /users', () => {
     beforeAll(async () => {
@@ -279,14 +279,14 @@ describe('POST /users', () => {
         expect(res.body.errorsMessages).toContainEqual({
             field: 'login',
             message: 'login is less than 3 characters long'
-        });
+        })
         expect(res.body.errorsMessages).toContainEqual({
             field: 'email',
             message: 'email is missing or not a string'
-        });
+        })
         expect(res.body.errorsMessages).toContainEqual({
             field: 'password',
             message: 'password is missing or not a string'
-        });
+        })
     })
 })

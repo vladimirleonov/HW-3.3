@@ -1,11 +1,11 @@
 import jwt, {JwtPayload} from 'jsonwebtoken'
-import {SETTINGS} from "../../settings";
+import {SETTINGS} from "../../settings"
 
 export const bearerService = {
-    generateToken (payload: Object): string {
+    generateToken(payload: Object): string {
         return jwt.sign(payload, SETTINGS.JWT_SECRET, {expiresIn: '7d'})
     },
-    verifyToken(token: string): string | JwtPayload  {
+    verifyToken(token: string): string | JwtPayload {
         return jwt.verify(token, SETTINGS.JWT_SECRET)
     },
     decode(token: string): string | JwtPayload | null {

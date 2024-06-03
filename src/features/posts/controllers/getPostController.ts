@@ -1,8 +1,8 @@
 import {Request, Response} from 'express'
 import {PostOutputType} from '../input-output-types/post-types'
 import {HTTP_CODES} from '../../../settings'
-import {IdParamInputType} from "../../../common/input-output-types/common-types";
-import {postMongoQueryRepository} from "../repository/postMongoQueryRepository";
+import {IdParamInputType} from "../../../common/input-output-types/common-types"
+import {postMongoQueryRepository} from "../repository/postMongoQueryRepository"
 
 export const getPostController = async (req: Request<IdParamInputType, PostOutputType>, res: Response<PostOutputType>) => {
     try {

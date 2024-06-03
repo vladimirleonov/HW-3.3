@@ -1,10 +1,10 @@
-import {req} from "../../helpers/req";
-import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings";
-import {base64Service} from "../../../src/common/adapters/base64Service";
-import {createUsers} from "../../helpers/user-helpers";
-import {DetailedUserOutputType} from "../../../src/features/users/input-output-types/user-types";
-import {MongoMemoryServer} from "mongodb-memory-server";
-import {db} from "../../../src/db/mongo-db";
+import {req} from "../../helpers/req"
+import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings"
+import {base64Service} from "../../../src/common/adapters/base64Service"
+import {createUsers} from "../../helpers/user-helpers"
+import {DetailedUserOutputType} from "../../../src/features/users/input-output-types/user-types"
+import {MongoMemoryServer} from "mongodb-memory-server"
+import {db} from "../../../src/db/mongo-db"
 
 describe('GET /users', () => {
     beforeAll(async () => {
@@ -34,17 +34,17 @@ describe('GET /users', () => {
             .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .expect(HTTP_CODES.OK)
 
-        expect(res.body.pagesCount).toBe(1);
-        expect(res.body.page).toBe(1);
-        expect(res.body.pageSize).toBe(10);
-        expect(res.body.totalCount).toBe(users.length);
+        expect(res.body.pagesCount).toBe(1)
+        expect(res.body.page).toBe(1)
+        expect(res.body.pageSize).toBe(10)
+        expect(res.body.totalCount).toBe(users.length)
 
         expect(res.body.items.length).toBe(users.length)
         res.body.items.forEach((item: DetailedUserOutputType, index: number) => {
-            expect(item.id).toBe(users[index].id);
-            expect(item.login).toBe(users[index].login);
-            expect(item.email).toBe(users[index].email);
-            expect(item.createdAt).toBe(users[index].createdAt);
+            expect(item.id).toBe(users[index].id)
+            expect(item.login).toBe(users[index].login)
+            expect(item.email).toBe(users[index].email)
+            expect(item.createdAt).toBe(users[index].createdAt)
         })
     })
     it('+ GET users with sorting query parameters: STATUS 200', async () => {
@@ -62,10 +62,10 @@ describe('GET /users', () => {
 
         expect(res.body.items.length).toBe(sortedUsers.length)
         res.body.items.forEach((item: DetailedUserOutputType, index: number) => {
-            expect(item.id).toBe(sortedUsers[index].id);
-            expect(item.login).toBe(sortedUsers[index].login);
-            expect(item.email).toBe(sortedUsers[index].email);
-            expect(item.createdAt).toBe(sortedUsers[index].createdAt);
+            expect(item.id).toBe(sortedUsers[index].id)
+            expect(item.login).toBe(sortedUsers[index].login)
+            expect(item.email).toBe(sortedUsers[index].email)
+            expect(item.createdAt).toBe(sortedUsers[index].createdAt)
         })
     })
     it('+ GET users with pagination: STATUS 200', async () => {
@@ -83,10 +83,10 @@ describe('GET /users', () => {
 
         expect(res.body.items.length).toBe(paginatedPosts.length)
         res.body.items.forEach((item: DetailedUserOutputType, index: number) => {
-            expect(item.id).toBe(paginatedPosts[index].id);
-            expect(item.login).toBe(paginatedPosts[index].login);
-            expect(item.email).toBe(paginatedPosts[index].email);
-            expect(item.createdAt).toBe(paginatedPosts[index].createdAt);
+            expect(item.id).toBe(paginatedPosts[index].id)
+            expect(item.login).toBe(paginatedPosts[index].login)
+            expect(item.email).toBe(paginatedPosts[index].email)
+            expect(item.createdAt).toBe(paginatedPosts[index].createdAt)
         })
     })
 })

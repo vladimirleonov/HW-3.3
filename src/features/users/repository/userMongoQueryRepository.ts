@@ -1,27 +1,27 @@
-import {SanitizedUsersQueryParamsType} from "../helpers/sanitizeUsersQueryParams";
+import {SanitizedUsersQueryParamsType} from "../helpers/sanitizeUsersQueryParams"
 import {
     UserPaginationOutputType,
     DetailedUserOutputType,
     AuthenticatedUserOutputType
-} from "../input-output-types/user-types";
-import {UserDbType} from "../../../db/db-types/user-db-types";
-import {ObjectId} from "mongodb";
-import {db} from "../../../db/mongo-db";
+} from "../input-output-types/user-types"
+import {UserDbType} from "../../../db/db-types/user-db-types"
+import {ObjectId} from "mongodb"
+import {db} from "../../../db/mongo-db"
 
 export const userMongoQueryRepository = {
     async findAllForOutput(query: SanitizedUsersQueryParamsType): Promise<UserPaginationOutputType> {
         const searchLoginFilter = query.searchLoginTerm
-            ? { login : { $regex: query.searchLoginTerm, $options: 'i' }}
+            ? {login: {$regex: query.searchLoginTerm, $options: 'i'}}
             : {}
 
         const searchEmailFilter = query.searchEmailTerm
-            ? { email : { $regex: query.searchEmailTerm, $options: 'i' }}
+            ? {email: {$regex: query.searchEmailTerm, $options: 'i'}}
             : {}
 
         const orFilters = [searchLoginFilter, searchEmailFilter]
-            .filter(filter => Object.keys(filter).length > 0 );
+            .filter(filter => Object.keys(filter).length > 0)
 
-        const filter = orFilters.length > 0 ? { $or: orFilters } : {}
+        const filter = orFilters.length > 0 ? {$or: orFilters} : {}
 
         const users: UserDbType[] = await db.getCollections().userCollection
             .find(filter)

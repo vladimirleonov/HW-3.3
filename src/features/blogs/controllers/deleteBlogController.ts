@@ -1,8 +1,8 @@
 import {Request, Response} from 'express'
 import {IdParamInputType} from '../../../common/input-output-types/common-types'
 import {HTTP_CODES} from '../../../settings'
-import {blogService} from "../services/blogService";
-import {Result, ResultStatus} from "../../../common/types/result-type";
+import {blogService} from "../services/blogService"
+import {Result, ResultStatus} from "../../../common/types/result-type"
 
 export const deleteBlogController = async (req: Request<IdParamInputType>, res: Response) => {
     try {

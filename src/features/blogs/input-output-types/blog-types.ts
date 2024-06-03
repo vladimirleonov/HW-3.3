@@ -1,6 +1,6 @@
 import {
     DefaultQueryParamsInputType,
-} from "../../../common/input-output-types/common-types";
+} from "../../../common/input-output-types/common-types"
 
 export type BlogIdParamInputType = {
     blogId: string

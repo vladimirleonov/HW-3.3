@@ -1,17 +1,10 @@
 import {req} from "../../helpers/req"
-import {AUTH_DATA, SETTINGS} from "../../../src/settings"
+import {SETTINGS} from "../../../src/settings"
 import {HTTP_CODES} from "../../../src/settings"
-import {createBlogs} from '../../helpers/blog-helpers'
-import {ObjectId} from "mongodb"
-import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types";
-import {createPosts} from "../../helpers/post-helpers";
-import {PostOutputType} from "../../../src/features/posts/input-output-types/post-types";
-import {MongoMemoryServer} from "mongodb-memory-server";
-import {db} from "../../../src/db/mongo-db";
-import {LoginInputType, LoginOutputType} from "../../../src/features/auth/input-output-types/auth-types";
-import {loginUser} from "../../helpers/auth-helpers";
-import {base64Service} from "../../../src/common/adapters/base64Service";
-import {UserBodyInputType} from "../../../src/features/users/input-output-types/user-types";
+import {MongoMemoryServer} from "mongodb-memory-server"
+import {db} from "../../../src/db/mongo-db"
+import {LoginOutputType} from "../../../src/features/auth/input-output-types/auth-types"
+import {loginUser} from "../../helpers/auth-helpers"
 
 describe('AUTH /me', () => {
     beforeAll(async () => {

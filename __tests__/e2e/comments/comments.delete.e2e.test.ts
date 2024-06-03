@@ -1,21 +1,20 @@
 import {req} from "../../helpers/req"
 import {HTTP_CODES, SETTINGS} from "../../../src/settings"
 import {
-    CommentBodyInputType, CommentOutputType
+    CommentOutputType
 } from "../../../src/features/comments/input-output-types/comment-types"
-import {base64Service} from "../../../src/common/adapters/base64Service";
+import {base64Service} from "../../../src/common/adapters/base64Service"
 import {AUTH_DATA} from "../../../src/settings"
-import {testSeeder} from "../../testSeeder";
-import {MongoMemoryServer} from "mongodb-memory-server";
-import {db} from "../../../src/db/mongo-db";
-import {createPost} from "../../helpers/post-helpers";
-import {PostOutputType} from "../../../src/features/posts/input-output-types/post-types";
-import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types";
-import {createBlog} from "../../helpers/blog-helpers";
-import {loginUser} from "../../helpers/auth-helpers";
-import {LoginOutputType} from "../../../src/features/auth/input-output-types/auth-types";
-import {ObjectId} from "mongodb";
-import {createComment} from "../../helpers/comment-helpers";
+import {MongoMemoryServer} from "mongodb-memory-server"
+import {db} from "../../../src/db/mongo-db"
+import {createPost} from "../../helpers/post-helpers"
+import {PostOutputType} from "../../../src/features/posts/input-output-types/post-types"
+import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types"
+import {createBlog} from "../../helpers/blog-helpers"
+import {loginUser} from "../../helpers/auth-helpers"
+import {LoginOutputType} from "../../../src/features/auth/input-output-types/auth-types"
+import {ObjectId} from "mongodb"
+import {createComment} from "../../helpers/comment-helpers"
 
 describe('DELETE /comments', () => {
     beforeAll(async () => {

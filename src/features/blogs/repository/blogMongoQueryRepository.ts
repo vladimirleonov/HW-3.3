@@ -2,12 +2,12 @@ import {db} from "../../../db/mongo-db"
 import {BlogDBType} from "../../../db/db-types/blog-db-types"
 import {BlogsPaginationOutputType, BlogOutputType} from "../input-output-types/blog-types"
 import {ObjectId} from "mongodb"
-import {SanitizedBlogsQueryParamsType} from "../helpers/sanitizeBlogsQueryParams";
+import {SanitizedBlogsQueryParamsType} from "../helpers/sanitizeBlogsQueryParams"
 
 export const blogMongoQueryRepository = {
     async findAllForOutput(query: SanitizedBlogsQueryParamsType): Promise<BlogsPaginationOutputType> {
         const searchFilter = query.searchNameTerm
-            ? { name : { $regex: query.searchNameTerm, $options: 'i' }}
+            ? {name: {$regex: query.searchNameTerm, $options: 'i'}}
             : {}
 
         const filter = {

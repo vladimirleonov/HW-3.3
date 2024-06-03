@@ -1,8 +1,8 @@
-import {db} from "../../../db/mongo-db";
-import {UserDbType} from "../../../db/db-types/user-db-types";
+import {db} from "../../../db/mongo-db"
+import {UserDbType} from "../../../db/db-types/user-db-types"
 
 export const authMongoRepository = {
-    findUserByLoginOrEmail (loginOrEmail: string): Promise<UserDbType | null> {
+    findUserByLoginOrEmail(loginOrEmail: string): Promise<UserDbType | null> {
         return db.getCollections().userCollection.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}]})
     }
 }

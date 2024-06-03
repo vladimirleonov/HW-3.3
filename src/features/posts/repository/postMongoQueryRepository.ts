@@ -2,8 +2,8 @@ import {PostDbType} from "../../../db/db-types/post-db-types"
 import {PostPaginationOutputType, PostOutputType} from "../input-output-types/post-types"
 import {ObjectId} from "mongodb"
 
-import {SanitizedDefaultQueryParamsType} from "../../../common/helpers/queryParamsSanitizer";
-import {db} from "../../../db/mongo-db";
+import {SanitizedDefaultQueryParamsType} from "../../../common/helpers/queryParamsSanitizer"
+import {db} from "../../../db/mongo-db"
 
 export const postMongoQueryRepository = {
     async findAllForOutput(query: SanitizedDefaultQueryParamsType, blogId?: string): Promise<PostPaginationOutputType> {

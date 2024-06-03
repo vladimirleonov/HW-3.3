@@ -7,13 +7,13 @@ import {updatePostController} from "./controllers/updatePostController"
 import {postBodyValidator} from "./validators/postBodyValidators"
 import {inputCheckErrorsMiddleware} from "../../common/middlewares/inputCheckErrorsMiddleware"
 import {basicMiddleware} from "../../common/middlewares/basicMiddleware"
-import {idParamValidator} from "../../common/validators/idParamValidator";
-import {queryPostsParamsValidator} from "./validators/queryPostsParamsValidator";
-import {commentBodyValidator} from "../comments/validators/commentBodyValidator";
-import {bearerAuthMiddleware} from "../../common/middlewares/bearerAuthMiddleware";
-import {createCommentController} from "../comments/controllers/createCommentController";
-import {getPostCommentsController} from "../comments/controllers/getPostCommentsController";
-import {queryPostCommentsParamsValidator} from "../comments/validators/queryPostCommentsParamsValidator";
+import {idParamValidator} from "../../common/validators/idParamValidator"
+import {queryPostsParamsValidator} from "./validators/queryPostsParamsValidator"
+import {commentBodyValidator} from "../comments/validators/commentBodyValidator"
+import {bearerAuthMiddleware} from "../../common/middlewares/bearerAuthMiddleware"
+import {createCommentController} from "../comments/controllers/createCommentController"
+import {getPostCommentsController} from "../comments/controllers/getPostCommentsController"
+import {queryPostCommentsParamsValidator} from "../comments/validators/queryPostCommentsParamsValidator"
 
 export const postsRouter = Router()
 

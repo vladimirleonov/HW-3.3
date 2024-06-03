@@ -1,6 +1,6 @@
-import {UserDbType} from "../../../db/db-types/user-db-types";
-import {DeleteResult, InsertOneResult, ObjectId} from "mongodb";
-import {db} from "../../../db/mongo-db";
+import {UserDbType} from "../../../db/db-types/user-db-types"
+import {DeleteResult, InsertOneResult, ObjectId} from "mongodb"
+import {db} from "../../../db/mongo-db"
 
 export const userMongoRepository = {
     async findUserById(id: string): Promise<UserDbType | null> {

@@ -1,11 +1,11 @@
 import {req} from "../../helpers/req"
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings"
 import {BlogBodyInputType} from "../../../src/features/blogs/input-output-types/blog-types"
-import {base64Service} from "../../../src/common/adapters/base64Service";
+import {base64Service} from "../../../src/common/adapters/base64Service"
 import {createBlogs} from "../../helpers/blog-helpers"
-import {testSeeder} from "../../testSeeder";
-import {MongoMemoryServer} from "mongodb-memory-server";
-import {db} from "../../../src/db/mongo-db";
+import {testSeeder} from "../../testSeeder"
+import {MongoMemoryServer} from "mongodb-memory-server"
+import {db} from "../../../src/db/mongo-db"
 
 describe('PUT /blogs', () => {
     beforeAll(async () => {
