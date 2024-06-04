@@ -39,13 +39,6 @@ export const userMongoQueryRepository = {
             items: users.map((user: UserDbType) => this.mapToDetailedUser(user))
         }
     },
-    // async findForOutputById(id: string): Promise<{error?: string, user?: UserWithIdAndCreatedAtOutputType}> {
-    //     const user: UserDbType | null = await db.getCollections().userCollection.findOne({_id: new ObjectId(id)})
-    //     if (!user) {
-    //         return {error: 'User not found'}
-    //     }
-    //     return {user: this.mapToOutputWithIdAndCreatedAt(user)}
-    // },
     async findDetailedUserById(id: string): Promise<DetailedUserOutputType | null> {
         const user: UserDbType | null = await db.getCollections().userCollection.findOne({_id: new ObjectId(id)})
         return user ? this.mapToDetailedUser(user) : null

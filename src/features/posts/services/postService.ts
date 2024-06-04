@@ -67,7 +67,6 @@ export const postService = {
                 data: null
             }
         } else {
-            // add
             await commentMongoRepository.deleteMany(postId)
 
             return {

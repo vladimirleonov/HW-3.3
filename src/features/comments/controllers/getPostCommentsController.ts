@@ -1,5 +1,5 @@
 import {Request, Response} from 'express'
-import {PostIdParamType} from "../../posts/input-output-types/post-types"
+import {PostIdParamType, PostOutputType} from "../../posts/input-output-types/post-types"
 import {CommentsPaginationOutputType} from "../input-output-types/comment-types"
 import {
     SanitizedDefaultQueryParamsType,
@@ -12,8 +12,8 @@ import {HTTP_CODES} from "../../../settings"
 export const getPostCommentsController = async (req: Request<PostIdParamType, CommentsPaginationOutputType>, res: Response<CommentsPaginationOutputType>) => {
     const sanitizedQuery: SanitizedDefaultQueryParamsType = sanitizeDefaultQueryParams(req.query)
 
-    //? service may be
-    const post = await postMongoQueryRepository.findForOutputById(req.params.postId)
+    //? in service
+    const post: PostOutputType | null  = await postMongoQueryRepository.findForOutputById(req.params.postId)
     if (!post) {
         res.status(HTTP_CODES.NOT_FOUND).send()
         return

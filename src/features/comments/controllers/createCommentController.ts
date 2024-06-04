@@ -9,14 +9,18 @@ import {ErrorsMessagesType} from "../../../common/types/errorsMessages"
 
 export const createCommentController = async (req: Request<PostIdParamType, CommentOutputType, CommentBodyInputType>, res: Response<CommentOutputType | ErrorsMessagesType>) => {
     try {
-        // ? req.user?.userId!
-        const result: Result<string | null> = await commentService.createComment(req.params.postId, req.body, req.user?.userId!)
+        //?
+        if (!req.user || !req.user.userId) {
+            res.status(HTTP_CODES.UNAUTHORIZED).send()
+            return
+        }
+
+        const result: Result<string | null> = await commentService.createComment(req.params.postId, req.body, req.user.userId)
         if (result.status === ResultStatus.NotFound) {
             res.status(HTTP_CODES.NOT_FOUND).send()
             return
         }
 
-        //?
         if (result.status === ResultStatus.Unauthorized) {
             res.status(HTTP_CODES.UNAUTHORIZED).send()
             return
@@ -28,7 +32,6 @@ export const createCommentController = async (req: Request<PostIdParamType, Comm
         //     res.status(xxx).send()
         // }
 
-        // ? !
         res.status(HTTP_CODES.CREATED).send(comment!)
     } catch (err) {
         console.error(err)

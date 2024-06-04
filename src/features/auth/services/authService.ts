@@ -9,7 +9,6 @@ import {JwtPayloadType} from "../../../common/types/jwtPayloadType"
 export const authService = {
     async login(input: LoginInputType): Promise<Result<string | null>> {
         const user: UserDbType | null = await authMongoRepository.findUserByLoginOrEmail(input.loginOrEmail)
-        // ?
         if (!user || !(await cryptoService.compare(input.password, user.password))) {
             return {
                 status: ResultStatus.BadRequest,

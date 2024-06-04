@@ -20,7 +20,6 @@ export const commentService = {
         }
 
         const user: UserDbType | null = await userMongoRepository.findUserById(userId)
-        //? Unauthorized
         if (!user) {
             return {
                 status: ResultStatus.Unauthorized,
@@ -28,16 +27,6 @@ export const commentService = {
                 data: null
             }
         }
-
-        // const newComment: CommentDbType = {
-        //     _id: new ObjectId(),
-        //     content: input.content,
-        //     commentatorInfo: {
-        //         userId: userId,
-        //         userLogin: user.login
-        //     },
-        //     createdAt: new Date().toISOString()
-        // }
 
         const newComment: CommentDbType = {
             _id: new ObjectId(),
@@ -58,8 +47,6 @@ export const commentService = {
         }
     },
     async updateComment(id: string, input: CommentBodyInputType, userId: string): Promise<Result> {
-        // ? можно делать в контроллере эту проверку? делать там лучш и здесь для работы с данными поста
-        // но нужен здесь для проверок
         const comment: CommentDbType | null = await commentMongoRepository.findById(id)
         if (!comment) {
             return {
@@ -78,7 +65,7 @@ export const commentService = {
         }
 
         const isUpdated: boolean = await commentMongoRepository.update(id, input)
-        //? проверять !isUpdated или нет
+        //? check !isUpdated
         if (!isUpdated) {
             return {
                 status: ResultStatus.InternalError,
