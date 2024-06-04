@@ -9,6 +9,12 @@ export const userMongoRepository = {
     async findUserByField(field: string, value: string): Promise<UserDbType | null> {
         return await db.getCollections().userCollection.findOne({[field]: value})
     },
+    // findUserByLoginOrEmail(loginOrEmail: string): Promise<UserDbType | null> {
+    //     return db.getCollections().userCollection.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}]})
+    // },
+    findUserByLoginOrEmail(login: string, email: string): Promise<UserDbType | null> {
+        return db.getCollections().userCollection.findOne({$or: [{login: login}, {email: email}]})
+    },
     async create(newUser: UserDbType): Promise<string> {
         const insertedInfo: InsertOneResult<UserDbType> = await db.getCollections().userCollection.insertOne(newUser)
         return insertedInfo.insertedId.toString()

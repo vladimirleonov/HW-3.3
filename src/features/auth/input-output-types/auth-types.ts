@@ -3,6 +3,12 @@ export type LoginInputType = {
     password: string
 }
 
+export type RegisterUserBodyInputType = {
+    login: string,
+    password: string,
+    email: string
+}
+
 export type LoginOutputType = {
     accessToken: string
 }
