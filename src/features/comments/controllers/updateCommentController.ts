@@ -17,9 +17,7 @@ export const updateCommentController = async (req: Request<CommentIdParamInputTy
         if (result.status === ResultStatus.NotFound) {
             res.status(HTTP_CODES.NOT_FOUND).send()
             return
-        }
-
-        if (result.status === ResultStatus.Forbidden) {
+        } else if (result.status === ResultStatus.Forbidden) {
             res.status(HTTP_CODES.FORBIDDEN).send()
             return
         }

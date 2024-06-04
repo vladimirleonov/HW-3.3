@@ -12,7 +12,6 @@ export const authMeUserController = async (req: Request<{}, {}, AuthMeUserOutput
             return
         }
         const user: AuthenticatedUserOutputType | null = await userMongoQueryRepository.findAuthenticatedUserById(req.user.userId!)
-        //? check user
         if (!user) {
             res.status(HTTP_CODES.UNAUTHORIZED).send()
             return
