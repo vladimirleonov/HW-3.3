@@ -12,5 +12,5 @@ export type UserDbType = {
     password: string,
     email: string,
     createdAt: string
-    emailConfirmation?: EmailConfirmation,
+    emailConfirmation: EmailConfirmation,
 }

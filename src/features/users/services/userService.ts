@@ -4,6 +4,8 @@ import {UserBodyInputType} from "../input-output-types/user-types"
 import {ObjectId} from "mongodb"
 import {cryptoService} from "../../../common/adapters/cryptoService"
 import {Result, ResultStatus} from "../../../common/types/result-type"
+import {randomUUID} from "node:crypto";
+import {add} from "date-fns";
 
 export const userService = {
     async createUser(input: UserBodyInputType): Promise<Result<string | null>> {
@@ -40,7 +42,12 @@ export const userService = {
             login: login,
             password: hash,
             email: email,
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
+            emailConfirmation: {
+                confirmationCode: randomUUID(),
+                expirationDate: add(new Date(), {}).toISOString(),
+                isConfirmed: true
+            }
         }
         const userId: string = await userMongoRepository.create(newUser)
         return {
