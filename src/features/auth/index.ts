@@ -7,10 +7,11 @@ import {bearerAuthMiddleware} from "../../common/middlewares/bearerAuthMiddlewar
 import {registrationController} from "./controllers/registrationUserController";
 import {registrationUserBodyValidator} from "./validators/registrationBodyValidator";
 import {registrationConfirmationController} from "./controllers/registrationConfirmationController";
+import {registrationConfirmationBodyValidator} from "./validators/registrationConfirmationBodyValidator";
 
 export const authRouter: Router = Router()
 
 authRouter.post('/login', loginBodyValidator, inputCheckErrorsMiddleware, loginController)
 authRouter.post('/registration', registrationUserBodyValidator, registrationController)
-authRouter.post('/registration-confirmation', registrationUserBodyValidator, registrationConfirmationController)
+authRouter.post('/registration-confirmation', registrationConfirmationBodyValidator, registrationConfirmationController)
 authRouter.get('/me', bearerAuthMiddleware, authMeController)

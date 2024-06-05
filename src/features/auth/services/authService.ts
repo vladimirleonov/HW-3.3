@@ -96,7 +96,6 @@ export const authService = {
 
         return {
             status: ResultStatus.Success,
-            extensions: [{field: 'code', message: 'User account already confirmed'}],
             data: true
         }
     },
