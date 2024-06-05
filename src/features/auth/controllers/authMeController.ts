@@ -4,7 +4,7 @@ import {AuthMeUserOutputType} from "../input-output-types/auth-types"
 import {userMongoQueryRepository} from "../../users/repository/userMongoQueryRepository"
 import {AuthenticatedUserOutputType} from "../../users/input-output-types/user-types";
 
-export const authMeUserController = async (req: Request<{}, {}, AuthMeUserOutputType, {}>, res: Response<AuthMeUserOutputType>) => {
+export const authMeController = async (req: Request<{}, {}, AuthMeUserOutputType, {}>, res: Response<AuthMeUserOutputType>) => {
     try {
         //? check user
         if (!req.user || !req.user.userId) {

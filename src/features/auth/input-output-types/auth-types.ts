@@ -9,6 +9,10 @@ export type RegisterUserBodyInputType = {
     email: string
 }
 
+export type RegistrationConfirmationUserBodyInputType = {
+    code: string
+}
+
 export type LoginOutputType = {
     accessToken: string
 }

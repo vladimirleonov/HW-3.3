@@ -1,14 +1,23 @@
 import {Request, Response} from "express";
 import {RegisterUserBodyInputType} from "../input-output-types/auth-types";
-import {ErrorsMessagesType} from "../../../common/types/errorsMessages";
 import {HTTP_CODES} from "../../../settings";
 import {authService} from "../services/authService";
+import {UserDbType} from "../../../db/db-types/user-db-types";
+import {Result, ResultStatus} from "../../../common/types/result-type";
 
-export const registrationUserController = async (req: Request<{}, {}, RegisterUserBodyInputType>, res: Response) => {
+export const registrationController = async (req: Request<{}, {}, RegisterUserBodyInputType>, res: Response) => {
     try {
-        const result = await authService.registrationUser(req.body)
+        const result: Result<boolean | null> = await authService.registrationUser(req.body)
+        if (result.status === ResultStatus.BadRequest) {
+            res.status(HTTP_CODES.BAD_REQUEST).send({
+                errorsMessages: result.extensions
+            })
+            return
+        }
+
+        res.status(HTTP_CODES.NO_CONTENT).send({})
     } catch (err) {
         console.error(err)
-        res.send(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
+        res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
     }
 }

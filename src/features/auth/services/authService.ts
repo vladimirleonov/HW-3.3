@@ -1,4 +1,8 @@
-import {LoginInputType, RegisterUserBodyInputType} from "../input-output-types/auth-types"
+import {
+    LoginInputType,
+    RegisterUserBodyInputType,
+    RegistrationConfirmationUserBodyInputType
+} from "../input-output-types/auth-types"
 import {UserDbType} from "../../../db/db-types/user-db-types"
 import {bearerService} from "../../../common/adapters/bearerService"
 import {Result, ResultStatus} from "../../../common/types/result-type"
@@ -12,9 +16,9 @@ import {nodemailerService} from "../../../common/adapters/nodemailerService";
 import {registrationEmailTemplate} from "../../../common/email-templates/registrationEmailTemplate";
 
 export const authService = {
-    async registrationUser(input: RegisterUserBodyInputType): Promise<Result<null | UserDbType>> {
-        const user: UserDbType | null = await userMongoRepository.findUserByLoginAndEmail(input.login, input.email)
-        if (!user) {
+    async registrationUser(input: RegisterUserBodyInputType): Promise<Result<null | boolean>> {
+        const existingUser: UserDbType | null = await userMongoRepository.findUserByLoginAndEmail(input.login, input.email)
+        if (!existingUser) {
             return {
                 status: ResultStatus.BadRequest,
                 extensions: [{field: 'login or password', message: 'Wrong login or password'}],
@@ -43,7 +47,7 @@ export const authService = {
         await userMongoRepository.create(newUser)
 
         try {
-            const result = await nodemailerService.sendEmail(
+            await nodemailerService.sendEmail(
                 newUser.email,
                 registrationEmailTemplate(newUser.emailConfirmation?.confirmationCode!)
             )
@@ -53,7 +57,47 @@ export const authService = {
 
         return {
             status: ResultStatus.Success,
-            data: newUser,
+            data: true,
+        }
+    },
+    async confirmRegistration(input: RegistrationConfirmationUserBodyInputType): Promise<Result<null | boolean>> {
+        const existingUser: UserDbType | null = await userMongoRepository.findUserByField('emailConfirmation.confirmationCode', input.code)
+        if (!existingUser) {
+            return {
+                status: ResultStatus.BadRequest,
+                extensions: [{field: 'code', message: 'Invalid confirmation code'}],
+                data: null
+            }
+        }
+
+        if(existingUser.emailConfirmation.expirationDate < (new Date()).toISOString()) {
+            return {
+                status: ResultStatus.BadRequest,
+                extensions: [{field: 'code', message: 'Invalid confirmation code'}],
+                data: null
+            }
+        }
+
+        if(existingUser.emailConfirmation.isConfirmed) {
+            return {
+                status: ResultStatus.BadRequest,
+                extensions: [{field: 'code', message: 'User account already confirmed'}],
+                data: null
+            }
+        }
+
+        const userToUpdate = {
+            emailConfirmation: {
+                isConfirmed: true
+            }
+        }
+
+        await userMongoRepository.update(existingUser._id.toString(), userToUpdate)
+
+        return {
+            status: ResultStatus.Success,
+            extensions: [{field: 'code', message: 'User account already confirmed'}],
+            data: true
         }
     },
     async login(input: LoginInputType): Promise<Result<string | null>> {

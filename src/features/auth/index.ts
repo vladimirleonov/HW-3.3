@@ -1,14 +1,16 @@
 import {Router} from "express"
-import {loginUserController} from "./controllers/loginUserController"
+import {loginController} from "./controllers/loginController"
 import {loginBodyValidator} from "./validators/loginBodyValidator"
 import {inputCheckErrorsMiddleware} from "../../common/middlewares/inputCheckErrorsMiddleware"
-import {authMeUserController} from "./controllers/authMeUserController"
+import {authMeController} from "./controllers/authMeController"
 import {bearerAuthMiddleware} from "../../common/middlewares/bearerAuthMiddleware"
-import {registrationUserController} from "./controllers/registrationUserController";
+import {registrationController} from "./controllers/registrationUserController";
 import {registrationUserBodyValidator} from "./validators/registrationBodyValidator";
+import {registrationConfirmationController} from "./controllers/registrationConfirmationController";
 
 export const authRouter: Router = Router()
 
-authRouter.post('/login', loginBodyValidator, inputCheckErrorsMiddleware, loginUserController)
-authRouter.post('/registration', registrationUserBodyValidator, registrationUserController)
-authRouter.get('/me', bearerAuthMiddleware, authMeUserController)
+authRouter.post('/login', loginBodyValidator, inputCheckErrorsMiddleware, loginController)
+authRouter.post('/registration', registrationUserBodyValidator, registrationController)
+authRouter.post('/registration-confirmation', registrationUserBodyValidator, registrationConfirmationController)
+authRouter.get('/me', bearerAuthMiddleware, authMeController)
