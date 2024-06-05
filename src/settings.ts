@@ -12,6 +12,12 @@ export const SETTINGS = {
         COMMENTS: '/comments',
         TESTING: '/testing',
     },
+    EMAIL: {
+        USER: process.env.EMAIL_USER || '',
+        PASSWORD: process.env.EMAIL_PASSWORD || '',
+        HOST: process.env.EMAIL_HOST || '',
+        PORT: process.env.EMAIL_PORT || '587'
+    },
     MONGO_URL: process.env.MONGO_URL || 'mongodb://0.0.0.0:27017',
     DB_NAME: process.env.DB_NAME || '',
     BLOG_COLLECTION_NAME: process.env.BLOG_COLLECTION_NAME || '',
