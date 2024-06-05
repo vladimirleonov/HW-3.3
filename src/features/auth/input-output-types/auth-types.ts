@@ -13,6 +13,10 @@ export type RegistrationConfirmationUserBodyInputType = {
     code: string
 }
 
+export type registrationEmailResendingUserBodyInputType = {
+    email: string
+}
+
 export type LoginOutputType = {
     accessToken: string
 }

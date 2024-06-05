@@ -1,7 +1,7 @@
 import {
     LoginInputType,
     RegisterUserBodyInputType,
-    RegistrationConfirmationUserBodyInputType
+    RegistrationConfirmationUserBodyInputType, registrationEmailResendingUserBodyInputType
 } from "../input-output-types/auth-types"
 import {UserDbType} from "../../../db/db-types/user-db-types"
 import {bearerService} from "../../../common/adapters/bearerService"
@@ -14,6 +14,8 @@ import {randomUUID} from "node:crypto";
 import {add} from "date-fns";
 import {nodemailerService} from "../../../common/adapters/nodemailerService";
 import {registrationEmailTemplate} from "../../../common/email-templates/registrationEmailTemplate";
+import {registrationEmailResendingUserBodyValidator} from "../validators/registrationEmailResendingUserBodyValidator";
+import {userService} from "../../users/services/userService";
 
 export const authService = {
     async registrationUser(input: RegisterUserBodyInputType): Promise<Result<null | boolean>> {
@@ -49,7 +51,7 @@ export const authService = {
         try {
             await nodemailerService.sendEmail(
                 newUser.email,
-                registrationEmailTemplate(newUser.emailConfirmation?.confirmationCode!)
+                registrationEmailTemplate(newUser.emailConfirmation.confirmationCode!)
             )
         } catch(err) {
             console.log('Send email error', err)
@@ -98,6 +100,33 @@ export const authService = {
             status: ResultStatus.Success,
             data: true
         }
+    },
+    async registrationEmailResending(input: registrationEmailResendingUserBodyInputType): Promise<Result<>> {
+        const existingUser: UserDbType | null = await userMongoRepository.findUserByField('email', input.email)
+        if (!existingUser) {
+            return {
+                status: ResultStatus.BadRequest,
+                extensions: [{field: 'code', message: 'Invalid confirmation code'}],
+                data: null
+            }
+        }
+
+        const newUser = {
+            emailConfirmation: {
+                confirmationCode: randomUUID(),
+                expirationDate: add(new Date(), {
+                    hours: 1,
+                    minutes: 30,
+                })
+            }
+        }
+
+        await nodemailerService.sendEmail(
+            input.email,
+            registrationEmailTemplate(newUser.emailConfirmation.confirmationCode)
+        )
+
+        await userMongoRepository.update(existingUser._id.toString(), newUser)
     },
     async login(input: LoginInputType): Promise<Result<string | null>> {
         const user: UserDbType | null = await userMongoRepository.findUserByLoginOrEmail(input.loginOrEmail)

@@ -19,7 +19,8 @@ export const userMongoRepository = {
         const insertedInfo: InsertOneResult<UserDbType> = await db.getCollections().userCollection.insertOne(newUser)
         return insertedInfo.insertedId.toString()
     },
-    async update(id: string, newUser: EmailConfirmationUpdateType): Promise<boolean> {
+    // async update(id: string, newUser: EmailConfirmationUpdateType): Promise<boolean> {
+    async update(id: string, newUser: any): Promise<boolean> {
         const updatedInfo: UpdateResult<UserDbType> = await db.getCollections().userCollection.updateOne(
             {_id: new ObjectId(id)},
             {$set: {['emailConfirmation.isConfirmed']: newUser.emailConfirmation.isConfirmed}},

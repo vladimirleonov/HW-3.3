@@ -8,10 +8,14 @@ import {registrationController} from "./controllers/registrationUserController";
 import {registrationUserBodyValidator} from "./validators/registrationBodyValidator";
 import {registrationConfirmationController} from "./controllers/registrationConfirmationController";
 import {registrationConfirmationBodyValidator} from "./validators/registrationConfirmationBodyValidator";
+import {registrationEmailResendingUserBodyValidator} from "./validators/registrationEmailResendingUserBodyValidator";
+import {registrationEmailConfirmationController} from "./controllers/registrationEmailConfirmationController";
 
 export const authRouter: Router = Router()
 
 authRouter.post('/login', loginBodyValidator, inputCheckErrorsMiddleware, loginController)
 authRouter.post('/registration', registrationUserBodyValidator, registrationController)
 authRouter.post('/registration-confirmation', registrationConfirmationBodyValidator, registrationConfirmationController)
+authRouter.post('/registration-email-resending', registrationEmailResendingUserBodyValidator, registrationEmailConfirmationController)
+
 authRouter.get('/me', bearerAuthMiddleware, authMeController)
