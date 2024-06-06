@@ -49,9 +49,9 @@ export const testSeeder = {
         login: string,
         email: string,
         password: string,
-        code: string,
-        expirationDate: string,
-        isConfirmed: boolean,
+        code?: string,
+        expirationDate?: string,
+        isConfirmed?: boolean,
     )
     // : Promise<IUserService>
     {
