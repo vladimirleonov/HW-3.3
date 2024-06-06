@@ -1,7 +1,6 @@
 import {UserDbType} from "../../../db/db-types/user-db-types"
 import {DeleteResult, InsertOneResult, ObjectId, UpdateResult} from "mongodb"
 import {db} from "../../../db/mongo-db"
-import {UpdateUserEmailConfirmationType} from "../../auth/UpdateUserEmailConfirmationType";
 import {DeepPartial} from "../../../common/types/deepPartial";
 
 export const userMongoRepository = {
@@ -17,7 +16,7 @@ export const userMongoRepository = {
     async findUserByEmail(email: string): Promise<UserDbType | null> {
         return await db.getCollections().userCollection.findOne({email: email})
     },
-    findUserByLoginOrEmail(loginOrEmail: string): Promise<UserDbType | null> {
+    findUserByLoginOrEmailField(loginOrEmail: string): Promise<UserDbType | null> {
         return db.getCollections().userCollection.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}]})
     },
     findUserByLoginAndEmail(login: string, email: string): Promise<UserDbType | null> {

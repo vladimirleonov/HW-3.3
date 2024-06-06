@@ -1,3 +1,9 @@
+import {UserDbType} from "../src/db/db-types/user-db-types";
+import {InsertOneResult, ObjectId} from "mongodb";
+import {randomUUID} from "node:crypto";
+import {add} from "date-fns";
+import {db} from "../src/db/mongo-db";
+
 export const testSeeder = {
     createUserDTO() {
         return {
@@ -39,4 +45,39 @@ export const testSeeder = {
             content: 'contentcontentcontentcontent',
         }
     },
+    async registerUser(
+        login: string,
+        email: string,
+        password: string,
+        code: string,
+        expirationDate: string,
+        isConfirmed: boolean,
+    )
+    // : Promise<IUserService>
+    {
+        const newUser: UserDbType = {
+            _id: new ObjectId(),
+            login,
+            email,
+            password,
+            createdAt: new Date().toISOString(),
+            emailConfirmation: {
+                confirmationCode: code ?? randomUUID(),
+                expirationDate: expirationDate || add(new Date(), {
+                    hours: 1,
+                    minutes: 30,
+                }).toISOString(),
+                isConfirmed: isConfirmed ?? false
+            }
+        }
+
+        const res: InsertOneResult<UserDbType> = await db.getCollections().userCollection.insertOne({...newUser})
+
+        const { _id, ...userWithoutId } = newUser;
+
+        return {
+            id: res.insertedId.toString(),
+            ...userWithoutId
+        }
+    }
 }

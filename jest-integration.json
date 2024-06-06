@@ -8,5 +8,5 @@
   "preset": "ts-jest",
   "testEnvironment": "node",
   "testTimeout": 100000,
-  "testRegex": "__tests__/integration/(blogs|posts|users|comments)/.*\\.test\\.ts$"
+  "testRegex": "__tests__/integration/(blogs|posts|users|comments|auth)/.*\\.test\\.ts$"
 }

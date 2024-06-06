@@ -1,7 +1,8 @@
 import {
     LoginInputType,
     RegisterUserBodyInputType,
-    RegistrationConfirmationUserBodyInputType, registrationEmailResendingUserBodyInputType
+    RegistrationConfirmationUserBodyInputType,
+    registrationEmailResendingUserBodyInputType
 } from "../input-output-types/auth-types"
 import {UserDbType} from "../../../db/db-types/user-db-types"
 import {bearerService} from "../../../common/adapters/bearerService"
@@ -13,13 +14,13 @@ import {ObjectId} from "mongodb";
 import {randomUUID} from "node:crypto";
 import {add} from "date-fns";
 import {nodemailerService} from "../../../common/adapters/nodemailerService";
-import {registrationEmailTemplate} from "../../../common/email-templates/registrationEmailTemplate";
+import {registrationEmailTemplate} from "../../../common/email/registrationEmailTemplate";
 import {DeepPartial} from "../../../common/types/deepPartial";
 
 export const authService = {
-    async registrationUser(input: RegisterUserBodyInputType): Promise<Result<null | UserDbType>> {
+    async registrationUser(input: RegisterUserBodyInputType): Promise<Result> {
         const existingUser: UserDbType | null = await userMongoRepository.findUserByLoginAndEmail(input.login, input.email)
-        if (!existingUser) {
+        if (existingUser) {
             return {
                 status: ResultStatus.BadRequest,
                 extensions: [{field: 'login or email', message: 'User with such credentials already exists'}],
@@ -59,7 +60,8 @@ export const authService = {
 
         return {
             status: ResultStatus.Success,
-            data: newUser,
+            data: null,
+            //data: newUser,
         }
     },
     async confirmRegistration(input: RegistrationConfirmationUserBodyInputType): Promise<Result<null | boolean>> {
@@ -101,7 +103,7 @@ export const authService = {
             data: true
         }
     },
-    async registrationEmailResending(input: registrationEmailResendingUserBodyInputType): Promise<Result<null>> {
+    async registrationEmailResending(input: registrationEmailResendingUserBodyInputType): Promise<Result> {
         const existingUser: UserDbType | null = await userMongoRepository.findUserByEmail(input.email)
         if (!existingUser) {
             return {
@@ -142,11 +144,19 @@ export const authService = {
         }
     },
     async login(input: LoginInputType): Promise<Result<string | null>> {
-        const user: UserDbType | null = await userMongoRepository.findUserByLoginOrEmail(input.loginOrEmail)
+        const user: UserDbType | null = await userMongoRepository.findUserByLoginOrEmailField(input.loginOrEmail)
         if (!user || !(await cryptoService.compare(input.password, user.password))) {
             return {
                 status: ResultStatus.BadRequest,
                 extensions: [{field: 'login or password', message: 'Wrong login or password'}],
+                data: null
+            }
+        }
+
+        if (!user.emailConfirmation.isConfirmed) {
+            return {
+                status: ResultStatus.BadRequest,
+                extensions: [{field: 'email', message: 'Email is not confirmed'}],
                 data: null
             }
         }

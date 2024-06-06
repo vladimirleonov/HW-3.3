@@ -3,7 +3,7 @@ import SMTPTransport from "nodemailer/lib/smtp-transport";
 import {SETTINGS} from "../../settings";
 
 export const nodemailerService = {
-    async sendEmail(recipient: string, emailTemplate: string) {
+    async sendEmail(recipient: string, emailTemplate: string): Promise<boolean> {
         let transporter: Transporter<SMTPTransport.SentMessageInfo> = nodemailer.createTransport({
             host: SETTINGS.EMAIL.HOST,
             port: parseInt(SETTINGS.EMAIL.PORT, 10),
@@ -22,5 +22,7 @@ export const nodemailerService = {
         });
 
         console.log('Message sent: %s', info.messageId);
+
+        return !!info
     }
 }

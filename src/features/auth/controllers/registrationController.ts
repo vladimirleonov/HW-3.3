@@ -6,7 +6,7 @@ import {Result, ResultStatus} from "../../../common/types/result-type";
 
 export const registrationController = async (req: Request<{}, {}, RegisterUserBodyInputType>, res: Response) => {
     try {
-        const result: Result<boolean | null> = await authService.registrationUser(req.body)
+        const result: Result = await authService.registrationUser(req.body)
         if (result.status === ResultStatus.BadRequest) {
             res.status(HTTP_CODES.BAD_REQUEST).send({
                 errorsMessages: result.extensions
