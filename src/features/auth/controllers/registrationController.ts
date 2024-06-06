@@ -2,7 +2,6 @@ import {Request, Response} from "express";
 import {RegisterUserBodyInputType} from "../input-output-types/auth-types";
 import {HTTP_CODES} from "../../../settings";
 import {authService} from "../services/authService";
-import {UserDbType} from "../../../db/db-types/user-db-types";
 import {Result, ResultStatus} from "../../../common/types/result-type";
 
 export const registrationController = async (req: Request<{}, {}, RegisterUserBodyInputType>, res: Response) => {

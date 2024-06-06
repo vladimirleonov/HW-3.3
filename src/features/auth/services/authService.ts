@@ -14,21 +14,21 @@ import {randomUUID} from "node:crypto";
 import {add} from "date-fns";
 import {nodemailerService} from "../../../common/adapters/nodemailerService";
 import {registrationEmailTemplate} from "../../../common/email-templates/registrationEmailTemplate";
-import {registrationEmailResendingUserBodyValidator} from "../validators/registrationEmailResendingUserBodyValidator";
-import {userService} from "../../users/services/userService";
+import {DeepPartial} from "../../../common/types/deepPartial";
 
 export const authService = {
-    async registrationUser(input: RegisterUserBodyInputType): Promise<Result<null | boolean>> {
+    async registrationUser(input: RegisterUserBodyInputType): Promise<Result<null | UserDbType>> {
         const existingUser: UserDbType | null = await userMongoRepository.findUserByLoginAndEmail(input.login, input.email)
         if (!existingUser) {
             return {
                 status: ResultStatus.BadRequest,
-                extensions: [{field: 'login or password', message: 'Wrong login or password'}],
+                extensions: [{field: 'login or email', message: 'User with such credentials already exists'}],
                 data: null
             }
         }
 
-        const passwordHash: string = await cryptoService.createHash(input.password, 10)
+        const saltRounds: number = 10
+        const passwordHash: string = await cryptoService.createHash(input.password, saltRounds)
 
         const newUser: UserDbType = {
             _id: new ObjectId(),
@@ -59,11 +59,11 @@ export const authService = {
 
         return {
             status: ResultStatus.Success,
-            data: true,
+            data: newUser,
         }
     },
     async confirmRegistration(input: RegistrationConfirmationUserBodyInputType): Promise<Result<null | boolean>> {
-        const existingUser: UserDbType | null = await userMongoRepository.findUserByField('emailConfirmation.confirmationCode', input.code)
+        const existingUser: UserDbType | null = await userMongoRepository.findUserByConfirmationCode(input.code)
         if (!existingUser) {
             return {
                 status: ResultStatus.BadRequest,
@@ -75,7 +75,7 @@ export const authService = {
         if(existingUser.emailConfirmation.expirationDate < (new Date()).toISOString()) {
             return {
                 status: ResultStatus.BadRequest,
-                extensions: [{field: 'code', message: 'Invalid confirmation code'}],
+                extensions: [{field: 'code', message: 'Confirmation code has expired'}],
                 data: null
             }
         }
@@ -88,7 +88,7 @@ export const authService = {
             }
         }
 
-        const userToUpdate = {
+        const userToUpdate: DeepPartial<UserDbType> = {
             emailConfirmation: {
                 isConfirmed: true
             }
@@ -101,32 +101,45 @@ export const authService = {
             data: true
         }
     },
-    async registrationEmailResending(input: registrationEmailResendingUserBodyInputType): Promise<Result<>> {
-        const existingUser: UserDbType | null = await userMongoRepository.findUserByField('email', input.email)
+    async registrationEmailResending(input: registrationEmailResendingUserBodyInputType): Promise<Result<null>> {
+        const existingUser: UserDbType | null = await userMongoRepository.findUserByEmail(input.email)
         if (!existingUser) {
             return {
                 status: ResultStatus.BadRequest,
-                extensions: [{field: 'code', message: 'Invalid confirmation code'}],
+                extensions: [{field: 'email', message: 'Invalid email'}],
                 data: null
             }
         }
 
-        const newUser = {
+        if (existingUser.emailConfirmation.isConfirmed) {
+            return {
+                status: ResultStatus.BadRequest,
+                extensions: [{field: 'email', message: 'Email already confirmed'}],
+                data: null
+            }
+        }
+
+        const userToUpdate: DeepPartial<UserDbType> = {
             emailConfirmation: {
                 confirmationCode: randomUUID(),
                 expirationDate: add(new Date(), {
                     hours: 1,
                     minutes: 30,
-                })
+                }).toISOString()
             }
         }
 
         await nodemailerService.sendEmail(
             input.email,
-            registrationEmailTemplate(newUser.emailConfirmation.confirmationCode)
+            registrationEmailTemplate(userToUpdate.emailConfirmation?.confirmationCode!)
         )
 
-        await userMongoRepository.update(existingUser._id.toString(), newUser)
+        await userMongoRepository.update(existingUser._id.toString(), userToUpdate)
+
+        return {
+            status: ResultStatus.Success,
+            data: null
+        }
     },
     async login(input: LoginInputType): Promise<Result<string | null>> {
         const user: UserDbType | null = await userMongoRepository.findUserByLoginOrEmail(input.loginOrEmail)
