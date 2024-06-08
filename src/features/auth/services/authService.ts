@@ -146,10 +146,7 @@ export const authService = {
             registrationEmailTemplate(userToUpdate.emailConfirmation?.confirmationCode!)
         )
 
-        await userMongoRepository.updateConfirmationInfo(existingUser._id.toString(), randomUUID(), add(new Date(), {
-            hours: 1,
-            minutes: 30,
-        }).toISOString() )
+        await userMongoRepository.updateConfirmationInfo(existingUser._id.toString(), userToUpdate.emailConfirmation?.confirmationCode!, userToUpdate.emailConfirmation?.expirationDate!)
 
         return {
             status: ResultStatus.Success,

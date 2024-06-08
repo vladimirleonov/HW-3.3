@@ -14,7 +14,7 @@ export const registrationConfirmationController = async (req: Request<{}, {}, Re
             return
         }
 
-        res.status(HTTP_CODES.BAD_REQUEST).send({})
+        res.status(HTTP_CODES.NO_CONTENT).send()
     } catch (err) {
         console.error(err)
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
