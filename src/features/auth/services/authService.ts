@@ -98,13 +98,15 @@ export const authService = {
             }
         }
 
-        const userToUpdate: DeepPartial<UserDbType> = {
-            emailConfirmation: {
-                isConfirmed: true
-            }
-        }
+        // const userToUpdate: DeepPartial<UserDbType> = {
+        //     emailConfirmation: {
+        //         isConfirmed: true
+        //     }
+        // }
 
-        await userMongoRepository.update(existingUser._id.toString(), userToUpdate)
+        const isConfirmed: boolean = true
+
+        await userMongoRepository.updateIsConfirmed(existingUser._id.toString(), isConfirmed)
 
         return {
             status: ResultStatus.Success,
@@ -144,7 +146,10 @@ export const authService = {
             registrationEmailTemplate(userToUpdate.emailConfirmation?.confirmationCode!)
         )
 
-        await userMongoRepository.update(existingUser._id.toString(), userToUpdate)
+        await userMongoRepository.updateConfirmationInfo(existingUser._id.toString(), randomUUID(), add(new Date(), {
+            hours: 1,
+            minutes: 30,
+        }).toISOString() )
 
         return {
             status: ResultStatus.Success,

@@ -29,10 +29,27 @@ export const userMongoRepository = {
         const insertedInfo: InsertOneResult<UserDbType> = await db.getCollections().userCollection.insertOne(newUser)
         return insertedInfo.insertedId.toString()
     },
-    async update(id: string, newUser: DeepPartial<UserDbType>): Promise<boolean> {
+    // async update(id: string, newUser: DeepPartial<UserDbType>): Promise<boolean> {
+    //     const updatedInfo: UpdateResult<UserDbType> = await db.getCollections().userCollection.updateOne(
+    //         {_id: new ObjectId(id)},
+    //         {$set: {['emailConfirmation.isConfirmed']: newUser}},
+    //     )
+    //     return updatedInfo.matchedCount === 1
+    // },
+    async updateIsConfirmed(id: string, isConfirmed: boolean): Promise<boolean> {
         const updatedInfo: UpdateResult<UserDbType> = await db.getCollections().userCollection.updateOne(
             {_id: new ObjectId(id)},
-            {$set: {['emailConfirmation.isConfirmed']: newUser}},
+            {$set: {['emailConfirmation.isConfirmed']: isConfirmed}},
+        )
+        return updatedInfo.matchedCount === 1
+    },
+    async updateConfirmationInfo(id: string, confirmationCode: string, expirationDate: string): Promise<boolean> {
+        const updatedInfo: UpdateResult<UserDbType> = await db.getCollections().userCollection.updateOne(
+            {_id: new ObjectId(id)},
+            {$set: {
+                ['emailConfirmation.confirmationCode']: confirmationCode,
+                ['emailConfirmation.expirationDate']: expirationDate}
+            }
         )
         return updatedInfo.matchedCount === 1
     },
