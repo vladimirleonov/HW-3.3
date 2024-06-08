@@ -18,7 +18,7 @@ import {registrationEmailTemplate} from "../../../common/email/registrationEmail
 import {DeepPartial} from "../../../common/types/deepPartial";
 
 export const authService = {
-    async registrationUser(input: RegisterUserBodyInputType): Promise<Result> {
+    async registrationUser(input: RegisterUserBodyInputType): Promise<Result<string | null>> {
         const existingUser: UserDbType | null = await userMongoRepository.findUserByLoginAndEmail(input.login, input.email)
         if (existingUser) {
             return {
@@ -49,19 +49,18 @@ export const authService = {
 
         await userMongoRepository.create(newUser)
 
-        try {
-            await nodemailerService.sendEmail(
-                newUser.email,
-                registrationEmailTemplate(newUser.emailConfirmation.confirmationCode!)
-            )
-        } catch(err) {
-            console.log('Send email error', err)
-        }
+        // try {
+        nodemailerService.sendEmail(
+            newUser.email,
+            registrationEmailTemplate(newUser.emailConfirmation.confirmationCode!)
+        )
+        // } catch(err) {
+        //     console.log('Send email error', err)
+        // }
 
         return {
             status: ResultStatus.Success,
-            data: null,
-            //data: newUser,
+            data: newUser.emailConfirmation.confirmationCode,
         }
     },
     async confirmRegistration(input: RegistrationConfirmationUserBodyInputType): Promise<Result<null | boolean>> {
