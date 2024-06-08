@@ -16,7 +16,7 @@ import {
 export const authRouter: Router = Router()
 
 authRouter.post('/login', loginBodyValidator, inputCheckErrorsMiddleware, loginController)
-authRouter.post('/registration', registrationUserBodyValidator, registrationController)
+authRouter.post('/registration', registrationUserBodyValidator, inputCheckErrorsMiddleware, registrationController)
 authRouter.post('/registration-confirmation', registrationConfirmationBodyValidator, registrationConfirmationController)
 authRouter.post('/registration-email-resending', registrationEmailResendingUserBodyValidator, registrationEmailResendingController)
 
