@@ -10,6 +10,7 @@ export const registrationEmailResendingController = async (req: Request<{}, {}, 
         res.status(HTTP_CODES.BAD_REQUEST).send({
             errorsMessages: result.extensions
         })
+        return
     }
 
     res.status(HTTP_CODES.NO_CONTENT).send({})
