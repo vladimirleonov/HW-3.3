@@ -14,16 +14,7 @@ export const registrationController = async (req: Request<{}, {}, RegisterUserBo
             return
         }
 
-        const code = result.data;  // Извлекаем код подтверждения
-
-        console.log(code);  // Логирование кода для отладки
-
-        if (code) {
-            console.log("ok");
-            res.status(HTTP_CODES.NO_CONTENT).send();  // Возвращаем статус 204 без тела ответа
-        } else {
-            res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send();  // Если код отсутствует, отправляем ошибку
-        }
+        res.status(HTTP_CODES.NO_CONTENT).send();
     } catch (err) {
         console.error(err)
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()

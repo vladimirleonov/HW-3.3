@@ -19,11 +19,20 @@ import {DeepPartial} from "../../../common/types/deepPartial";
 
 export const authService = {
     async registrationUser(input: RegisterUserBodyInputType): Promise<Result<string | null>> {
-        const existingUser: UserDbType | null = await userMongoRepository.findUserByLoginAndEmail(input.login, input.email)
-        if (existingUser) {
+        const userByEmail: UserDbType | null = await userMongoRepository.findUserByEmail(input.email)
+        if (userByEmail) {
             return {
                 status: ResultStatus.BadRequest,
-                extensions: [{field: 'login or email', message: 'User with such credentials already exists'}],
+                extensions: [{field: 'email', message: 'User with such credentials already exists'}],
+                data: null
+            }
+        }
+
+        const userByLogin: UserDbType | null = await userMongoRepository.findUserByLogin(input.login)
+        if (userByLogin) {
+            return {
+                status: ResultStatus.BadRequest,
+                extensions: [{field: 'login', message: 'User with such credentials already exists'}],
                 data: null
             }
         }

@@ -16,12 +16,15 @@ export const userMongoRepository = {
     async findUserByEmail(email: string): Promise<UserDbType | null> {
         return await db.getCollections().userCollection.findOne({email: email})
     },
+    findUserByLogin(login: string): Promise<UserDbType | null> {
+        return db.getCollections().userCollection.findOne({login: login})
+    },
     findUserByLoginOrEmailField(loginOrEmail: string): Promise<UserDbType | null> {
         return db.getCollections().userCollection.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}]})
     },
-    findUserByLoginAndEmail(login: string, email: string): Promise<UserDbType | null> {
-        return db.getCollections().userCollection.findOne({$or: [{login: login}, {email: email}]})
-    },
+    // findUserByLoginAndEmail(login: string, email: string): Promise<UserDbType | null> {
+    //     return db.getCollections().userCollection.findOne({$or: [{login: login}, {email: email}]})
+    // },
     async create(newUser: UserDbType): Promise<string> {
         const insertedInfo: InsertOneResult<UserDbType> = await db.getCollections().userCollection.insertOne(newUser)
         return insertedInfo.insertedId.toString()
