@@ -18,7 +18,7 @@ import {registrationEmailTemplate} from "../../../common/email/registrationEmail
 import {DeepPartial} from "../../../common/types/deepPartial";
 
 export const authService = {
-    async registrationUser(input: RegisterUserBodyInputType): Promise<Result<string | null>> {
+    async registrationUser(input: RegisterUserBodyInputType): Promise<Result> {
         const userByEmail: UserDbType | null = await userMongoRepository.findUserByEmail(input.email)
         if (userByEmail) {
             return {
@@ -69,7 +69,7 @@ export const authService = {
 
         return {
             status: ResultStatus.Success,
-            data: newUser.emailConfirmation.confirmationCode,
+            data: null,
         }
     },
     async confirmRegistration(input: RegistrationConfirmationUserBodyInputType): Promise<Result<null | boolean>> {
@@ -97,12 +97,6 @@ export const authService = {
                 data: null
             }
         }
-
-        // const userToUpdate: DeepPartial<UserDbType> = {
-        //     emailConfirmation: {
-        //         isConfirmed: true
-        //     }
-        // }
 
         const isConfirmed: boolean = true
 

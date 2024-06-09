@@ -8,5 +8,5 @@
   "preset": "ts-jest",
   "testEnvironment": "node",
   "testTimeout": 100000,
-  "testRegex": "__tests__/e2e/features/(blogs|posts|users|comments)/.*\\.e2e\\.test\\.ts$"
+  "testRegex": "__tests__/e2e/(auth|blogs|posts|comments|users)/.*\\.e2e\\.test\\.ts$"
 }

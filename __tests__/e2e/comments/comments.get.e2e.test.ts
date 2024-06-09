@@ -39,10 +39,8 @@ describe('GET /comments', () => {
     })
     it('- GET comments for non-existent post: STATUS 404', async () => {
 
-        const res = await req
+        await req
             .get(`${SETTINGS.PATH.POSTS}/${new ObjectId()}/comments`)
             .expect(HTTP_CODES.NOT_FOUND)
-
-        console.log(res.body)
     })
 })
