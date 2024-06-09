@@ -2,7 +2,7 @@ import {userMongoRepository} from "../repository/userMongoRepository"
 import {UserDbType} from "../../../db/db-types/user-db-types"
 import {UserBodyInputType} from "../input-output-types/user-types"
 import {ObjectId} from "mongodb"
-import {cryptoService} from "../../../common/adapters/cryptoService"
+import {cryptoAdapter} from "../../../common/adapters/crypto.adapter"
 import {Result, ResultStatus} from "../../../common/types/result-type"
 import {randomUUID} from "node:crypto";
 import {add} from "date-fns";
@@ -35,7 +35,7 @@ export const userService = {
         }
 
         const saltRounds: number = 10
-        const hash: string = await cryptoService.createHash(password, saltRounds)
+        const hash: string = await cryptoAdapter.createHash(password, saltRounds)
 
         const newUser: UserDbType = {
             _id: new ObjectId(),

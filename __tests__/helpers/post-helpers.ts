@@ -1,6 +1,6 @@
 import {req} from "./req"
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../src/settings"
-import {base64Service} from "../../src/common/adapters/base64Service"
+import {base64Adapter} from "../../src/common/adapters/base64.adapter"
 import {BlogOutputType} from "../../src/features/blogs/input-output-types/blog-types"
 import {PostOutputType} from "../../src/features/posts/input-output-types/post-types"
 
@@ -8,7 +8,7 @@ import {PostOutputType} from "../../src/features/posts/input-output-types/post-t
 export const createPost = async (blogId: string): Promise<PostOutputType> => {
     const res = await req
         .post(SETTINGS.PATH.POSTS)
-        .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+        .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
         .send({
             title: `title`,
             shortDescription: `shortDescription`,
@@ -28,7 +28,7 @@ export const createPosts = async (blogs: BlogOutputType[], count: number = 2): P
 
         const res = await req
             .post(SETTINGS.PATH.POSTS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send({
                 title: `title${i}`,
                 shortDescription: `shortDescription${i}`,

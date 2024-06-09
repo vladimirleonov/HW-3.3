@@ -2,7 +2,7 @@ import nodemailer, {Transporter} from 'nodemailer'
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import {SETTINGS} from "../../settings";
 
-export const nodemailerService = {
+export const nodemailerAdapter = {
     async sendEmail(recipient: string, emailTemplate: string): Promise<boolean> {
         let transporter: Transporter<SMTPTransport.SentMessageInfo> = nodemailer.createTransport({
             host: SETTINGS.EMAIL.HOST,

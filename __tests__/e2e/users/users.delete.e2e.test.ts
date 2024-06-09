@@ -1,6 +1,6 @@
 import {req} from "../../helpers/req"
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings"
-import {base64Service} from "../../../src/common/adapters/base64Service"
+import {base64Adapter} from "../../../src/common/adapters/base64.adapter"
 import {ObjectId} from "mongodb"
 import {DetailedUserOutputType} from "../../../src/features/users/input-output-types/user-types"
 import {createUser} from "../../helpers/user-helpers"
@@ -23,13 +23,13 @@ describe('DELETE /posts', () => {
 
         await req
             .delete(`${SETTINGS.PATH.USERS}/${user.id}`)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.FAKE_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.FAKE_AUTH)}`)
             .expect(HTTP_CODES.UNAUTHORIZED)
     })
     it('- DELETE user with incorrect input id: STATUS 404', async () => {
         await req
             .delete(`${SETTINGS.PATH.USERS}/${new ObjectId()}`)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .expect(HTTP_CODES.NOT_FOUND)
     })
     it('+ DELETE user with correct input data: STATUS 204', async () => {
@@ -37,7 +37,7 @@ describe('DELETE /posts', () => {
 
         await req
             .delete(`${SETTINGS.PATH.USERS}/${user.id}`)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .expect(HTTP_CODES.NO_CONTENT)
     })
 })

@@ -1,6 +1,6 @@
 import {req} from "../../helpers/req"
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings"
-import {base64Service} from "../../../src/common/adapters/base64Service"
+import {base64Adapter} from "../../../src/common/adapters/base64.adapter"
 import {createUsers} from "../../helpers/user-helpers"
 import {DetailedUserOutputType} from "../../../src/features/users/input-output-types/user-types"
 import {MongoMemoryServer} from "mongodb-memory-server"
@@ -19,19 +19,19 @@ describe('GET /users', () => {
     })
     it('- GET users unauthorized: STATUS 401', async () => {
         await req.get(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.FAKE_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.FAKE_AUTH)}`)
             .expect(HTTP_CODES.UNAUTHORIZED)
     })
     it('- GET users empty array: STATUS 200', async () => {
         await req.get(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .expect(HTTP_CODES.OK)
     })
     it('+ GET users with default query parameters: STATUS 200', async () => {
         const users: DetailedUserOutputType[] = await createUsers()
 
         const res = await req.get(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .expect(HTTP_CODES.OK)
 
         expect(res.body.pagesCount).toBe(1)
@@ -54,7 +54,7 @@ describe('GET /users', () => {
         const sortDirection = 'asc'
 
         const res = await req.get(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .query({sortBy, sortDirection})
             .expect(200)
 
@@ -75,7 +75,7 @@ describe('GET /users', () => {
         const pageSize: number = 3
 
         const res = await req.get(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .query({pageNumber, pageSize})
             .expect(200)
 

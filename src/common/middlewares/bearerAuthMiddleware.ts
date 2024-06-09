@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction} from 'express'
 import {HTTP_CODES} from "../../settings"
-import {bearerService} from "../adapters/bearerService"
+import {bearerAdapter} from "../adapters/bearer.adapter"
 import {JwtPayload} from "jsonwebtoken"
 
 export const bearerAuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
@@ -14,7 +14,7 @@ export const bearerAuthMiddleware = (req: Request, res: Response, next: NextFunc
     const token: string = authHeader.split(' ')[1]
 
     try {
-        const decoded: JwtPayload = bearerService.verifyToken(token) as JwtPayload
+        const decoded: JwtPayload = bearerAdapter.verifyToken(token) as JwtPayload
         req.user = decoded
         next()
     } catch (err) {

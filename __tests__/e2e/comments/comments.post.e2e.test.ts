@@ -3,7 +3,7 @@ import {HTTP_CODES, SETTINGS} from "../../../src/settings"
 import {
     CommentBodyInputType
 } from "../../../src/features/comments/input-output-types/comment-types"
-import {base64Service} from "../../../src/common/adapters/base64Service"
+import {base64Adapter} from "../../../src/common/adapters/base64.adapter"
 import {AUTH_DATA} from "../../../src/settings"
 import {testSeeder} from "../../testSeeder"
 import {MongoMemoryServer} from "mongodb-memory-server"
@@ -81,7 +81,7 @@ describe('POST /comments', () => {
 
         await req
             .post(`${SETTINGS.PATH.POSTS}/${postId}/comments`)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.FAKE_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.FAKE_AUTH)}`)
             .send(newComment)
             .expect(HTTP_CODES.UNAUTHORIZED)
     })

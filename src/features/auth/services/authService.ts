@@ -2,18 +2,18 @@ import {
     LoginInputType,
     RegisterUserBodyInputType,
     RegistrationConfirmationUserBodyInputType,
-    registrationEmailResendingUserBodyInputType
+    RegistrationEmailResendingUserBodyInputType
 } from "../input-output-types/auth-types"
 import {UserDbType} from "../../../db/db-types/user-db-types"
-import {bearerService} from "../../../common/adapters/bearerService"
+import {bearerAdapter} from "../../../common/adapters/bearer.adapter"
 import {Result, ResultStatus} from "../../../common/types/result-type"
-import {cryptoService} from "../../../common/adapters/cryptoService"
+import {cryptoAdapter} from "../../../common/adapters/crypto.adapter"
 import {JwtPayloadType} from "../../../common/types/jwtPayloadType"
 import {userMongoRepository} from "../../users/repository/userMongoRepository";
 import {ObjectId} from "mongodb";
 import {randomUUID} from "node:crypto";
 import {add} from "date-fns";
-import {nodemailerService} from "../../../common/adapters/nodemailerService";
+import {nodemailerAdapter} from "../../../common/adapters/nodemailer.adapter";
 import {registrationEmailTemplate} from "../../../common/email/registrationEmailTemplate";
 import {DeepPartial} from "../../../common/types/deepPartial";
 
@@ -38,7 +38,7 @@ export const authService = {
         }
 
         const saltRounds: number = 10
-        const passwordHash: string = await cryptoService.createHash(input.password, saltRounds)
+        const passwordHash: string = await cryptoAdapter.createHash(input.password, saltRounds)
 
         const newUser: UserDbType = {
             _id: new ObjectId(),
@@ -59,10 +59,12 @@ export const authService = {
         await userMongoRepository.create(newUser)
 
         // try {
-        nodemailerService.sendEmail(
+
+        nodemailerAdapter.sendEmail(
             newUser.email,
             registrationEmailTemplate(newUser.emailConfirmation.confirmationCode!)
-        )
+        ).catch((err) => console.error(err))
+
         // } catch(err) {
         //     console.log('Send email error', err)
         // }
@@ -107,7 +109,7 @@ export const authService = {
             data: true
         }
     },
-    async registrationEmailResending(input: registrationEmailResendingUserBodyInputType): Promise<Result> {
+    async registrationEmailResending(input: RegistrationEmailResendingUserBodyInputType): Promise<Result> {
         const existingUser: UserDbType | null = await userMongoRepository.findUserByEmail(input.email)
         if (!existingUser) {
             return {
@@ -135,7 +137,7 @@ export const authService = {
             }
         }
 
-        await nodemailerService.sendEmail(
+        await nodemailerAdapter.sendEmail(
             input.email,
             registrationEmailTemplate(userToUpdate.emailConfirmation?.confirmationCode!)
         )
@@ -149,7 +151,7 @@ export const authService = {
     },
     async login(input: LoginInputType): Promise<Result<string | null>> {
         const user: UserDbType | null = await userMongoRepository.findUserByLoginOrEmailField(input.loginOrEmail)
-        if (!user || !(await cryptoService.compare(input.password, user.password))) {
+        if (!user || !(await cryptoAdapter.compare(input.password, user.password))) {
             return {
                 status: ResultStatus.BadRequest,
                 extensions: [{field: 'login or password', message: 'Wrong login or password'}],
@@ -169,7 +171,7 @@ export const authService = {
             userId: user._id.toString()
         }
 
-        const token: string = bearerService.generateToken(jwtPayload)
+        const token: string = bearerAdapter.generateToken(jwtPayload)
 
         return {
             status: ResultStatus.Success,

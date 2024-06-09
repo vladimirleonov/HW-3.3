@@ -2,7 +2,7 @@ import {MongoMemoryServer} from "mongodb-memory-server";
 import {db} from "../../../../src/db/mongo-db";
 import {testSeeder} from "../../../testSeeder";
 import {authService} from "../../../../src/features/auth/services/authService";
-import {nodemailerService} from "../../../../src/common/adapters/nodemailerService";
+import {nodemailerAdapter} from "../../../../src/common/adapters/nodemailer.adapter";
 import {ResultStatus} from "../../../../src/common/types/result-type";
 import {userMongoRepository} from "../../../../src/features/users/repository/userMongoRepository";
 import {randomUUID} from "node:crypto";
@@ -11,9 +11,9 @@ import {Result} from "../../../../src/common/types/result-type";
 
 describe('User registration', () => {
     const registrationUserUseCase = authService.registrationUser
-    // nodemailerService.sendEmail = emailServiceMock.sendEmail
-    // nodemailerService.sendEmail = jest.fn()// just function, but not returns anything
-    nodemailerService.sendEmail = jest.fn().mockImplementation(async (recipient: string, emailTemplate: string): Promise<boolean> => true)
+    // nodemailerAdapter.sendEmail = nodemailerAdapterMock.sendEmail
+    // nodemailerAdapter.sendEmail = jest.fn()// just function, but not returns anything
+    nodemailerAdapter.sendEmail = jest.fn().mockImplementation(async (recipient: string, emailTemplate: string): Promise<boolean> => true)
 
     beforeAll(async () => {
         const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
@@ -34,8 +34,8 @@ describe('User registration', () => {
         expect(result.status).toBe(ResultStatus.Success)
         expect(result.data).toBeNull()
 
-        expect(nodemailerService.sendEmail).toHaveBeenCalled()
-        expect(nodemailerService.sendEmail).toHaveBeenCalledTimes(1)
+        expect(nodemailerAdapter.sendEmail).toHaveBeenCalled()
+        expect(nodemailerAdapter.sendEmail).toHaveBeenCalledTimes(1)
     });
     it('should not register user twice', async () => {
         const userDTO = testSeeder.createUserDTO()
@@ -49,7 +49,7 @@ describe('User registration', () => {
         expect(result.status).toBe(ResultStatus.BadRequest)
         expect(result.data).toBeNull()
 
-        expect(nodemailerService.sendEmail).not.toHaveBeenCalled()
+        expect(nodemailerAdapter.sendEmail).not.toHaveBeenCalled()
     });
 });
 
@@ -179,7 +179,7 @@ describe('Confirm email', () => {
 
 describe('User registration email resending', () => {
     const registrationEmailResendingUseCase = authService.registrationEmailResending
-    nodemailerService.sendEmail = jest.fn().mockImplementation(async (recipient: string, emailTemplate: string): Promise<boolean> => true)
+    nodemailerAdapter.sendEmail = jest.fn().mockImplementation(async (recipient: string, emailTemplate: string): Promise<boolean> => true)
 
     beforeAll(async () => {
         const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
@@ -197,7 +197,7 @@ describe('User registration email resending', () => {
         expect(result.status).toBe(ResultStatus.BadRequest)
         expect(result.data).toBeNull()
 
-        expect(nodemailerService.sendEmail).not.toHaveBeenCalled()
+        expect(nodemailerAdapter.sendEmail).not.toHaveBeenCalled()
     });
     it('should not resend email registration if email already confirmed', async () => {
         const user = await testSeeder.registerUser(
@@ -214,7 +214,7 @@ describe('User registration email resending', () => {
         expect(result.status).toBe(ResultStatus.BadRequest)
         expect(result.data).toBeNull()
 
-        expect(nodemailerService.sendEmail).not.toHaveBeenCalled()
+        expect(nodemailerAdapter.sendEmail).not.toHaveBeenCalled()
     });
     it('should confirm registration', async () => {
         const user = await testSeeder.registerUser(
@@ -228,6 +228,6 @@ describe('User registration email resending', () => {
         expect(result.status).toBe(ResultStatus.Success)
         expect(result.data).toBeNull()
 
-        expect(nodemailerService.sendEmail).toHaveBeenCalled()
+        expect(nodemailerAdapter.sendEmail).toHaveBeenCalled()
     });
 })

@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt"
 
-export const cryptoService = {
+export const cryptoAdapter = {
     async createHash(password: string, saltOrRounds: string | number): Promise<string> {
         return bcrypt.hash(password, saltOrRounds)
     },

@@ -13,7 +13,7 @@ export type RegistrationConfirmationUserBodyInputType = {
     code: string
 }
 
-export type registrationEmailResendingUserBodyInputType = {
+export type RegistrationEmailResendingUserBodyInputType = {
     email: string
 }
 

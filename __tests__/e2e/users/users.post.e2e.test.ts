@@ -1,6 +1,6 @@
 import {req} from "../../helpers/req"
 import {HTTP_CODES, SETTINGS} from "../../../src/settings"
-import {base64Service} from "../../../src/common/adapters/base64Service"
+import {base64Adapter} from "../../../src/common/adapters/base64.adapter"
 import {AUTH_DATA} from "../../../src/settings"
 import {UserBodyInputType} from "../../../src/features/users/input-output-types/user-types"
 import {testSeeder} from "../../testSeeder"
@@ -23,7 +23,7 @@ describe('POST /users', () => {
 
         await req
             .post(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.FAKE_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.FAKE_AUTH)}`)
             .send(newUser)
             .expect(HTTP_CODES.UNAUTHORIZED)
     })
@@ -32,7 +32,7 @@ describe('POST /users', () => {
 
         const res = await req
             .post(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(newUser)
             .expect(HTTP_CODES.CREATED)
 
@@ -45,13 +45,13 @@ describe('POST /users', () => {
 
         await req
             .post(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(user1)
             .expect(HTTP_CODES.CREATED)
 
         const res = await req
             .post(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(user2)
             .expect(HTTP_CODES.BAD_REQUEST)
 
@@ -70,7 +70,7 @@ describe('POST /users', () => {
 
         const res = await req
             .post(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(newUser)
             .expect(HTTP_CODES.BAD_REQUEST)
 
@@ -90,7 +90,7 @@ describe('POST /users', () => {
 
         const res = await req
             .post(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(newUser)
             .expect(HTTP_CODES.BAD_REQUEST)
 
@@ -110,7 +110,7 @@ describe('POST /users', () => {
 
         const res = await req
             .post(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(newUser)
             .expect(HTTP_CODES.BAD_REQUEST)
 
@@ -131,7 +131,7 @@ describe('POST /users', () => {
 
         const res = await req
             .post(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(newUser)
             .expect(HTTP_CODES.BAD_REQUEST)
 
@@ -151,7 +151,7 @@ describe('POST /users', () => {
 
         const res = await req
             .post(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(newUser)
             .expect(HTTP_CODES.BAD_REQUEST)
 
@@ -171,7 +171,7 @@ describe('POST /users', () => {
 
         const res = await req
             .post(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(newUser)
             .expect(HTTP_CODES.BAD_REQUEST)
 
@@ -191,7 +191,7 @@ describe('POST /users', () => {
 
         const res = await req
             .post(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(newUser)
             .expect(HTTP_CODES.BAD_REQUEST)
 
@@ -211,7 +211,7 @@ describe('POST /users', () => {
 
         const res = await req
             .post(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(newUser)
             .expect(HTTP_CODES.BAD_REQUEST)
 
@@ -231,7 +231,7 @@ describe('POST /users', () => {
 
         const res = await req
             .post(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(newUser)
             .expect(HTTP_CODES.BAD_REQUEST)
 
@@ -251,7 +251,7 @@ describe('POST /users', () => {
 
         const res = await req
             .post(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(newUser)
             .expect(HTTP_CODES.BAD_REQUEST)
 
@@ -272,7 +272,7 @@ describe('POST /users', () => {
 
         const res = await req
             .post(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send(newUser)
             .expect(HTTP_CODES.BAD_REQUEST)
 

@@ -1,4 +1,4 @@
-export const base64Service = {
+export const base64Adapter = {
     encodeToBase64(data: string): string {
         return Buffer.from(data).toString('base64')
     },

@@ -1,13 +1,13 @@
 import {req} from "./req"
 import {HTTP_CODES, SETTINGS} from "../../src/settings"
-import {base64Service} from "../../src/common/adapters/base64Service"
+import {base64Adapter} from "../../src/common/adapters/base64.adapter"
 import {AUTH_DATA} from "../../src/settings"
 import {DetailedUserOutputType} from "../../src/features/users/input-output-types/user-types"
 
 export const createUser = async (): Promise<DetailedUserOutputType> => {
     const res = await req.post(SETTINGS.PATH.USERS)
         // .auth(ADMIN_LOGIN, ADMIN_PASS)
-        .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+        .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
         .send({
             login: 'test',
             email: 'test@gmail.com',
@@ -21,7 +21,7 @@ export const createUsers = async (count: number = 2): Promise<DetailedUserOutput
 
     for (let i = 0; i < count; i++) {
         const res = await req.post(SETTINGS.PATH.USERS)
-            .set('authorization', `Basic ${base64Service.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
+            .set('authorization', `Basic ${base64Adapter.encodeToBase64(AUTH_DATA.ADMIN_AUTH)}`)
             .send({
                 login: `test${i}`,
                 email: `test${i}@gmail.com`,

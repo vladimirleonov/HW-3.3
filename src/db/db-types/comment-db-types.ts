@@ -5,13 +5,6 @@ type CommentatorInfoType = {
     userLogin: string
 }
 
-// export type CommentDbType = {
-//     _id: ObjectId,
-//     content: string,
-//     commentatorInfo: CommentatorInfoType,
-//     createdAt: string
-// }
-
 export type CommentDbType = {
     _id: ObjectId,
     postId: ObjectId,

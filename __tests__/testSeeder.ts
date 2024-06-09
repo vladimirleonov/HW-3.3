@@ -3,7 +3,7 @@ import {InsertOneResult, ObjectId} from "mongodb";
 import {randomUUID} from "node:crypto";
 import {add} from "date-fns";
 import {db} from "../src/db/mongo-db";
-import {cryptoService} from "../src/common/adapters/cryptoService"
+import {cryptoAdapter} from "../src/common/adapters/crypto.adapter"
 
 export const testSeeder = {
     createUserDTO() {
@@ -57,7 +57,7 @@ export const testSeeder = {
     // : Promise<IUserService>
     {
         const saltRounds: number = 10
-        const passwordHash: string = await cryptoService.createHash(password, saltRounds)
+        const passwordHash: string = await cryptoAdapter.createHash(password, saltRounds)
 
         const newUser: UserDbType = {
             _id: new ObjectId(),
