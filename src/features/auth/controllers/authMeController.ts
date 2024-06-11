@@ -1,10 +1,10 @@
 import {Request, Response} from 'express'
 import {HTTP_CODES} from "../../../settings"
-import {AuthMeUserOutputType} from "../input-output-types/auth-types"
 import {userMongoQueryRepository} from "../../users/repository/userMongoQueryRepository"
 import {AuthenticatedUserOutputType} from "../../users/input-output-types/user-types";
+import {AuthMeUserOutputControllerType} from "../types/outputTypes/authOutputControllersTypes";
 
-export const authMeController = async (req: Request<{}, {}, AuthMeUserOutputType, {}>, res: Response<AuthMeUserOutputType>) => {
+export const authMeController = async (req: Request<{}, {}, AuthMeUserOutputControllerType, {}>, res: Response<AuthMeUserOutputControllerType>) => {
     try {
         //? check user
         if (!req.user || !req.user.userId) {

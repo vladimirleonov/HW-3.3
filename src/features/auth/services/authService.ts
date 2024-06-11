@@ -1,9 +1,3 @@
-import {
-    LoginInputType,
-    RegisterUserBodyInputType,
-    RegistrationConfirmationUserBodyInputType,
-    RegistrationEmailResendingUserBodyInputType
-} from "../input-output-types/auth-types"
 import {UserDbType} from "../../../db/db-types/user-db-types"
 import {bearerAdapter} from "../../../common/adapters/bearer.adapter"
 import {Result, ResultStatus} from "../../../common/types/result"
@@ -15,10 +9,17 @@ import {randomUUID} from "node:crypto";
 import {add} from "date-fns";
 import {nodemailerAdapter} from "../../../common/adapters/nodemailer.adapter";
 import {registrationEmailTemplate} from "../../../common/email-templates/registrationEmailTemplate";
-import {DeepPartial} from "../../../common/types/deepPartial";
+import {
+    LoginInputServiceType,
+    RegistrationConfirmationInputServiceType,
+    RegistrationEmailResendingInputServiceType,
+    RegistrationInputServiceType,
+} from "../types/inputTypes/authInputServiceTypes";
+import {LoginOutputServiceType} from "../types/outputTypes/authOutputServiceTypes";
+
 
 export const authService = {
-    async registrationUser(input: RegisterUserBodyInputType): Promise<Result> {
+    async registrationUser(input: RegistrationInputServiceType): Promise<Result> {
         const userByEmail: UserDbType | null = await userMongoRepository.findUserByEmail(input.email)
         if (userByEmail) {
             return {
@@ -74,7 +75,7 @@ export const authService = {
             data: null,
         }
     },
-    async confirmRegistration(input: RegistrationConfirmationUserBodyInputType): Promise<Result<null | boolean>> {
+    async confirmRegistration(input: RegistrationConfirmationInputServiceType): Promise<Result> {
         const existingUser: UserDbType | null = await userMongoRepository.findUserByConfirmationCode(input.code)
         if (!existingUser) {
             return {
@@ -105,11 +106,10 @@ export const authService = {
 
         return {
             status: ResultStatus.Success,
-            //?
-            data: true
+            data: null
         }
     },
-    async registrationEmailResending(input: RegistrationEmailResendingUserBodyInputType): Promise<Result> {
+    async registrationEmailResending(input: RegistrationEmailResendingInputServiceType): Promise<Result> {
         const existingUser: UserDbType | null = await userMongoRepository.findUserByEmail(input.email)
         if (!existingUser) {
             return {
@@ -155,7 +155,7 @@ export const authService = {
             data: null
         }
     },
-    async login(input: LoginInputType): Promise<Result<string | null>> {
+    async login(input: LoginInputServiceType): Promise<Result<LoginOutputServiceType | null>> {
         const user: UserDbType | null = await userMongoRepository.findUserByLoginOrEmailField(input.loginOrEmail)
         if (!user || !(await cryptoAdapter.compare(input.password, user.password))) {
             return {
@@ -177,11 +177,15 @@ export const authService = {
             userId: user._id.toString()
         }
 
-        const token: string = bearerAdapter.generateToken(jwtPayload)
+        const accessToken: string = bearerAdapter.generateToken(jwtPayload)
+        const refreshToken: string = bearerAdapter.generateToken(jwtPayload)
 
         return {
             status: ResultStatus.Success,
-            data: token
+            data: {
+                accessToken,
+                refreshToken
+            }
         }
     }
 }

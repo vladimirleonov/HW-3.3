@@ -1,10 +1,10 @@
 import {Request, Response} from "express";
 import {authService} from "../services/authService";
-import {RegistrationEmailResendingUserBodyInputType} from "../input-output-types/auth-types";
 import {Result, ResultStatus} from "../../../common/types/result";
 import {HTTP_CODES} from "../../../settings";
+import {RegistrationEmailResendingInputServiceType} from "../types/inputTypes/authInputServiceTypes";
 
-export const registrationEmailResendingController = async (req: Request<{}, {}, RegistrationEmailResendingUserBodyInputType>, res: Response) => {
+export const registrationEmailResendingController = async (req: Request<{}, {}, RegistrationEmailResendingInputServiceType>, res: Response) => {
     const result: Result = await authService.registrationEmailResending(req.body)
     if (result.status === ResultStatus.BadRequest) {
         res.status(HTTP_CODES.BAD_REQUEST).send({

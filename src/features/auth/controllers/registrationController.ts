@@ -1,10 +1,10 @@
 import {Request, Response} from "express";
-import {RegisterUserBodyInputType} from "../input-output-types/auth-types";
 import {HTTP_CODES} from "../../../settings";
 import {authService} from "../services/authService";
 import {Result, ResultStatus} from "../../../common/types/result";
+import {RegistrationInputControllerType} from "../types/inputTypes/authInputControllersTypes";
 
-export const registrationController = async (req: Request<{}, {}, RegisterUserBodyInputType>, res: Response) => {
+export const registrationController = async (req: Request<{}, {}, RegistrationInputControllerType>, res: Response) => {
     try {
         const result: Result = await authService.registrationUser(req.body)
         if (result.status === ResultStatus.BadRequest) {

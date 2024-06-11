@@ -1,10 +1,10 @@
 import {Request, Response} from "express";
-import {RegistrationConfirmationUserBodyInputType} from "../input-output-types/auth-types";
 import {authService} from "../services/authService";
 import {Result, ResultStatus} from "../../../common/types/result";
 import {HTTP_CODES} from "../../../settings";
+import {RegistrationConfirmationInputControllerType} from "../types/inputTypes/authInputControllersTypes";
 
-export const registrationConfirmationController = async (req: Request<{}, {}, RegistrationConfirmationUserBodyInputType>, res: Response) => {
+export const registrationConfirmationController = async (req: Request<{}, {}, RegistrationConfirmationInputControllerType>, res: Response) => {
     try {
         const result: Result<Boolean | null> = await authService.confirmRegistration(req.body);
         if(result.status === ResultStatus.BadRequest) {
