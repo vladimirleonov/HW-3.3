@@ -11,7 +11,7 @@ export const createBlogController = async (req: Request<{}, BlogOutputType, Blog
 
         const blog: BlogOutputType | null = await blogMongoQueryRepository.findForOutputById(result.data)
 
-        //? !
+        //?
         if(!blog) {
             //error if just created blog not found
             res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send('something went wrong');
