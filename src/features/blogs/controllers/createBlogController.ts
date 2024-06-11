@@ -10,7 +10,6 @@ export const createBlogController = async (req: Request<{}, BlogOutputType, Blog
         const result: Result<string> = await blogService.createBlog(req.body)
 
         const blog: BlogOutputType | null = await blogMongoQueryRepository.findForOutputById(result.data)
-
         //?
         if(!blog) {
             //error if just created blog not found

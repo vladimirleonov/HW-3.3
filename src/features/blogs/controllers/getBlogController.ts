@@ -7,7 +7,6 @@ import {BlogOutputType} from "../input-output-types/blog-types"
 export const getBlogController = async (req: Request<IdParamInputType>, res: Response) => {
     try {
         const blog: BlogOutputType | null = await blogMongoQueryRepository.findForOutputById(req.params.id)
-
         if (!blog) {
             res.status(HTTP_CODES.NOT_FOUND).send()
             return

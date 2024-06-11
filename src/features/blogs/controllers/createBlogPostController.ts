@@ -22,8 +22,7 @@ export const createBlogPostController = async (req: Request<BlogIdParamInputType
             return;
         }
 
-        //? !
-        res.status(HTTP_CODES.CREATED).send(post!)
+        res.status(HTTP_CODES.CREATED).send(post)
     } catch (err) {
         console.error(err)
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
