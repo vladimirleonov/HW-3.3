@@ -1,7 +1,5 @@
 import {body} from "express-validator"
 
-// body validator
-
 const loginOrEmailInputValidator = body('loginOrEmail')
     .isString().withMessage('loginOrEmail is missing or not a string')
     .trim()
