@@ -1,7 +1,5 @@
 import {body} from "express-validator"
 
-// body validator
-
 const blogTitleInputValidator = body('name')
     .isString().withMessage('name is missing or not a string')
     .trim()

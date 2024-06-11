@@ -18,7 +18,7 @@ export const authMeController = async (req: Request<{}, {}, AuthMeUserOutputType
         }
         res.status(HTTP_CODES.OK).send(user)
     } catch (err) {
-        console.error(err)
+        console.error('authMeController', err)
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
     }
 }

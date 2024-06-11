@@ -7,7 +7,7 @@ import {Result, ResultStatus} from "../../../common/types/result"
 import {commentMongoQueryRepository} from "../repository/commentMongoQueryRepository"
 import {ErrorsMessagesType} from "../../../common/types/errorMessageType"
 
-export const createCommentController = async (req: Request<PostIdParamType, CommentOutputType, CommentBodyInputType>, res: Response<CommentOutputType | ErrorsMessagesType>) => {
+export const createCommentController = async (req: Request<PostIdParamType, CommentOutputType, CommentBodyInputType>, res: Response<CommentOutputType | string>) => {
     try {
         //?
         if (!req.user || !req.user.userId) {
@@ -27,12 +27,14 @@ export const createCommentController = async (req: Request<PostIdParamType, Comm
         }
 
         const comment: CommentOutputType | null = await commentMongoQueryRepository.findForOutputById(result.data!)
-        // ?
-        // if (!comment) {
-        //     res.status(xxx).send()
-        // }
+        //?
+        if(!comment) {
+            //error if just created comment not found
+            res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send('something went wrong');
+            return;
+        }
 
-        res.status(HTTP_CODES.CREATED).send(comment!)
+        res.status(HTTP_CODES.CREATED).send(comment)
     } catch (err) {
         console.error(err)
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()

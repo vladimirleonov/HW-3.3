@@ -143,12 +143,12 @@ export const authService = {
             minutes: 30,
         }).toISOString()
 
+        await userMongoRepository.updateConfirmationInfo(existingUser._id.toString(), newConfirmationCode, newExpirationDate)
+
         await nodemailerAdapter.sendEmail(
             input.email,
             registrationEmailTemplate(newConfirmationCode)
         )
-
-        await userMongoRepository.updateConfirmationInfo(existingUser._id.toString(), newConfirmationCode, newExpirationDate)
 
         return {
             status: ResultStatus.Success,
