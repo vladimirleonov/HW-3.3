@@ -5,7 +5,7 @@ import {HTTP_CODES} from "../../../settings"
 import {BlogIdParamInputType} from "../input-output-types/blog-types"
 import {postService} from "../../posts/services/postService"
 import {postMongoQueryRepository} from "../../posts/repository/postMongoQueryRepository"
-import {Result, ResultStatus} from "../../../common/types/result-type"
+import {Result, ResultStatus} from "../../../common/types/result"
 
 export const createBlogPostController = async (req: Request<BlogIdParamInputType, PostOutputType, BlogPostInputType>, res: Response<PostOutputType>) => {
     try {

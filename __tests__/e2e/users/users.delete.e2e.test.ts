@@ -3,7 +3,7 @@ import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings"
 import {base64Adapter} from "../../../src/common/adapters/base64.adapter"
 import {ObjectId} from "mongodb"
 import {DetailedUserOutputType} from "../../../src/features/users/input-output-types/user-types"
-import {createUser} from "../../helpers/user-helpers"
+import {createUser} from "../helpers/user-helpers"
 import {MongoMemoryServer} from "mongodb-memory-server"
 import {db} from "../../../src/db/mongo-db"
 

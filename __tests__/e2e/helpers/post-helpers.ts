@@ -1,8 +1,8 @@
-import {req} from "./req"
-import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../src/settings"
-import {base64Adapter} from "../../src/common/adapters/base64.adapter"
-import {BlogOutputType} from "../../src/features/blogs/input-output-types/blog-types"
-import {PostOutputType} from "../../src/features/posts/input-output-types/post-types"
+import {req} from "../../helpers/req"
+import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings"
+import {base64Adapter} from "../../../src/common/adapters/base64.adapter"
+import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types"
+import {PostOutputType} from "../../../src/features/posts/input-output-types/post-types"
 
 
 export const createPost = async (blogId: string): Promise<PostOutputType> => {
@@ -42,24 +42,3 @@ export const createPosts = async (blogs: BlogOutputType[], count: number = 2): P
     const sortedPosts: PostOutputType[] = posts.sort((a: PostOutputType, b: PostOutputType) => b.createdAt.localeCompare(a.createdAt))
     return sortedPosts
 }
-
-// export const createPosts= (blogs: BlogDBType[], count: number = 2): {posts: PostDbType[]} => {
-//     const posts: PostDbType[] = []
-//
-//     for(let i: number = 0; i < count; i++) {
-//         const blog: BlogDBType = blogs[i % blogs.length]
-//         const currentDate: string = new Date().toISOString()
-//         posts.push({
-//             _id: new ObjectId(),
-//             title: `title${i}`,
-//             shortDescription: `shortDescription${i}`,
-//             content: `content${i}`,
-//             blogId: blog._id,
-//             blogName: blog.name,
-//             createdAt: currentDate,
-//         })
-//     }
-//
-//     return {posts}
-// }
-

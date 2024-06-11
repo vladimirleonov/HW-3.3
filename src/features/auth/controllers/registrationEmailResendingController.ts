@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import {authService} from "../services/authService";
 import {RegistrationEmailResendingUserBodyInputType} from "../input-output-types/auth-types";
-import {Result, ResultStatus} from "../../../common/types/result-type";
+import {Result, ResultStatus} from "../../../common/types/result";
 import {HTTP_CODES} from "../../../settings";
 
 export const registrationEmailResendingController = async (req: Request<{}, {}, RegistrationEmailResendingUserBodyInputType>, res: Response) => {

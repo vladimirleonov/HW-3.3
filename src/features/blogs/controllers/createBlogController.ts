@@ -3,7 +3,7 @@ import {BlogBodyInputType, BlogOutputType} from '../input-output-types/blog-type
 import {HTTP_CODES} from '../../../settings'
 import {blogService} from "../services/blogService"
 import {blogMongoQueryRepository} from "../repository/blogMongoQueryRepository"
-import {Result} from "../../../common/types/result-type"
+import {Result} from "../../../common/types/result"
 
 export const createBlogController = async (req: Request<{}, BlogOutputType, BlogBodyInputType>, res: Response<BlogOutputType>) => {
     try {

@@ -2,7 +2,7 @@ import {Request, Response} from 'express'
 import {commentService} from "../services/commentService"
 import {HTTP_CODES} from "../../../settings"
 import {CommentIdParamInputType, CommentBodyInputType} from "../input-output-types/comment-types"
-import {Result, ResultStatus} from "../../../common/types/result-type"
+import {Result, ResultStatus} from "../../../common/types/result"
 
 export const updateCommentController = async (req: Request<CommentIdParamInputType, {}, CommentBodyInputType>, res: Response) => {
     try {

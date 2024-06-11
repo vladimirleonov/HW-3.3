@@ -2,8 +2,8 @@ import {Request, Response} from "express"
 import {HTTP_CODES} from "../../../settings"
 import {LoginInputType, LoginOutputType} from "../input-output-types/auth-types"
 import {authService} from "../services/authService"
-import {Result, ResultStatus} from "../../../common/types/result-type"
-import {ErrorsMessagesType} from "../../../common/types/errorsMessages"
+import {Result, ResultStatus} from "../../../common/types/result"
+import {ErrorsMessagesType} from "../../../common/types/errorMessageType"
 
 export const loginController = async (req: Request<{}, LoginOutputType | ErrorsMessagesType, LoginInputType>, res: Response<LoginOutputType | ErrorsMessagesType>) => {
     try {

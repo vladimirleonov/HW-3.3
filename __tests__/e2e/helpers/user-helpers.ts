@@ -1,8 +1,8 @@
-import {req} from "./req"
-import {HTTP_CODES, SETTINGS} from "../../src/settings"
-import {base64Adapter} from "../../src/common/adapters/base64.adapter"
-import {AUTH_DATA} from "../../src/settings"
-import {DetailedUserOutputType} from "../../src/features/users/input-output-types/user-types"
+import {req} from "../../helpers/req"
+import {HTTP_CODES, SETTINGS} from "../../../src/settings"
+import {base64Adapter} from "../../../src/common/adapters/base64.adapter"
+import {AUTH_DATA} from "../../../src/settings"
+import {DetailedUserOutputType} from "../../../src/features/users/input-output-types/user-types"
 
 export const createUser = async (): Promise<DetailedUserOutputType> => {
     const res = await req.post(SETTINGS.PATH.USERS)
@@ -34,30 +34,3 @@ export const createUsers = async (count: number = 2): Promise<DetailedUserOutput
     const sortedUsers: DetailedUserOutputType[] = users.sort((a: DetailedUserOutputType, b: DetailedUserOutputType) => b.createdAt.localeCompare(a.createdAt))
     return sortedUsers
 }
-
-
-// export const createUsers = (count: number = 2) => {
-//     const users: UserDbType[] = []
-//
-//     for (let i: number = 0; i < count; i++) {
-//         const currentDate: string = new Date().toISOString()
-//         users.push({
-//             _id: new ObjectId(),
-//             login: `test${i}`,
-//             password: 'test',
-//             email: `test${i}@gmail.com`,
-//             createdAt: currentDate,
-//         })
-//     }
-//     return {users}
-// }
-//
-// export const createUser = () => {
-//     return {
-//         _id: new ObjectId(),
-//         login: 'test',
-//         email: 'test@gmail.com',
-//         password: 'test',
-//         createdAt: new Date().toISOString(),
-//     }
-// }

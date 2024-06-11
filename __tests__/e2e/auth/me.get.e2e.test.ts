@@ -4,7 +4,7 @@ import {HTTP_CODES} from "../../../src/settings"
 import {MongoMemoryServer} from "mongodb-memory-server"
 import {db} from "../../../src/db/mongo-db"
 import {LoginOutputType} from "../../../src/features/auth/input-output-types/auth-types"
-import {loginUser} from "../../helpers/auth-helpers"
+import {loginUser} from "../helpers/auth-helpers"
 
 describe('AUTH /me', () => {
     beforeAll(async () => {

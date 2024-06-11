@@ -5,13 +5,13 @@ import {
 } from "../../../src/features/comments/input-output-types/comment-types"
 import {MongoMemoryServer} from "mongodb-memory-server"
 import {db} from "../../../src/db/mongo-db"
-import {createPost} from "../../helpers/post-helpers"
+import {createPost} from "../helpers/post-helpers"
 import {PostOutputType} from "../../../src/features/posts/input-output-types/post-types"
 import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types"
-import {createBlog} from "../../helpers/blog-helpers"
-import {loginUser} from "../../helpers/auth-helpers"
+import {createBlog} from "../helpers/blog-helpers"
+import {loginUser} from "../helpers/auth-helpers"
 import {LoginOutputType} from "../../../src/features/auth/input-output-types/auth-types"
-import {createComment} from "../../helpers/comment-helpers"
+import {createComment} from "../helpers/comment-helpers"
 import {ObjectId} from "mongodb"
 
 describe('GET /comments', () => {

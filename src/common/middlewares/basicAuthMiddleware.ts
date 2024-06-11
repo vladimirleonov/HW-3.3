@@ -2,7 +2,7 @@ import {NextFunction, Request, Response} from "express"
 import {AUTH_DATA, HTTP_CODES} from "../../settings"
 import {base64Adapter} from "../adapters/base64.adapter"
 
-export const basicMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const basicAuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const auth: string | undefined = req.headers['authorization']
 
     if (!auth || !auth.startsWith('Basic ')) {

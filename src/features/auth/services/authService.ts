@@ -6,7 +6,7 @@ import {
 } from "../input-output-types/auth-types"
 import {UserDbType} from "../../../db/db-types/user-db-types"
 import {bearerAdapter} from "../../../common/adapters/bearer.adapter"
-import {Result, ResultStatus} from "../../../common/types/result-type"
+import {Result, ResultStatus} from "../../../common/types/result"
 import {cryptoAdapter} from "../../../common/adapters/crypto.adapter"
 import {JwtPayloadType} from "../../../common/types/jwtPayloadType"
 import {userMongoRepository} from "../../users/repository/userMongoRepository";
@@ -14,7 +14,7 @@ import {ObjectId} from "mongodb";
 import {randomUUID} from "node:crypto";
 import {add} from "date-fns";
 import {nodemailerAdapter} from "../../../common/adapters/nodemailer.adapter";
-import {registrationEmailTemplate} from "../../../common/email/registrationEmailTemplate";
+import {registrationEmailTemplate} from "../../../common/email-templates/registrationEmailTemplate";
 import {DeepPartial} from "../../../common/types/deepPartial";
 
 export const authService = {

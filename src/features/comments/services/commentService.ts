@@ -1,6 +1,6 @@
 import {postMongoRepository} from "../../posts/repository/postMongoRepository"
 import {PostDbType} from "../../../db/db-types/post-db-types"
-import {Result, ResultStatus} from "../../../common/types/result-type"
+import {Result, ResultStatus} from "../../../common/types/result"
 import {CommentDbType} from "../../../db/db-types/comment-db-types"
 import {ObjectId} from "mongodb"
 import {CommentBodyInputType} from "../input-output-types/comment-types"

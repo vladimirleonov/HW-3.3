@@ -3,7 +3,7 @@ import {PostBodyInputType, PostOutputType} from "../input-output-types/post-type
 import {HTTP_CODES} from "../../../settings"
 import {IdParamInputType} from "../../../common/input-output-types/common-types"
 import {postService} from "../services/postService"
-import {Result, ResultStatus} from "../../../common/types/result-type"
+import {Result, ResultStatus} from "../../../common/types/result"
 
 export const updatePostController = async (req: Request<IdParamInputType, PostOutputType, PostBodyInputType>, res: Response<PostOutputType>) => {
     try {

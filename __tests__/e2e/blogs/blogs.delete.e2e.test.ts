@@ -1,7 +1,7 @@
 import {req} from "../../helpers/req"
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings"
 import {base64Adapter} from "../../../src/common/adapters/base64.adapter"
-import {createBlogs} from "../../helpers/blog-helpers"
+import {createBlogs} from "../helpers/blog-helpers"
 import {ObjectId} from "mongodb"
 import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types"
 import {MongoMemoryServer} from "mongodb-memory-server"

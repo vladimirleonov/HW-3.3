@@ -5,7 +5,7 @@ import {getBlogController} from "./controllers/getBlogController"
 import {updateBlogController} from "./controllers/updateBlogController"
 import {deleteBlogController} from "./controllers/deleteBlogController"
 import {inputCheckErrorsMiddleware} from "../../common/middlewares/inputCheckErrorsMiddleware"
-import {basicMiddleware} from "../../common/middlewares/basicMiddleware"
+import {basicAuthMiddleware} from "../../common/middlewares/basicAuthMiddleware"
 import {queryBlogPostsParamsValidator} from "./validators/queryBlogPostsParamsValidator"
 import {queryBlogsParamsValidator} from "./validators/queryBlogsParamsValidator"
 import {idParamValidator} from "../../common/validators/idParamValidator"
@@ -20,9 +20,9 @@ import {blogBodyValidator} from "./validators/blogBodyValidators"
 export const blogsRouter: Router = Router()
 
 blogsRouter.get('/', queryBlogsParamsValidator, inputCheckErrorsMiddleware, getBlogsController)
-blogsRouter.post('/', blogBodyValidator, basicMiddleware, inputCheckErrorsMiddleware, createBlogController)
+blogsRouter.post('/', blogBodyValidator, basicAuthMiddleware, inputCheckErrorsMiddleware, createBlogController)
 blogsRouter.get('/:blogId/posts', blogIdParamValidator, queryBlogPostsParamsValidator, inputCheckErrorsMiddleware, getBlogPostsController)
-blogsRouter.post('/:blogId/posts', blogIdParamValidator, BlogPostBodyValidator, basicMiddleware, inputCheckErrorsMiddleware, createBlogPostController)
+blogsRouter.post('/:blogId/posts', blogIdParamValidator, BlogPostBodyValidator, basicAuthMiddleware, inputCheckErrorsMiddleware, createBlogPostController)
 blogsRouter.get('/:id', idParamValidator, inputCheckErrorsMiddleware, getBlogController)
-blogsRouter.put('/:id', idParamValidator, blogBodyValidator, basicMiddleware, inputCheckErrorsMiddleware, updateBlogController)
-blogsRouter.delete('/:id', idParamValidator, basicMiddleware, inputCheckErrorsMiddleware, deleteBlogController)
+blogsRouter.put('/:id', idParamValidator, blogBodyValidator, basicAuthMiddleware, inputCheckErrorsMiddleware, updateBlogController)
+blogsRouter.delete('/:id', idParamValidator, basicAuthMiddleware, inputCheckErrorsMiddleware, deleteBlogController)

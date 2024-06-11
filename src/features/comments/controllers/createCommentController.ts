@@ -3,9 +3,9 @@ import {commentService} from "../services/commentService"
 import {PostIdParamType} from "../../posts/input-output-types/post-types"
 import {CommentBodyInputType, CommentOutputType} from "../input-output-types/comment-types"
 import {HTTP_CODES} from "../../../settings"
-import {Result, ResultStatus} from "../../../common/types/result-type"
+import {Result, ResultStatus} from "../../../common/types/result"
 import {commentMongoQueryRepository} from "../repository/commentMongoQueryRepository"
-import {ErrorsMessagesType} from "../../../common/types/errorsMessages"
+import {ErrorsMessagesType} from "../../../common/types/errorMessageType"
 
 export const createCommentController = async (req: Request<PostIdParamType, CommentOutputType, CommentBodyInputType>, res: Response<CommentOutputType | ErrorsMessagesType>) => {
     try {

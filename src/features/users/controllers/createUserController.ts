@@ -3,8 +3,8 @@ import {UserBodyInputType, DetailedUserOutputType} from "../input-output-types/u
 import {userService} from "../services/userService"
 import {userMongoQueryRepository} from "../repository/userMongoQueryRepository"
 import {HTTP_CODES} from "../../../settings"
-import {ErrorsMessagesType} from "../../../common/types/errorsMessages"
-import {Result, ResultStatus} from "../../../common/types/result-type"
+import {ErrorsMessagesType} from "../../../common/types/errorMessageType"
+import {Result, ResultStatus} from "../../../common/types/result"
 
 export const createUserController = async (req: Request<{}, DetailedUserOutputType | ErrorsMessagesType, UserBodyInputType>, res: Response<DetailedUserOutputType | ErrorsMessagesType>) => {
     try {

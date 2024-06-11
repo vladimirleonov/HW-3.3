@@ -1,7 +1,7 @@
 import {req} from "../../helpers/req"
 import {AUTH_DATA, HTTP_CODES, SETTINGS} from "../../../src/settings"
 import {base64Adapter} from "../../../src/common/adapters/base64.adapter"
-import {createUsers} from "../../helpers/user-helpers"
+import {createUsers} from "../helpers/user-helpers"
 import {DetailedUserOutputType} from "../../../src/features/users/input-output-types/user-types"
 import {MongoMemoryServer} from "mongodb-memory-server"
 import {db} from "../../../src/db/mongo-db"

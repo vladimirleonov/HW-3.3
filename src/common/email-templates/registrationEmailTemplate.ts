@@ -4,5 +4,5 @@ export const registrationEmailTemplate = (confirmationCode: string): string => {
          <p>To finish registration please follow the link below:
              <a href='https://somesite.com/confirm-email?code=${confirmationCode}'>complete registration</a>
          </p>
-        `
+    `
 }

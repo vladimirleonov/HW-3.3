@@ -1,8 +1,8 @@
 import {
     CommentOutputType
-} from "../../src/features/comments/input-output-types/comment-types"
-import {req} from "./req";
-import {HTTP_CODES, SETTINGS} from "../../src/settings"
+} from "../../../src/features/comments/input-output-types/comment-types"
+import {req} from "../../helpers/req";
+import {HTTP_CODES, SETTINGS} from "../../../src/settings"
 
 export const createComment = async (postId: string, accessToken: string): Promise<CommentOutputType> => {
     const res = await req

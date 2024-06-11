@@ -4,7 +4,7 @@ import {BlogPostInputType, PostBodyInputType} from "../input-output-types/post-t
 import {PostDbType} from "../../../db/db-types/post-db-types"
 import {BlogDBType} from "../../../db/db-types/blog-db-types"
 import {blogMongoRepository} from "../../blogs/repository/blogMongoRepository"
-import {Result, ResultStatus} from "../../../common/types/result-type"
+import {Result, ResultStatus} from "../../../common/types/result"
 import {commentMongoRepository} from "../../comments/repository/commentMongoRepository"
 
 export const postService = {

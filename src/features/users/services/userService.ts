@@ -3,7 +3,7 @@ import {UserDbType} from "../../../db/db-types/user-db-types"
 import {UserBodyInputType} from "../input-output-types/user-types"
 import {ObjectId} from "mongodb"
 import {cryptoAdapter} from "../../../common/adapters/crypto.adapter"
-import {Result, ResultStatus} from "../../../common/types/result-type"
+import {Result, ResultStatus} from "../../../common/types/result"
 import {randomUUID} from "node:crypto";
 import {add} from "date-fns";
 

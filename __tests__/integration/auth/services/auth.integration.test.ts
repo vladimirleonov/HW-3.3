@@ -3,10 +3,10 @@ import {db} from "../../../../src/db/mongo-db";
 import {testSeeder} from "../../../testSeeder";
 import {authService} from "../../../../src/features/auth/services/authService";
 import {nodemailerAdapter} from "../../../../src/common/adapters/nodemailer.adapter";
-import {ResultStatus} from "../../../../src/common/types/result-type";
+import {ResultStatus} from "../../../../src/common/types/result";
 import {userMongoRepository} from "../../../../src/features/users/repository/userMongoRepository";
 import {randomUUID} from "node:crypto";
-import {Result} from "../../../../src/common/types/result-type";
+import {Result} from "../../../../src/common/types/result";
 
 
 describe('User registration', () => {

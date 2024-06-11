@@ -1,6 +1,6 @@
-import {req} from "./req"
-import {HTTP_CODES, SETTINGS} from "../../src/settings"
-import {LoginOutputType} from "../../src/features/auth/input-output-types/auth-types"
+import {req} from "../../helpers/req"
+import {HTTP_CODES, SETTINGS} from "../../../src/settings"
+import {LoginOutputType} from "../../../src/features/auth/input-output-types/auth-types"
 import {createUser} from "./user-helpers"
 
 export const loginUser = async (): Promise<LoginOutputType> => {

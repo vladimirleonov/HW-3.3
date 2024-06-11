@@ -23,10 +23,10 @@ export const searchNameTermQueryValidator = query('searchNameTerm')
     .isString().withMessage('searchNameTerm is not a string')
 
 
-export const searchLoginTermQueryValidator = query('searchNameTerm')
+export const searchLoginTermQueryValidator = query('searchLoginTerm')
     .optional()
     .isString().withMessage('searchLoginTerm is not a string')
 
-export const searchEmailTermQueryValidator = query('searchNameTerm')
+export const searchEmailTermQueryValidator = query('searchEmailTerm')
     .optional()
     .isString().withMessage('searchEmailTerm is not a string')

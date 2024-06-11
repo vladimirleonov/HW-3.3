@@ -2,7 +2,7 @@ import {blogMongoRepository} from "../repository/blogMongoRepository"
 import {ObjectId} from "mongodb"
 import {BlogBodyInputType} from "../input-output-types/blog-types"
 import {BlogDBType} from "../../../db/db-types/blog-db-types"
-import {Result, ResultStatus} from "../../../common/types/result-type"
+import {Result, ResultStatus} from "../../../common/types/result"
 
 export const blogService = {
     async createBlog(input: BlogBodyInputType): Promise<Result<string>> {
