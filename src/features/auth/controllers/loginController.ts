@@ -5,7 +5,8 @@ import {authService} from "../services/authService"
 import {Result, ResultStatus} from "../../../common/types/result"
 import {ErrorsMessagesType} from "../../../common/types/errorMessageType"
 
-export const loginController = async (req: Request<{}, LoginOutputType | ErrorsMessagesType, LoginInputType>, res: Response<LoginOutputType | ErrorsMessagesType>) => {
+//? response error
+export const loginController = async (req: Request<{}, LoginOutputType, LoginInputType>, res: Response<LoginOutputType | ErrorsMessagesType>) => {
     try {
         const result: Result<string | null> = await authService.login(req.body)
         if (result.status === ResultStatus.BadRequest) {

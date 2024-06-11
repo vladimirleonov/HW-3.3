@@ -14,9 +14,3 @@ export type UserDbType = {
     createdAt: string
     emailConfirmation: EmailConfirmation,
 }
-
-export type EmailConfirmationUpdateType = {
-    emailConfirmation: {
-        isConfirmed: boolean;
-    }
-};

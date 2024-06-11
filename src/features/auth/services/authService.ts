@@ -101,11 +101,11 @@ export const authService = {
         }
 
         const isConfirmed: boolean = true
-
         await userMongoRepository.updateIsConfirmed(existingUser._id.toString(), isConfirmed)
 
         return {
             status: ResultStatus.Success,
+            //?
             data: true
         }
     },
@@ -127,22 +127,28 @@ export const authService = {
             }
         }
 
-        const userToUpdate: DeepPartial<UserDbType> = {
-            emailConfirmation: {
-                confirmationCode: randomUUID(),
-                expirationDate: add(new Date(), {
-                    hours: 1,
-                    minutes: 30,
-                }).toISOString()
-            }
-        }
+        // const userToUpdate: DeepPartial<UserDbType> = {
+        //     emailConfirmation: {
+        //         confirmationCode: randomUUID(),
+        //         expirationDate: add(new Date(), {
+        //             hours: 1,
+        //             minutes: 30,
+        //         }).toISOString()
+        //     }
+        // }
+
+        const newConfirmationCode = randomUUID();
+        const newExpirationDate = add(new Date(), {
+            hours: 1,
+            minutes: 30,
+        }).toISOString()
 
         await nodemailerAdapter.sendEmail(
             input.email,
-            registrationEmailTemplate(userToUpdate.emailConfirmation?.confirmationCode!)
+            registrationEmailTemplate(newConfirmationCode)
         )
 
-        await userMongoRepository.updateConfirmationInfo(existingUser._id.toString(), userToUpdate.emailConfirmation?.confirmationCode!, userToUpdate.emailConfirmation?.expirationDate!)
+        await userMongoRepository.updateConfirmationInfo(existingUser._id.toString(), newConfirmationCode, newExpirationDate)
 
         return {
             status: ResultStatus.Success,

@@ -13,5 +13,5 @@ export const registrationEmailResendingController = async (req: Request<{}, {}, 
         return
     }
 
-    res.status(HTTP_CODES.NO_CONTENT).send({})
+    res.status(HTTP_CODES.NO_CONTENT).send()
 }
