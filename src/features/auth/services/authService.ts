@@ -15,7 +15,14 @@ import {
     RegistrationEmailResendingInputServiceType,
     RegistrationInputServiceType,
 } from "../types/inputTypes/authInputServiceTypes";
-import {LoginOutputServiceType} from "../types/outputTypes/authOutputServiceTypes";
+import {
+    LoginOutputServiceType,
+    LogoutOutputServiceType,
+    RefreshTokenOutputServiceType
+} from "../types/outputTypes/authOutputServiceTypes";
+import {JwtPayload} from "jsonwebtoken";
+import {revokedTokenRepository} from "../repository/revokedTokenRepository";
+import {RevokedTokenDbType} from "../../../db/db-types/refreshToken-db-types";
 
 
 export const authService = {
@@ -177,8 +184,8 @@ export const authService = {
             userId: user._id.toString()
         }
 
-        const accessToken: string = bearerAdapter.generateToken(jwtPayload)
-        const refreshToken: string = bearerAdapter.generateToken(jwtPayload)
+        const accessToken: string = bearerAdapter.generateToken(jwtPayload, '10s')
+        const refreshToken: string = bearerAdapter.generateToken(jwtPayload, '20s')
 
         return {
             status: ResultStatus.Success,
@@ -186,6 +193,77 @@ export const authService = {
                 accessToken,
                 refreshToken
             }
+        }
+    },
+    async refreshToken(token: string): Promise<Result<RefreshTokenOutputServiceType | null>> {
+        const decoded: JwtPayload = bearerAdapter.verifyToken(token) as JwtPayload
+        if (!decoded || !decoded.userId) {
+            return {
+                status: ResultStatus.Unauthorized,
+                extensions: [{field: 'refreshToken', message: 'Invalid refresh token'}],
+                data: null
+            }
+        }
+
+        const isExistToken: RevokedTokenDbType | null = await revokedTokenRepository.findByToken(token)
+        if(isExistToken) {
+            return {
+                status: ResultStatus.Unauthorized,
+                extensions: [{field: 'refreshToken', message: 'Refresh token has expired'}],
+                data: null
+            }
+        }
+
+        const user: UserDbType | null = await userMongoRepository.findUserById(decoded.userId)
+        if (!user) {
+            return {
+                status: ResultStatus.Unauthorized,
+                extensions: [{field: 'refreshToken', message: 'No user found'}],
+                data: null
+            }
+        }
+
+        const jwtPayload: JwtPayloadType = {
+            userId: user._id.toString()
+        }
+
+        await revokedTokenRepository.create(token, decoded.userId)
+
+        const accessToken: string = bearerAdapter.generateToken(jwtPayload, '10s')
+        const refreshToken: string = bearerAdapter.generateToken(jwtPayload, '20s')
+
+        return {
+            status: ResultStatus.Success,
+            data: {
+                accessToken,
+                refreshToken
+            }
+        }
+    },
+    async logout (token: string): Promise<Result> {
+        const decoded: JwtPayload = bearerAdapter.verifyToken(token) as JwtPayload
+        if (!decoded || !decoded.userId) {
+            return {
+                status: ResultStatus.Unauthorized,
+                extensions: [{field: 'refreshToken', message: 'Invalid refresh token'}],
+                data: null
+            }
+        }
+
+        const isExistToken: RevokedTokenDbType | null = await revokedTokenRepository.findByToken(token)
+        if(isExistToken) {
+            return {
+                status: ResultStatus.Unauthorized,
+                extensions: [{field: 'refreshToken', message: 'Refresh token has expired'}],
+                data: null
+            }
+        }
+
+        await revokedTokenRepository.create(token, decoded.userId)
+
+        return {
+            status: ResultStatus.Success,
+            data: null
         }
     }
 }

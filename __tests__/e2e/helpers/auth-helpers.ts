@@ -1,9 +1,9 @@
 import {req} from "../../helpers/req"
 import {HTTP_CODES, SETTINGS} from "../../../src/settings"
-import {LoginOutputType} from "../../../src/features/auth/input-output-types/auth-types"
 import {createUser} from "./user-helpers"
+import {LoginOutputControllerType} from "../../../src/features/auth/types/outputTypes/authOutputControllersTypes";
 
-export const loginUser = async (): Promise<LoginOutputType> => {
+export const loginUser = async (): Promise<LoginOutputControllerType> => {
     await createUser()
 
     const res = await req.post(`${SETTINGS.PATH.AUTH}/login`)

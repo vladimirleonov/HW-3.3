@@ -7,3 +7,7 @@ export type AuthMeUserOutputControllerType = {
     login: string,
     userId: string
 }
+
+export type RefreshTokenOutputControllerType = {
+    accessToken: string
+}

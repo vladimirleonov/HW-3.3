@@ -7,6 +7,7 @@ import {ResultStatus} from "../../../../src/common/types/result";
 import {userMongoRepository} from "../../../../src/features/users/repository/userMongoRepository";
 import {randomUUID} from "node:crypto";
 import {Result} from "../../../../src/common/types/result";
+import {LoginOutputServiceType} from "../../../../src/features/auth/types/outputTypes/authOutputServiceTypes";
 
 
 describe('User registration', () => {
@@ -84,7 +85,7 @@ describe('User login', () => {
             password: 'testtest1234'
         }
 
-        const result: Result<string | null> = await loginUserUseCase(userToLogin)
+        const result: Result<LoginOutputServiceType | null> = await loginUserUseCase(userToLogin)
 
         expect(result.status).toBe(ResultStatus.Success)
     });
@@ -95,7 +96,7 @@ describe('User login', () => {
             'testtest1234'
         )
 
-        const result: Result<string | null> = await loginUserUseCase({loginOrEmail: user.login, password: user.password})
+        const result: Result<LoginOutputServiceType | null> = await loginUserUseCase({loginOrEmail: user.login, password: user.password})
 
         expect(result.status).toBe(ResultStatus.BadRequest)
     });
@@ -105,7 +106,7 @@ describe('User login', () => {
             password: 'testtest1234'
         }
 
-        const result: Result<string | null> = await loginUserUseCase(userToLogin)
+        const result: Result<LoginOutputServiceType | null> = await loginUserUseCase(userToLogin)
 
         expect(result.status).toBe(ResultStatus.BadRequest)
     });

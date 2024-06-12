@@ -2,8 +2,8 @@ import jwt, {JwtPayload} from 'jsonwebtoken'
 import {SETTINGS} from "../../settings"
 
 export const bearerAdapter = {
-    generateToken(payload: Object): string {
-        return jwt.sign(payload, SETTINGS.JWT_SECRET, {expiresIn: '7d'})
+    generateToken(payload: Object, expiresIn: string = '7d'): string {
+        return jwt.sign(payload, SETTINGS.JWT_SECRET, {expiresIn})
     },
     verifyToken(token: string): string | JwtPayload {
         return jwt.verify(token, SETTINGS.JWT_SECRET)

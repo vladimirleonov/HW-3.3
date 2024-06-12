@@ -13,7 +13,7 @@ import {PostOutputType} from "../../../src/features/posts/input-output-types/pos
 import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types"
 import {createBlog} from "../helpers/blog-helpers"
 import {loginUser} from "../helpers/auth-helpers"
-import {LoginOutputType} from "../../../src/features/auth/input-output-types/auth-types"
+import {LoginOutputControllerType} from "../../../src/features/auth/types/outputTypes/authOutputControllersTypes";
 import {ObjectId} from "mongodb"
 
 describe('POST /comments', () => {
@@ -36,7 +36,7 @@ describe('POST /comments', () => {
 
         const newComment: CommentBodyInputType = testSeeder.createCommentDTO()
 
-        const authData: LoginOutputType = await loginUser()
+        const authData: LoginOutputControllerType = await loginUser()
 
         await req
             .post(`${SETTINGS.PATH.POSTS}/${postId}/comments`)
@@ -55,7 +55,7 @@ describe('POST /comments', () => {
             content: 'contentcontent'
         }
 
-        const authData: LoginOutputType = await loginUser()
+        const authData: LoginOutputControllerType = await loginUser()
 
         const res = await req
             .post(`${SETTINGS.PATH.POSTS}/${postId}/comments`)
@@ -88,7 +88,7 @@ describe('POST /comments', () => {
     it('- POST comment if post with specified postId does not exist: STATUS 404', async () => {
         const newComment: CommentBodyInputType = testSeeder.createCommentDTO()
 
-        const authData: LoginOutputType = await loginUser()
+        const authData: LoginOutputControllerType = await loginUser()
 
         await req
             .post(`${SETTINGS.PATH.POSTS}/${new ObjectId()}/comments`)

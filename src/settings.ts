@@ -4,6 +4,7 @@ config()
 
 export const SETTINGS = {
     PORT: process.env.PORT,
+    NODE_ENV: process.env.NODE_ENV,
     PATH: {
         AUTH: '/auth',
         BLOGS: '/blogs',
@@ -24,6 +25,7 @@ export const SETTINGS = {
     POST_COLLECTION_NAME: process.env.POST_COLLECTION_NAME || '',
     USER_COLLECTION_NAME: process.env.USER_COLLECTION_NAME || '',
     COMMENT_COLLECTION_NAME: process.env.COMMENT_COLLECTION_NAME || '',
+    REVOKEDTOKENS_COLLECTION_NAME: process.env.REVOKEDTOKENS_COLLECTION_NAME || '',
     JWT_SECRET: process.env.JWT_SECRET || 'secret',
 }
 

@@ -3,8 +3,8 @@ import {SETTINGS} from "../../../src/settings"
 import {HTTP_CODES} from "../../../src/settings"
 import {MongoMemoryServer} from "mongodb-memory-server"
 import {db} from "../../../src/db/mongo-db"
-import {LoginOutputType} from "../../../src/features/auth/input-output-types/auth-types"
 import {loginUser} from "../helpers/auth-helpers"
+import {LoginOutputControllerType} from "../../../src/features/auth/types/outputTypes/authOutputControllersTypes";
 
 describe('AUTH /me', () => {
     beforeAll(async () => {
@@ -18,7 +18,7 @@ describe('AUTH /me', () => {
         await db.drop()
     })
     it('+ GET aut me : STATUS 200', async () => {
-        const authData: LoginOutputType = await loginUser()
+        const authData: LoginOutputControllerType = await loginUser()
 
         await req.get(`${SETTINGS.PATH.AUTH}/me`)
             .set('authorization', `Bearer ${authData.accessToken}`)

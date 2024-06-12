@@ -18,12 +18,18 @@ export const loginController = async (req: Request<{}, LoginOutputControllerType
             return
         }
 
+        res.cookie('refreshToken', result.data?.refreshToken, {
+            httpOnly: true, // cookie can only be accessed via http or https
+            secure: true,
+            //secure: process.env.NODE_ENV === 'production', // send cookie only over https
+            sameSite: 'strict' // protects against CSRF attacks
+        })
+
         res.status(HTTP_CODES.OK).send({
-            //?
             accessToken: result.data?.accessToken!
         })
     } catch (err) {
-        console.error(err)
+        console.error('loginController', err);
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
     }
 }

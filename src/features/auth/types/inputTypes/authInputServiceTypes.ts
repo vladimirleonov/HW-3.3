@@ -16,3 +16,9 @@ export type RegistrationConfirmationInputServiceType = {
 export type RegistrationEmailResendingInputServiceType = {
     email: string
 }
+
+export type LogoutInputServiceType = {
+    login: string,
+    password: string,
+    email: string
+}
