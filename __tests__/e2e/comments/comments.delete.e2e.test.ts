@@ -56,7 +56,7 @@ describe('DELETE /comments', () => {
 
         await req
             .delete(`${SETTINGS.PATH.COMMENTS}/${comment.id}`)
-            .set('authorization', `Bearer asdafafafafsgfdgfd`)
+            .set('authorization', `Bearer adkafhjfkaskd`)
             .expect(HTTP_CODES.UNAUTHORIZED)
     })
     it('- DELETE comment when content does not belongs to user: STATUS 403', async () => {

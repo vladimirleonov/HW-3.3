@@ -12,7 +12,7 @@ import {PostOutputType} from "../../../src/features/posts/input-output-types/pos
 import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types"
 import {createBlog} from "../helpers/blog-helpers"
 import {loginUser} from "../helpers/auth-helpers"
-import {LoginOutputType} from "../../../src/features/auth/input-output-types/auth-types"
+import {LoginOutputControllerType} from "../../../src/features/auth/types/outputTypes/authOutputControllersTypes";
 import {createComment} from "../helpers/comment-helpers"
 import {ObjectId} from "mongodb"
 
@@ -34,7 +34,7 @@ describe('PUT /comments', () => {
         const post: PostOutputType = await createPost(blogId)
         const postId: string = post.id
 
-        const authData: LoginOutputType = await loginUser()
+        const authData: LoginOutputControllerType = await loginUser()
 
         const comment: CommentOutputType = await createComment(postId, authData.accessToken)
 
@@ -55,7 +55,7 @@ describe('PUT /comments', () => {
         const post: PostOutputType = await createPost(blogId)
         const postId: string = post.id
 
-        const authData: LoginOutputType = await loginUser()
+        const authData: LoginOutputControllerType = await loginUser()
 
         const comment: CommentOutputType = await createComment(postId, authData.accessToken)
 
@@ -76,7 +76,7 @@ describe('PUT /comments', () => {
         const post: PostOutputType = await createPost(blogId)
         const postId: string = post.id
 
-        const authData: LoginOutputType = await loginUser()
+        const authData: LoginOutputControllerType = await loginUser()
 
         const comment: CommentOutputType = await createComment(postId, authData.accessToken)
 
@@ -93,7 +93,7 @@ describe('PUT /comments', () => {
         const post: PostOutputType = await createPost(blogId)
         const postId: string = post.id
 
-        const authData: LoginOutputType = await loginUser()
+        const authData: LoginOutputControllerType = await loginUser()
 
         const comment: CommentOutputType = await createComment(postId, authData.accessToken)
 
@@ -128,7 +128,7 @@ describe('PUT /comments', () => {
         const post: PostOutputType = await createPost(blogId)
         const postId: string = post.id
 
-        const authData: LoginOutputType = await loginUser()
+        const authData: LoginOutputControllerType = await loginUser()
 
         const comment: CommentOutputType = await createComment(postId, authData.accessToken)
 

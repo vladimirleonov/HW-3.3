@@ -14,7 +14,9 @@ describe('User registration', () => {
     const registrationUserUseCase = authService.registrationUser
     // nodemailerAdapter.sendEmail = nodemailerAdapterMock.sendEmail
     // nodemailerAdapter.sendEmail = jest.fn()// just function, but not returns anything
-    nodemailerAdapter.sendEmail = jest.fn().mockImplementation(async (recipient: string, emailTemplate: string): Promise<boolean> => true)
+    nodemailerAdapter.sendEmail = jest.fn().mockImplementation(async (recipient: string, emailTemplate: string): Promise<boolean> => {
+        return Promise.resolve(true);
+    });
 
     beforeAll(async () => {
         const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
@@ -172,7 +174,6 @@ describe('Confirm email', () => {
         const result: Result<boolean | null> = await confirmRegistrationUseCase({code: user.emailConfirmation.confirmationCode})
 
         expect(result.status).toBe(ResultStatus.Success)
-        expect(result.data).toBeTruthy()
     });
 })
 

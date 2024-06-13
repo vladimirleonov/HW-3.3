@@ -67,7 +67,8 @@ export const authService = {
         nodemailerAdapter.sendEmail(
             newUser.email,
             registrationEmailTemplate(newUser.emailConfirmation.confirmationCode!)
-        ).catch((err) => console.error(err))
+        )
+        //.catch((err) => console.error(err))
 
         // } catch(err) {
         //     console.log('Send email error', err)
@@ -280,10 +281,18 @@ export const authService = {
             }
         }
 
-        const payload: JwtPayloadCustomType = bearerAdapter.verifyToken(token) as JwtPayloadCustomType
-        console.log(payload)
-        //check payload
-        if (!payload || !payload.userId) {
+        let payload: JwtPayloadCustomType
+        try {
+            payload = bearerAdapter.verifyToken(token) as JwtPayloadCustomType
+            if (!payload || !payload.userId) {
+                return {
+                    status: ResultStatus.Unauthorized,
+                    extensions: [{field: 'accessToken', message: 'Invalid access token'}],
+                    data: null
+                }
+            }
+        } catch (err) {
+            console.error('', err)
             return {
                 status: ResultStatus.Unauthorized,
                 extensions: [{field: 'accessToken', message: 'Invalid access token'}],
