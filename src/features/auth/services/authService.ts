@@ -2,7 +2,6 @@ import {UserDbType} from "../../../db/db-types/user-db-types"
 import {bearerAdapter} from "../../../common/adapters/bearer.adapter"
 import {Result, ResultStatus} from "../../../common/types/result"
 import {cryptoAdapter} from "../../../common/adapters/crypto.adapter"
-import {JwtPayloadType} from "../../../common/types/jwtPayloadType"
 import {userMongoRepository} from "../../users/repository/userMongoRepository";
 import {ObjectId} from "mongodb";
 import {randomUUID} from "node:crypto";
@@ -15,14 +14,11 @@ import {
     RegistrationEmailResendingInputServiceType,
     RegistrationInputServiceType,
 } from "../types/inputTypes/authInputServiceTypes";
-import {
-    LoginOutputServiceType,
-    LogoutOutputServiceType,
-    RefreshTokenOutputServiceType
-} from "../types/outputTypes/authOutputServiceTypes";
+import {LoginOutputServiceType, RefreshTokenOutputServiceType} from "../types/outputTypes/authOutputServiceTypes";
 import {JwtPayload} from "jsonwebtoken";
 import {revokedTokenRepository} from "../repository/revokedTokenRepository";
 import {RevokedTokenDbType} from "../../../db/db-types/refreshToken-db-types";
+import {JwtPayloadCustomType} from "../../../common/types/jwtPayloadType";
 
 
 export const authService = {
@@ -180,7 +176,7 @@ export const authService = {
             }
         }
 
-        const jwtPayload: JwtPayloadType = {
+        const jwtPayload: JwtPayloadCustomType = {
             userId: user._id.toString()
         }
 
@@ -205,8 +201,8 @@ export const authService = {
             }
         }
 
-        const isExistToken: RevokedTokenDbType | null = await revokedTokenRepository.findByToken(token)
-        if(isExistToken) {
+        const isRevoked: RevokedTokenDbType | null = await revokedTokenRepository.findByToken(token)
+        if(isRevoked) {
             return {
                 status: ResultStatus.Unauthorized,
                 extensions: [{field: 'refreshToken', message: 'Refresh token has expired'}],
@@ -223,7 +219,7 @@ export const authService = {
             }
         }
 
-        const jwtPayload: JwtPayloadType = {
+        const jwtPayload: JwtPayloadCustomType = {
             userId: user._id.toString()
         }
 
@@ -250,20 +246,63 @@ export const authService = {
             }
         }
 
-        const isExistToken: RevokedTokenDbType | null = await revokedTokenRepository.findByToken(token)
-        if(isExistToken) {
-            return {
-                status: ResultStatus.Unauthorized,
-                extensions: [{field: 'refreshToken', message: 'Refresh token has expired'}],
-                data: null
-            }
-        }
+        // const isRevoked: RevokedTokenDbType | null = await revokedTokenRepository.findByToken(token)
+        // if(isRevoked) {
+        //     return {
+        //         status: ResultStatus.Unauthorized,
+        //         extensions: [{field: 'refreshToken', message: 'Refresh token has expired'}],
+        //         data: null
+        //     }
+        // }
 
         await revokedTokenRepository.create(token, decoded.userId)
 
         return {
             status: ResultStatus.Success,
             data: null
+        }
+    },
+    async checkAccessToken(authHeader: string): Promise<Result<JwtPayloadCustomType | null>> {
+        if (!authHeader.startsWith('Bearer ')) {
+            return {
+                status: ResultStatus.Unauthorized,
+                extensions: [{field: 'accessToken', message: 'Access token not provided'}],
+                data: null
+            }
+        }
+
+        const token: string = authHeader.split(' ')[1]
+        if (!token) {
+            return {
+                status: ResultStatus.Unauthorized,
+                extensions: [{field: 'accessToken', message: 'Access token not provided'}],
+                data: null
+            }
+        }
+
+        const payload: JwtPayloadCustomType = bearerAdapter.verifyToken(token) as JwtPayloadCustomType
+        console.log(payload)
+        //check payload
+        if (!payload || !payload.userId) {
+            return {
+                status: ResultStatus.Unauthorized,
+                extensions: [{field: 'accessToken', message: 'Invalid access token'}],
+                data: null
+            }
+        }
+
+        const user: UserDbType | null = await userMongoRepository.findUserById(payload.userId)
+        if (!user) {
+            return {
+                status: ResultStatus.Unauthorized,
+                extensions: [{field: 'accessToken', message: 'User not found'}],
+                data: null
+            }
+        }
+
+        return {
+            status: ResultStatus.Success,
+            data: payload
         }
     }
 }

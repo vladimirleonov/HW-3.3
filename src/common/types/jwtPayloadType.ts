@@ -1,3 +1,3 @@
-export type JwtPayloadType = {
+export type JwtPayloadCustomType = {
     userId: string
 }
