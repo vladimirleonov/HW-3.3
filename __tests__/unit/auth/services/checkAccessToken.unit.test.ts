@@ -45,19 +45,23 @@ describe('Check Access Token', () => {
         expect(bearerAdapter.verifyToken).toHaveBeenCalledTimes(1)
     })
     it('should not verify in userRepository', async () => {
-        bearerAdapter.verifyToken = jest.fn().mockImplementation(async (token: string) => ({userId: '234878ca6713be81a'}))
-        userMongoRepository.findUserById = jest.fn().mockImplementation(async (userId: string): Promise<null> => null)
+        bearerAdapter.verifyToken = jest.fn().mockImplementation((token: string) => ({ userId: '234878ca6713be81a' }));
+        userMongoRepository.findUserById = jest.fn().mockImplementation(async (userId: string) => null);
 
-        const result: Result<JwtPayloadCustomType | null> = await checkAccessTokenUseCase("Bearer jkashdfafqeoprwejad")
+        const result: Result<JwtPayloadCustomType | null> = await checkAccessTokenUseCase("Bearer jkashdfafqeoprwejad");
 
-        expect(result.status).toBe(ResultStatus.Unauthorized)
-        expect(bearerAdapter.verifyToken).toHaveBeenCalledTimes(1)
-        expect(userMongoRepository.findUserById).toHaveBeenCalledTimes(1)
-    })
+        console.log('Result:', result);
+
+        expect(result.status).toBe(ResultStatus.Unauthorized);
+        expect(bearerAdapter.verifyToken).toHaveBeenCalledTimes(1);
+        expect(userMongoRepository.findUserById).toHaveBeenCalledTimes(1);
+    });
+
     it('should verify user', async () => {
-        bearerAdapter.verifyToken = jest.fn().mockImplementation(async (token: string) => ({userId: '234878ca6713be81a'}))
-        userMongoRepository.findUserById = jest.fn().mockImplementation(async (userId: string) => {
-            return {
+        bearerAdapter.verifyToken = jest.fn().mockImplementation((token: string) => ({ userId: '234878ca6713be81a' }));
+
+        userMongoRepository.findUserById = jest.fn().mockImplementation(async (userId: string) => (
+            {
                 id: "666a100906c35b487bd2efbf",
                 login: "lg-952714",
                 email: "email952714@gg.com",
@@ -67,16 +71,18 @@ describe('Check Access Token', () => {
                     expirationDate: "2024-06-12T21:15:53.496Z",
                     isConfirmed: true
                 }
-            }
-        })
+            })
+        );
 
-        const result: Result<JwtPayloadCustomType | null> = await checkAccessTokenUseCase("Bearer jkashdfafqeoprwejad")
+        const result: Result<JwtPayloadCustomType | null> = await checkAccessTokenUseCase("Bearer jkashdfafqeoprwejad");
 
-        expect(result.status).toBe(ResultStatus.Success)
-        expect(result.data).toEqual({ userId: '234878ca6713be81a' })
+        console.log('Result:', result);
 
-        expect(bearerAdapter.verifyToken).toHaveBeenCalledTimes(1)
-        expect(userMongoRepository.findUserById).toHaveBeenCalledTimes(1)
+        expect(result.status).toBe(ResultStatus.Success);
+        expect(result.data).toEqual({ userId: '234878ca6713be81a' });
+
+        expect(bearerAdapter.verifyToken).toHaveBeenCalledTimes(1);
+        expect(userMongoRepository.findUserById).toHaveBeenCalledTimes(1);
         expect(userMongoRepository.findUserById).toHaveBeenCalledWith('234878ca6713be81a');
-    })
+    });
 })

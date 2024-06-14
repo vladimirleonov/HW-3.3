@@ -193,11 +193,21 @@ export const authService = {
         }
     },
     async refreshToken(token: string): Promise<Result<RefreshTokenOutputServiceType | null>> {
-        const decoded: JwtPayload = bearerAdapter.verifyToken(token) as JwtPayload
-        if (!decoded || !decoded.userId) {
+        let payload: JwtPayload
+        try {
+            payload = bearerAdapter.verifyToken(token) as JwtPayload
+            if (!payload || !payload.userId) {
+                return {
+                    status: ResultStatus.Unauthorized,
+                    extensions: [{field: 'refreshToken', message: 'Invalid refresh token'}],
+                    data: null
+                }
+            }
+        } catch (err) {
+            console.error('Token verification failed:', err)
             return {
                 status: ResultStatus.Unauthorized,
-                extensions: [{field: 'refreshToken', message: 'Invalid refresh token'}],
+                extensions: [{field: 'accessToken', message: 'Invalid refresh token'}],
                 data: null
             }
         }
@@ -211,7 +221,7 @@ export const authService = {
             }
         }
 
-        const user: UserDbType | null = await userMongoRepository.findUserById(decoded.userId)
+        const user: UserDbType | null = await userMongoRepository.findUserById(payload.userId)
         if (!user) {
             return {
                 status: ResultStatus.Unauthorized,
@@ -224,7 +234,7 @@ export const authService = {
             userId: user._id.toString()
         }
 
-        await revokedTokenRepository.create(token, decoded.userId)
+        await revokedTokenRepository.create(token, payload.userId)
 
         const accessToken: string = bearerAdapter.generateToken(jwtPayload, '10s')
         const refreshToken: string = bearerAdapter.generateToken(jwtPayload, '20s')
@@ -287,12 +297,12 @@ export const authService = {
             if (!payload || !payload.userId) {
                 return {
                     status: ResultStatus.Unauthorized,
-                    extensions: [{field: 'accessToken', message: 'Invalid access token'}],
+                    extensions: [{field: 'accessToken', message: 'Invalid access token!'}],
                     data: null
                 }
             }
         } catch (err) {
-            console.error('', err)
+            console.error('verifyToken', err)
             return {
                 status: ResultStatus.Unauthorized,
                 extensions: [{field: 'accessToken', message: 'Invalid access token'}],
