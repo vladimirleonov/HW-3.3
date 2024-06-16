@@ -47,7 +47,7 @@ export const userMongoQueryRepository = {
         const user: UserDbType | null = await db.getCollections().userCollection.findOne({_id: new ObjectId(id)})
         return user ? this.mapToAuthenticatedUser(user) : null
     },
-    mapToDetailedUser({_id, password, ...rest}: UserDbType): DetailedUserOutputType {
+    mapToDetailedUser({_id, password, emailConfirmation, ...rest}: UserDbType): DetailedUserOutputType {
         return {
             id: _id.toString(),
             ...rest

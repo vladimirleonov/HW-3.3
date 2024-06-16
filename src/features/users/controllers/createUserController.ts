@@ -6,7 +6,7 @@ import {HTTP_CODES} from "../../../settings"
 import {ErrorsMessagesType} from "../../../common/types/errorMessageType"
 import {Result, ResultStatus} from "../../../common/types/result"
 
-export const createUserController = async (req: Request<{}, DetailedUserOutputType | ErrorsMessagesType, UserBodyInputType>, res: Response<DetailedUserOutputType | ErrorsMessagesType>) => {
+export const createUserController = async (req: Request<{}, DetailedUserOutputType, UserBodyInputType>, res: Response<DetailedUserOutputType | ErrorsMessagesType>) => {
     try {
         const result: Result<string | null> = await userService.createUser(req.body)
         // ?
