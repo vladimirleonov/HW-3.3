@@ -7,11 +7,13 @@ import {usersRouter} from "./features/users"
 import {testingRouter} from "./features/testing"
 import {authRouter} from "./features/auth"
 import {commentsRouter} from "./features/comments"
+import cookieParser from "cookie-parser";
 
 const app: Express = express()
 
-app.use(express.json())
 app.use(cors())
+app.use(cookieParser())
+app.use(express.json())
 
 app.get('/', (req: Request, res: Response) => {
     res.status(HTTP_CODES.OK).send({version: '1.0'})
