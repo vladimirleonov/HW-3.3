@@ -53,7 +53,7 @@ export const userMongoQueryRepository = {
             ...rest
         }
     },
-    mapToAuthenticatedUser({_id, password, createdAt, ...rest}: UserDbType): AuthenticatedUserOutputType {
+    mapToAuthenticatedUser({_id, password, emailConfirmation, createdAt, ...rest}: UserDbType): AuthenticatedUserOutputType {
         return {
             ...rest,
             userId: _id.toString(),

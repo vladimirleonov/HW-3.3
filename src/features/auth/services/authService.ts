@@ -207,7 +207,7 @@ export const authService = {
             console.error('Token verification failed:', err)
             return {
                 status: ResultStatus.Unauthorized,
-                extensions: [{field: 'accessToken', message: 'Invalid refresh token'}],
+                extensions: [{field: 'refreshToken', message: 'Invalid refresh token'}],
                 data: null
             }
         }
@@ -248,11 +248,31 @@ export const authService = {
         }
     },
     async logout (token: string): Promise<Result> {
-        const decoded: JwtPayload = bearerAdapter.verifyToken(token) as JwtPayload
-        if (!decoded || !decoded.userId) {
+        console.log(token)
+        let payload: JwtPayload
+        try {
+            payload = bearerAdapter.verifyToken(token) as JwtPayload
+            if (!payload || !payload.userId) {
+                return {
+                    status: ResultStatus.Unauthorized,
+                    extensions: [{field: 'refreshToken', message: 'Invalid refresh token'}],
+                    data: null
+                }
+            }
+        } catch (err) {
+            console.error('Token verification failed:', err)
             return {
                 status: ResultStatus.Unauthorized,
                 extensions: [{field: 'refreshToken', message: 'Invalid refresh token'}],
+                data: null
+            }
+        }
+
+        const isRevoked: RevokedTokenDbType | null = await revokedTokenRepository.findByToken(token)
+        if(isRevoked) {
+            return {
+                status: ResultStatus.Unauthorized,
+                extensions: [{field: 'refreshToken', message: 'Refresh token has expired'}],
                 data: null
             }
         }
@@ -266,7 +286,7 @@ export const authService = {
         //     }
         // }
 
-        await revokedTokenRepository.create(token, decoded.userId)
+        await revokedTokenRepository.create(token, payload.userId)
 
         return {
             status: ResultStatus.Success,
