@@ -231,7 +231,7 @@ describe('User login', () => {
     });
 });
 
-describe('Refresh tokens', () => {
+describe('Refresh token', () => {
     const refreshTokenUseCase = authService.refreshToken
     const loginUserUseCase = authService.login
 
@@ -276,7 +276,6 @@ describe('Refresh tokens', () => {
         const refreshToken_2 = refreshTokenResult_1.data!.refreshToken
 
         const secondRefreshTokenResult: Result<RefreshTokenOutputServiceType | null> = await refreshTokenUseCase(refreshToken_1)
-        console.log(secondRefreshTokenResult)
 
         expect(secondRefreshTokenResult.status).toBe(ResultStatus.Unauthorized)
     })
@@ -304,3 +303,72 @@ describe('Refresh tokens', () => {
     })
 })
 
+describe('logout', () => {
+    const logoutUserUseCase = authService.logout
+    const loginUserUseCase = authService.login
+    const refreshTokenUseCase = authService.refreshToken
+
+    beforeAll(async () => {
+        const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
+        await db.run(mongoServer.getUri())
+    })
+    afterAll(async () => {
+        await db.stop()
+    })
+    beforeEach(async () => {
+        await db.drop()
+        jest.resetAllMocks()
+    })
+    it('should return unauthorized for an invalid token', async () => {
+        const invalidToken = 'afafasgaewrs'
+        const result: Result<RefreshTokenOutputServiceType | null> = await logoutUserUseCase(invalidToken)
+
+        expect(result.status).toBe(ResultStatus.Unauthorized)
+    })
+    it('should return unauthorized for revoked token', async () => {
+        const user = await testSeeder.registerUser(
+            'test123411',
+            'test12adasd@gmail.com',
+            'testtest1234',
+            undefined,
+            undefined,
+            true
+        )
+
+        const userToLogin = {
+            loginOrEmail: 'test12adasd@gmail.com',
+            password: 'testtest1234'
+        }
+
+        const loginResult: Result<LoginOutputServiceType | null> = await loginUserUseCase(userToLogin)
+        expect(loginResult.status).toBe(ResultStatus.Success)
+
+        const refreshTokenResult: Result<RefreshTokenOutputServiceType | null> = await refreshTokenUseCase(loginResult.data!.refreshToken)
+        expect(refreshTokenResult.status).toBe(ResultStatus.Success)
+
+        const logoutResult: Result = await logoutUserUseCase(loginResult.data!.refreshToken)
+        expect(logoutResult.status).toBe(ResultStatus.Unauthorized)
+    })
+    it('should successfully logout', async () => {
+        const user = await testSeeder.registerUser(
+            'test123411',
+            'test12adasd@gmail.com',
+            'testtest1234',
+            undefined,
+            undefined,
+            true
+        )
+
+        const userToLogin = {
+            loginOrEmail: 'test12adasd@gmail.com',
+            password: 'testtest1234'
+        }
+
+        const loginResult: Result<LoginOutputServiceType | null> = await loginUserUseCase(userToLogin)
+        expect(loginResult.status).toBe(ResultStatus.Success)
+
+        const logoutResult: Result = await logoutUserUseCase(loginResult.data!.refreshToken)
+        expect(logoutResult.status).toBe(ResultStatus.Success)
+        expect(logoutResult.data).toBeNull()
+    })
+})

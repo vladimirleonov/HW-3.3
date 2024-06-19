@@ -62,17 +62,10 @@ export const authService = {
 
         await userMongoRepository.create(newUser)
 
-        // try {
-
         nodemailerAdapter.sendEmail(
             newUser.email,
             registrationEmailTemplate(newUser.emailConfirmation.confirmationCode!)
         )
-        //.catch((err) => console.error(err))
-
-        // } catch(err) {
-        //     console.log('Send email error', err)
-        // }
 
         return {
             status: ResultStatus.Success,
@@ -276,15 +269,6 @@ export const authService = {
                 data: null
             }
         }
-
-        // const isRevoked: RevokedTokenDbType | null = await revokedTokenRepository.findByToken(token)
-        // if(isRevoked) {
-        //     return {
-        //         status: ResultStatus.Unauthorized,
-        //         extensions: [{field: 'refreshToken', message: 'Refresh token has expired'}],
-        //         data: null
-        //     }
-        // }
 
         await revokedTokenRepository.create(token, payload.userId)
 

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "hw-2.4",
+  "name": "hw-3.1",
   "builds": [
     { "src": "src/index.ts", "use": "@vercel/node" }
   ],

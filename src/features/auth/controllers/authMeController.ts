@@ -6,16 +6,17 @@ import {AuthMeUserOutputControllerType} from "../types/outputTypes/authOutputCon
 
 export const authMeController = async (req: Request<{}, {}, AuthMeUserOutputControllerType, {}>, res: Response<AuthMeUserOutputControllerType>) => {
     try {
-        //? check user
         if (!req.user || !req.user.userId) {
             res.status(HTTP_CODES.UNAUTHORIZED).send()
             return
         }
+
         const user: AuthenticatedUserOutputType | null = await userMongoQueryRepository.findAuthenticatedUserById(req.user.userId)
         if (!user) {
             res.status(HTTP_CODES.UNAUTHORIZED).send()
             return
         }
+
         res.status(HTTP_CODES.OK).send(user)
     } catch (err) {
         console.error('authMeController', err)
