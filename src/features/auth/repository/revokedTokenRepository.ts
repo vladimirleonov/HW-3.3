@@ -4,14 +4,13 @@ import {RevokedTokenDbType} from "../../../db/db-types/refreshToken-db-types";
 
 export const revokedTokenRepository = {
     async create (token: string, userId: string): Promise<string> {
-        const insertedInfo: InsertOneResult<RevokedTokenDbType> = await db.getCollections().revokedTokensCollection.insertOne({
+        const insertedInfo: InsertOneResult<RevokedTokenDbType> = await db.getCollections().revokedTokenCollection.insertOne({
             userId: new ObjectId(userId),
             token: token,
         })
-        console.log(insertedInfo.insertedId.toString())
         return insertedInfo.insertedId.toString()
     },
     async findByToken (token: string): Promise<RevokedTokenDbType | null> {
-        return db.getCollections().revokedTokensCollection.findOne({token})
+        return db.getCollections().revokedTokenCollection.findOne({token})
     }
 }

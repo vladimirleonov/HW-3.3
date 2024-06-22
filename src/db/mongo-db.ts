@@ -5,6 +5,7 @@ import {PostDbType} from "./db-types/post-db-types";
 import {UserDbType} from "./db-types/user-db-types";
 import {CommentDbType} from "./db-types/comment-db-types";
 import {RevokedTokenDbType} from "./db-types/refreshToken-db-types";
+import {UserDeviceDBType} from "./db-types/user-devices-db-types";
 
 export const db = {
     client: {} as MongoClient,
@@ -56,7 +57,8 @@ export const db = {
             postCollection: this.getDBName().collection<PostDbType>(SETTINGS.POST_COLLECTION_NAME as string),
             userCollection: this.getDBName().collection<UserDbType>(SETTINGS.USER_COLLECTION_NAME as string),
             commentCollection: this.getDBName().collection<CommentDbType>(SETTINGS.COMMENT_COLLECTION_NAME as string),
-            revokedTokensCollection: this.getDBName().collection<RevokedTokenDbType>(SETTINGS.REVOKEDTOKENS_COLLECTION_NAME as string)
+            revokedTokenCollection: this.getDBName().collection<RevokedTokenDbType>(SETTINGS.REVOKED_TOKEN_COLLECTION_NAME as string),
+            userDeviceCollection: this.getDBName().collection<UserDeviceDBType>(SETTINGS.USER_DEVICE_COLLECTION_NAME as string)
         }
     }
 }

@@ -1,6 +1,9 @@
 export type LoginInputServiceType = {
     loginOrEmail: string
     password: string
+    ip: string,
+    deviceName: string,
+    refreshToken: string
 }
 
 export type RegistrationInputServiceType = {

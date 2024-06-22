@@ -4,7 +4,7 @@ import {authService} from "../../../../src/features/auth/services/authService";
 import {ResultStatus} from "../../../../src/common/types/result";
 import {JwtPayloadCustomType} from "../../../../src/common/types/jwtPayloadType";
 import {Result} from "../../../../src/common/types/result";
-import {bearerAdapter} from "../../../../src/common/adapters/bearer.adapter";
+import {bearerAdapter} from "../../../../src/common/adapters/jwt.adapter";
 import {userMongoRepository} from "../../../../src/features/users/repository/userMongoRepository";
 
 describe('Check Access Token', () => {

@@ -1,6 +1,6 @@
 import {Router} from "express"
 import {getCommentController} from "./controllers/getCommentController"
-import {bearerAuthMiddleware} from "../../common/middlewares/bearerAuthMiddleware"
+import {authMiddleware} from "../../common/middlewares/authMiddleware"
 import {deleteCommentController} from "./controllers/deleteCommentController"
 import {updateCommentController} from "./controllers/updateCommentController"
 import {commentBodyValidator} from "./validators/commentBodyValidator"
@@ -9,5 +9,5 @@ import {inputCheckErrorsMiddleware} from "../../common/middlewares/inputCheckErr
 export const commentsRouter = Router()
 
 commentsRouter.get('/:id', getCommentController)
-commentsRouter.put('/:commentId', bearerAuthMiddleware, commentBodyValidator, inputCheckErrorsMiddleware, updateCommentController)
-commentsRouter.delete('/:commentId', bearerAuthMiddleware, deleteCommentController)
+commentsRouter.put('/:commentId', authMiddleware, commentBodyValidator, inputCheckErrorsMiddleware, updateCommentController)
+commentsRouter.delete('/:commentId', authMiddleware, deleteCommentController)

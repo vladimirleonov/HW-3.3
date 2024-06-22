@@ -1,4 +1,4 @@
-export type UserSessionDBType = {
+export type UserDeviceDBType = {
     userId: string
     deviceId: string
     iat: string

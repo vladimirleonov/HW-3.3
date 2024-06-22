@@ -8,6 +8,7 @@ import {testingRouter} from "./features/testing"
 import {authRouter} from "./features/auth"
 import {commentsRouter} from "./features/comments"
 import cookieParser from "cookie-parser";
+import {securityRouter} from "./features/security";
 
 const app: Express = express()
 
@@ -25,6 +26,6 @@ app.use(SETTINGS.PATH.POSTS, postsRouter)
 app.use(SETTINGS.PATH.USERS, usersRouter)
 app.use(SETTINGS.PATH.COMMENTS, commentsRouter)
 app.use(SETTINGS.PATH.TESTING, testingRouter)
-
+app.use(SETTINGS.PATH.SECURITY, securityRouter)
 
 export default app

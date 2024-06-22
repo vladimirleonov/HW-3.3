@@ -3,7 +3,7 @@ import {loginController} from "./controllers/loginController"
 import {loginBodyValidator} from "./validators/loginBodyValidator"
 import {inputCheckErrorsMiddleware} from "../../common/middlewares/inputCheckErrorsMiddleware"
 import {authMeController} from "./controllers/authMeController"
-import {bearerAuthMiddleware} from "../../common/middlewares/bearerAuthMiddleware"
+import {authMiddleware} from "../../common/middlewares/authMiddleware"
 import {registrationController} from "./controllers/registrationController";
 import {registrationUserBodyValidator} from "./validators/registrationBodyValidator";
 import {registrationConfirmationController} from "./controllers/registrationConfirmationController";
@@ -25,4 +25,4 @@ authRouter.post('/refresh-token', refreshTokenController)
 authRouter.post('/logout', logoutController)
 
 
-authRouter.get('/me', bearerAuthMiddleware, authMeController)
+authRouter.get('/me', authMiddleware, authMeController)

@@ -12,6 +12,7 @@ export const SETTINGS = {
         USERS: '/users',
         COMMENTS: '/comments',
         TESTING: '/testing',
+        SECURITY: '/security'
     },
     EMAIL: {
         USER: process.env.EMAIL_USER || '',
@@ -25,7 +26,8 @@ export const SETTINGS = {
     POST_COLLECTION_NAME: process.env.POST_COLLECTION_NAME || '',
     USER_COLLECTION_NAME: process.env.USER_COLLECTION_NAME || '',
     COMMENT_COLLECTION_NAME: process.env.COMMENT_COLLECTION_NAME || '',
-    REVOKEDTOKENS_COLLECTION_NAME: process.env.REVOKEDTOKENS_COLLECTION_NAME || '',
+    REVOKED_TOKEN_COLLECTION_NAME: process.env.REVOKED_TOKEN_COLLECTION_NAME || '',
+    USER_DEVICE_COLLECTION_NAME: process.env.USER_DEVICE_COLLECTION_NAME || '',
     JWT_SECRET: process.env.JWT_SECRET || 'secret',
 }
 
