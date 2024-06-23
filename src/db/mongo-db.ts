@@ -58,7 +58,8 @@ export const db = {
             userCollection: this.getDBName().collection<UserDbType>(SETTINGS.USER_COLLECTION_NAME as string),
             commentCollection: this.getDBName().collection<CommentDbType>(SETTINGS.COMMENT_COLLECTION_NAME as string),
             revokedTokenCollection: this.getDBName().collection<RevokedTokenDbType>(SETTINGS.REVOKED_TOKEN_COLLECTION_NAME as string),
-            userDeviceCollection: this.getDBName().collection<UserDeviceDBType>(SETTINGS.USER_DEVICE_COLLECTION_NAME as string)
+            userDeviceCollection: this.getDBName().collection<UserDeviceDBType>(SETTINGS.USER_DEVICE_COLLECTION_NAME as string),
+            apiAccessLogsCollection: this.getDBName().collection<ApiAccessLogDbType>(SETTINGS.API_ACCESS_LOGS_COLLECTION_NAME as string),
         }
     }
 }

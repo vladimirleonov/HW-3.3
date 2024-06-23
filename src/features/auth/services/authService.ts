@@ -16,14 +16,14 @@ import {
 } from "../types/inputTypes/authInputServiceTypes";
 import {LoginOutputServiceType} from "../types/outputTypes/authOutputServiceTypes";
 import {JwtPayload} from "jsonwebtoken";
-import {revokedTokenRepository} from "../repository/revokedTokenRepository";
 import {JwtAccessTokenPayloadCustomType, JwtRefreshTokenPayloadCustomType} from "../../../common/types/jwtPayloadType";
 import {userDeviceMongoRepository} from "../../security/repository/userDeviceMongoRepository";
 import {UserDeviceDBType} from "../../../db/db-types/user-devices-db-types";
+import {unixToISOString} from "../../../common/helpers/unixToISOString";
 
 
 export const authService = {
-    async registrationUser(input: RegistrationInputServiceType): Promise<Result> {
+    async registration(input: RegistrationInputServiceType): Promise<Result> {
         const userByEmail: UserDbType | null = await userMongoRepository.findUserByEmail(input.email)
         if (userByEmail) {
             return {
@@ -213,20 +213,13 @@ export const authService = {
             const deviceName: string = input.deviceName
             const ip: string = input.ip
 
-            //convert date from token (number) to iso
-            const issuedAtDate: string = (iat !== undefined ? new Date(iat * 1000) : new Date).toISOString()
-            const expiredDate: string = (exp !== undefined ? new Date(exp * 1000) : new Date).toISOString()
-
-            // const date = new Date(iat * 1000);
-            // const isoIAtDate = date.toISOString();
-
             const newUserDevice: UserDeviceDBType = {
                 userId: user._id.toString(),
                 deviceId: decodedRefreshToken.deviceId,
-                iat: issuedAtDate,
+                iat: unixToISOString(iat),
                 deviceName: deviceName,
                 ip: ip,
-                exp: expiredDate
+                exp: unixToISOString(iat)
             }
 
             console.log(newUserDevice)
@@ -287,9 +280,9 @@ export const authService = {
         if (decodedRefreshToken) {
             const {iat} = decodedRefreshToken as JwtPayload
 
-            const issuedAt: string = (iat ? iat.toString() : Date.now()).toString()
+            const issuedAt: string = unixToISOString(iat)
 
-            const isUpdated = await userDeviceMongoRepository.updateOne({deviceId, iat: issuedAt})
+            const isUpdated: boolean = await userDeviceMongoRepository.updateOne({deviceId, iat: issuedAt})
             if (!isUpdated) {
                 return {
                     status: ResultStatus.Unauthorized,

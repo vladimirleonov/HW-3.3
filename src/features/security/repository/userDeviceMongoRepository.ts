@@ -1,6 +1,7 @@
 import {UserDeviceDBType} from "../../../db/db-types/user-devices-db-types";
 import {db} from "../../../db/mongo-db";
 import {DeleteResult, InsertOneResult, UpdateResult, WithId} from "mongodb";
+import {userMongoRepository} from "../../users/repository/userMongoRepository";
 
 export const userDeviceMongoRepository = {
     async create(userSession: UserDeviceDBType): Promise<string> {
@@ -48,6 +49,9 @@ export const userDeviceMongoRepository = {
                 userId
             }
         )
+    },
+    async findByDeviceId(deviceId: string): Promise<WithId<UserDeviceDBType> | null> {
+        return db.getCollections().userDeviceCollection.findOne({deviceId})
     },
     async findOneByDeviceIdAndIat({deviceId, iat}: {deviceId: string, iat: string}) {
         return await db.getCollections().userDeviceCollection.findOne({

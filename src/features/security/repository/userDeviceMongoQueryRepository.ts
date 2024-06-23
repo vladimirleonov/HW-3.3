@@ -7,6 +7,7 @@ export const userDeviceMongoQueryRepository = {
         const userSessions: WithId<UserDeviceDBType>[] = await db.getCollections().userDeviceCollection.find({
             userId: userId
         }).toArray()
+        console.log(userSessions)
         return userSessions.map((session: WithId<UserDeviceDBType>) => this.mapToOutput(session))
     },
     mapToOutput({ip, deviceName, iat, deviceId, ...rest}: WithId<UserDeviceDBType>) {

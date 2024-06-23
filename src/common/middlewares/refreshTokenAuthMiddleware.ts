@@ -3,6 +3,7 @@ import {HTTP_CODES} from "../../settings";
 import {authService} from "../../features/auth/services/authService";
 import {JwtPayload} from "jsonwebtoken";
 import {Result, ResultStatus} from "../types/result";
+import {unixToISOString} from "../helpers/unixToISOString";
 
 export const refreshTokenAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const refreshToken = req.cookies?.refreshToken
@@ -24,7 +25,7 @@ export const refreshTokenAuthMiddleware = async (req: Request, res: Response, ne
         userId,
         deviceId,
         //?
-        iat: (iat !== undefined ? iat : Date.now()).toString()
+        iat: unixToISOString(iat)
     }
     console.log("req.refreshTokenPayload", req.device)
     next()

@@ -12,11 +12,18 @@ export const securityService = {
         }
     },
     async deleteDevice({deviceId, userId}: { deviceId: string, userId: string }): Promise<Result> {
-        const device: WithId<UserDeviceDBType> | null = await userDeviceMongoRepository.findOneByDeviceIdAndUserId({deviceId, userId})
-        if (!device) {
+        const device: WithId<UserDeviceDBType> | null = await userDeviceMongoRepository.findByDeviceId(deviceId)
+        if(!device) {
+            return {
+                status: ResultStatus.NotFound,
+                extensions: [{field: 'deviceId', message: `Device with deviceId ${deviceId} does not exist`}],
+                data: null
+            }
+        }
+        if (device.userId !== userId) {
             return {
                 status: ResultStatus.Forbidden,
-                extensions: [{field: 'deviceId', message: `Device with deviceId ${deviceId} does not exist or you do not have permission to delete it`}],
+                extensions: [{field: 'deviceId', message: `You do not have permission to delete it`}],
                 data: null
             }
         }

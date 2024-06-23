@@ -13,7 +13,10 @@ export const deleteDeviceController = async (req: Request, res: Response) => {
         }
 
         const result: Result = await securityService.deleteDevice({deviceId, userId})
-        if (result.status === ResultStatus.Forbidden) {
+        if (result.status === ResultStatus.NotFound) {
+            res.status(HTTP_CODES.NOT_FOUND).send()
+            return
+        } else if (result.status === ResultStatus.Forbidden) {
             res.status(HTTP_CODES.FORBIDDEN).send()
             return
         } else if (result.status === ResultStatus.Success) {
