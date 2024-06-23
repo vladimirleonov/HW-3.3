@@ -2,6 +2,7 @@ import {userDeviceMongoRepository} from "../repository/userDeviceMongoRepository
 import {Result, ResultStatus} from "../../../common/types/result";
 import {WithId} from "mongodb";
 import {UserDeviceDBType} from "../../../db/db-types/user-devices-db-types";
+import {apiAccessLogsRepository} from "../../auth/repository/apiAccessLogsRepository";
 
 export const securityService = {
     async terminateDevicesExcludedCurrent({deviceId, userId}: { deviceId: string, userId: string }): Promise<Result> {
@@ -34,4 +35,39 @@ export const securityService = {
             data: null
         }
     },
+    async checkRateLimit({ip, originUrl}: {ip: string, originUrl: string}): Promise<Result> {
+        const accessLogsCount: number = await apiAccessLogsRepository.countApiLogsByIpAndOriginUrl({ip, originUrl})
+        console.log("accessLogsCount", accessLogsCount)
+        if (accessLogsCount >= 5) {
+            return {
+                status: ResultStatus.TooManyRequests,
+                extensions: [{field: 'requests', message: `Too many requests`}],
+                data: null
+            }
+        }
+
+        console.log("create access log")
+        await apiAccessLogsRepository.createApiAccessLog({ip, originUrl})
+
+        return {
+            status: ResultStatus.Success,
+            data: null
+        }
+    }
+    // async checkRateLimit({ ip, originUrl }: { ip: string; originUrl: string }): Promise<Result> {
+    //     const accessLogsCount: number = await apiAccessLogsRepository.countApiLogsByIpAndOriginUrl({ ip, originUrl });
+    //     if (accessLogsCount >= 5) {
+    //         return {
+    //             status: ResultStatus.TooManyRequests,
+    //             extensions: [{ field: "requests", message: `Too many requests` }],
+    //             data: null
+    //         };
+    //     }
+    //
+    //     await apiAccessLogsRepository.createApiAccessLog({ ip, originUrl });
+    //     return {
+    //         status: ResultStatus.Success,
+    //         data: null
+    //     };
+    // }
 }

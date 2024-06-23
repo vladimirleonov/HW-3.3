@@ -15,13 +15,14 @@ import {
 import {refreshTokenController} from "./controllers/refreshTokenController";
 import {logoutController} from "./controllers/logoutController";
 import {refreshTokenAuthMiddleware} from "../../common/middlewares/refreshTokenAuthMiddleware";
+import {rateLimitMiddleware} from "../../common/middlewares/rateLimitMiddleware";
 
 export const authRouter: Router = Router()
 
-authRouter.post('/login', loginBodyValidator, inputCheckErrorsMiddleware, loginController)
-authRouter.post('/registration', registrationUserBodyValidator, inputCheckErrorsMiddleware, registrationController)
-authRouter.post('/registration-confirmation', registrationConfirmationBodyValidator, registrationConfirmationController)
-authRouter.post('/registration-email-resending', registrationEmailResendingBodyValidator, registrationEmailResendingController)
+authRouter.post('/login', rateLimitMiddleware, loginBodyValidator, inputCheckErrorsMiddleware, loginController)
+authRouter.post('/registration', rateLimitMiddleware, registrationUserBodyValidator, inputCheckErrorsMiddleware, registrationController)
+authRouter.post('/registration-confirmation', rateLimitMiddleware, registrationConfirmationBodyValidator, registrationConfirmationController)
+authRouter.post('/registration-email-resending', rateLimitMiddleware, registrationEmailResendingBodyValidator, inputCheckErrorsMiddleware, registrationEmailResendingController)
 authRouter.post('/refresh-token', refreshTokenAuthMiddleware, refreshTokenController)
 authRouter.post('/logout', refreshTokenAuthMiddleware, logoutController)
 
