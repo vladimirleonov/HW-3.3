@@ -4,14 +4,14 @@ import {authService} from "../../features/auth/services/authService";
 import {JwtPayload} from "jsonwebtoken";
 import {Result, ResultStatus} from "../types/result";
 
-export const refreshTokenAuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const refreshToken  = req.cookies.refreshToken
+export const refreshTokenAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    const refreshToken = req.cookies?.refreshToken
     if (!refreshToken) {
-        res.status(HTTP_CODES.UNAUTHORIZED).send()
+        res.status(HTTP_CODES.UNAUTHORIZED).send("Refresh token is missing")
         return
     }
 
-    const result: Result<JwtPayload | null> = authService.checkRefreshToken(refreshToken)
+    const result: Result<JwtPayload | null> = await authService.checkRefreshToken(refreshToken)
     //console.log("refreshTokenAuthMiddleware", result.data)
     if (result.status === ResultStatus.Unauthorized) {
         console.error("refreshTokenAuthMiddleware")
@@ -19,8 +19,13 @@ export const refreshTokenAuthMiddleware = (req: Request, res: Response, next: Ne
         return
     }
 
-    const { userId, deviceId } = result.data as JwtPayload
-    req.device = { userId, deviceId }
+    const { userId, deviceId, iat } = result.data as JwtPayload
+    req.device = {
+        userId,
+        deviceId,
+        //?
+        iat: (iat !== undefined ? iat : Date.now()).toString()
+    }
     console.log("req.refreshTokenPayload", req.device)
     next()
 }

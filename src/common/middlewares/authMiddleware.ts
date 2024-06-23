@@ -20,6 +20,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         }
 
         res.status(HTTP_CODES.UNAUTHORIZED).send()
+    //?
     } catch (err) {
         console.log("authMiddleware", err)
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()

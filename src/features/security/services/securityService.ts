@@ -12,7 +12,7 @@ export const securityService = {
         }
     },
     async deleteDevice({deviceId, userId}: { deviceId: string, userId: string }): Promise<Result> {
-        const device: WithId<UserDeviceDBType> | null = await userDeviceMongoRepository.findOne({deviceId, userId})
+        const device: WithId<UserDeviceDBType> | null = await userDeviceMongoRepository.findOneByDeviceIdAndUserId({deviceId, userId})
         if (!device) {
             return {
                 status: ResultStatus.Forbidden,
@@ -21,7 +21,7 @@ export const securityService = {
             }
         }
 
-        await userDeviceMongoRepository.deleteDevice({deviceId, userId})
+        await userDeviceMongoRepository.deleteByDeviceIdAndUserId({deviceId, userId})
         return {
             status: ResultStatus.Success,
             data: null

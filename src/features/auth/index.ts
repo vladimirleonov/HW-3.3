@@ -14,6 +14,7 @@ import {
 } from "./controllers/registrationEmailResendingController";
 import {refreshTokenController} from "./controllers/refreshTokenController";
 import {logoutController} from "./controllers/logoutController";
+import {refreshTokenAuthMiddleware} from "../../common/middlewares/refreshTokenAuthMiddleware";
 
 export const authRouter: Router = Router()
 
@@ -21,8 +22,8 @@ authRouter.post('/login', loginBodyValidator, inputCheckErrorsMiddleware, loginC
 authRouter.post('/registration', registrationUserBodyValidator, inputCheckErrorsMiddleware, registrationController)
 authRouter.post('/registration-confirmation', registrationConfirmationBodyValidator, registrationConfirmationController)
 authRouter.post('/registration-email-resending', registrationEmailResendingBodyValidator, registrationEmailResendingController)
-authRouter.post('/refresh-token', refreshTokenController)
-authRouter.post('/logout', logoutController)
+authRouter.post('/refresh-token', refreshTokenAuthMiddleware, refreshTokenController)
+authRouter.post('/logout', refreshTokenAuthMiddleware, logoutController)
 
 
 authRouter.get('/me', authMiddleware, authMeController)

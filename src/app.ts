@@ -12,6 +12,8 @@ import {securityRouter} from "./features/security";
 
 const app: Express = express()
 
+app.set('trust proxy', true);
+
 app.use(cors())
 app.use(cookieParser())
 app.use(express.json())
