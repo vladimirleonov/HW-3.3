@@ -57,7 +57,7 @@ export const authService = {
                     hours: 1,
                     minutes: 30,
                 }).toISOString(),
-                isConfirmed: true
+                isConfirmed: false
             }
         }
 
@@ -213,13 +213,20 @@ export const authService = {
             const deviceName: string = input.deviceName
             const ip: string = input.ip
 
+            //convert date from token (number) to iso
+            const issuedAtDate: string = (iat !== undefined ? new Date(iat * 1000) : new Date).toISOString()
+            const expiredDate: string = (exp !== undefined ? new Date(exp * 1000) : new Date).toISOString()
+
+            // const date = new Date(iat * 1000);
+            // const isoIAtDate = date.toISOString();
+
             const newUserDevice: UserDeviceDBType = {
                 userId: user._id.toString(),
                 deviceId: decodedRefreshToken.deviceId,
-                iat: (iat !== undefined ? iat : Date.now()).toString(),
+                iat: issuedAtDate,
                 deviceName: deviceName,
                 ip: ip,
-                exp: (exp !== undefined ? exp : Date.now()).toString()
+                exp: expiredDate
             }
 
             console.log(newUserDevice)
