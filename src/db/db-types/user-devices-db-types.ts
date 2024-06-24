@@ -1,4 +1,7 @@
+import {ObjectId} from "mongodb";
+
 export type UserDeviceDBType = {
+    _id: ObjectId
     userId: string
     deviceId: string
     iat: string

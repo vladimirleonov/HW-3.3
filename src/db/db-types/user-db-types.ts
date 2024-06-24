@@ -14,5 +14,3 @@ export type UserDbType = {
     createdAt: string
     emailConfirmation: EmailConfirmation,
 }
-
-type UserDbTypeWithoutEmailConfirmation = Omit<UserDbType, 'emailConfirmation'>;

@@ -1,11 +1,13 @@
 import {Router} from "express"
-import {getDevicesController} from "./controllers/getDevicesController";
-import {terminateDevicesController} from "./controllers/terminateDevicesController";
-import {deleteDeviceController} from "./controllers/deleteDeviceController";
+import {
+    getUserDeviceSessionsController
+} from "./controllers/getUserDeviceSessionsController";
+import {terminateAllOtherDeviceSessionsController} from "./controllers/terminateAllOtherDeviceSessionsController";
+import {terminateDeviceSessionController} from "./controllers/terminateDeviceSessionController";
 import {refreshTokenAuthMiddleware} from "../../common/middlewares/refreshTokenAuthMiddleware";
 
 export const securityRouter: Router = Router()
 
-securityRouter.get('/devices', refreshTokenAuthMiddleware, getDevicesController)
-securityRouter.delete('/devices', refreshTokenAuthMiddleware, terminateDevicesController)
-securityRouter.delete('/devices/:deviceId', refreshTokenAuthMiddleware, deleteDeviceController)
+securityRouter.get('/devices', refreshTokenAuthMiddleware, getUserDeviceSessionsController)
+securityRouter.delete('/devices', refreshTokenAuthMiddleware, terminateAllOtherDeviceSessionsController)
+securityRouter.delete('/devices/:deviceId', refreshTokenAuthMiddleware, terminateDeviceSessionController)

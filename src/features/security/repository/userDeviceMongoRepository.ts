@@ -1,59 +1,58 @@
 import {UserDeviceDBType} from "../../../db/db-types/user-devices-db-types";
 import {db} from "../../../db/mongo-db";
-import {DeleteResult, InsertOneResult, UpdateResult, WithId} from "mongodb";
-import {userMongoRepository} from "../../users/repository/userMongoRepository";
+import {DeleteResult, InsertOneResult, UpdateResult} from "mongodb";
+import {
+    deleteAllOtherByDeviceIdAndUserIdInputType,
+    deleteOneByDeviceIdAndIAtInputType,
+    deleteOneByDeviceIdAndUserIdInputType,
+    findOneByDeviceIdAndIatInputType,
+    UpdateInputType
+} from "../../auth/types/inputTypes/userDeviceInputMongoRepositoryTypes";
 
 export const userDeviceMongoRepository = {
     async create(userSession: UserDeviceDBType): Promise<string> {
         const insertedInfo: InsertOneResult<UserDeviceDBType> = await db.getCollections().userDeviceCollection.insertOne(userSession)
         return insertedInfo.insertedId.toString()
     },
-    async updateOne({deviceId, iat}: {deviceId: string, iat: string}): Promise<boolean> {
+    async update({deviceId, iat}: UpdateInputType): Promise<boolean> {
         const updatedInfo: UpdateResult<UserDeviceDBType> = await db.getCollections().userDeviceCollection.updateOne({
-            deviceId: deviceId,
-        },
-        {
-            $set: {
-                iat: iat
-            }
-        })
+                deviceId: deviceId,
+            },
+            {
+                $set: {iat: iat}
+            })
 
         return updatedInfo.matchedCount === 1
     },
-    async deleteExcludedCurrent({deviceId, userId}: {deviceId: string, userId: string}): Promise<void> {
+    async deleteAllOtherByDeviceIdAndUserId({
+                                                deviceId,
+                                                userId
+                                            }: deleteAllOtherByDeviceIdAndUserIdInputType): Promise<void> {
         await db.getCollections().userDeviceCollection.deleteMany({
-            deviceId: { $ne: deviceId },
-            userId: { $eq: userId }
+            deviceId: {$ne: deviceId},
+            userId: {$eq: userId}
         });
-
-        //return true
     },
-    async deleteByDeviceIdAndUserId({deviceId, userId}: {deviceId: string, userId: string}) {
-        await db.getCollections().userDeviceCollection.deleteOne({
-            deviceId: { $eq: deviceId },
-            userId: { $eq: userId }
-        })
-    },
-    async deleteByDeviceIdAndIat({deviceId, iat}: {deviceId: string, iat: string}): Promise<boolean> {
-        console.log(deviceId, iat)
+    async deleteOneByDeviceIdAndUserId({deviceId, userId}: deleteOneByDeviceIdAndUserIdInputType): Promise<boolean> {
         const deletedInfo: DeleteResult = await db.getCollections().userDeviceCollection.deleteOne({
-            deviceId: { $eq: deviceId },
-            iat: { $eq: iat }
+            deviceId: {$eq: deviceId},
+            userId: {$eq: userId}
         })
+
         return deletedInfo.deletedCount === 1
     },
-    async findOneByDeviceIdAndUserId({deviceId, userId}: {deviceId: string, userId: string}): Promise<WithId<UserDeviceDBType> | null> {
-         return await db.getCollections().userDeviceCollection.findOne(
-            {
-                deviceId,
-                userId
-            }
-        )
+    async deleteOneByDeviceIdAndIAt({deviceId, iat}: deleteOneByDeviceIdAndIAtInputType): Promise<boolean> {
+        const deletedInfo: DeleteResult = await db.getCollections().userDeviceCollection.deleteOne({
+            deviceId: {$eq: deviceId},
+            iat: {$eq: iat}
+        })
+
+        return deletedInfo.deletedCount === 1
     },
-    async findByDeviceId(deviceId: string): Promise<WithId<UserDeviceDBType> | null> {
+    async findByDeviceId(deviceId: string): Promise<UserDeviceDBType | null> {
         return db.getCollections().userDeviceCollection.findOne({deviceId})
     },
-    async findOneByDeviceIdAndIat({deviceId, iat}: {deviceId: string, iat: string}) {
+    async findOneByDeviceIdAndIat({deviceId, iat}: findOneByDeviceIdAndIatInputType) {
         return await db.getCollections().userDeviceCollection.findOne({
             deviceId,
             iat

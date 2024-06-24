@@ -1,26 +1,34 @@
 import {userDeviceMongoRepository} from "../repository/userDeviceMongoRepository";
 import {Result, ResultStatus} from "../../../common/types/result";
-import {WithId} from "mongodb";
 import {UserDeviceDBType} from "../../../db/db-types/user-devices-db-types";
-import {apiAccessLogsRepository} from "../../auth/repository/apiAccessLogsRepository";
+import {apiAccessLogsMongoRepository} from "../../auth/repository/apiAccessLogsMongoRepository";
+import {
+    CheckRateLimitInputServiceType,
+    TerminateAllOtherDeviceSessionsInputServiceType,
+    TerminateDeviceSessionInputServiceType
+} from "../types/inputTypes/securityInputServiceTypes";
 
 export const securityService = {
-    async terminateDevicesExcludedCurrent({deviceId, userId}: { deviceId: string, userId: string }): Promise<Result> {
-        await userDeviceMongoRepository.deleteExcludedCurrent({deviceId, userId})
+    async terminateAllOtherDeviceSessions({
+                                              deviceId,
+                                              userId
+                                          }: TerminateAllOtherDeviceSessionsInputServiceType): Promise<Result> {
+        await userDeviceMongoRepository.deleteAllOtherByDeviceIdAndUserId({deviceId, userId})
         return {
             status: ResultStatus.Success,
             data: null
         }
     },
-    async deleteDevice({deviceId, userId}: { deviceId: string, userId: string }): Promise<Result> {
-        const device: WithId<UserDeviceDBType> | null = await userDeviceMongoRepository.findByDeviceId(deviceId)
-        if(!device) {
+    async terminateDeviceSession({deviceId, userId}: TerminateDeviceSessionInputServiceType): Promise<Result> {
+        const device: UserDeviceDBType | null = await userDeviceMongoRepository.findByDeviceId(deviceId)
+        if (!device) {
             return {
                 status: ResultStatus.NotFound,
                 extensions: [{field: 'deviceId', message: `Device with deviceId ${deviceId} does not exist`}],
                 data: null
             }
         }
+
         if (device.userId !== userId) {
             return {
                 status: ResultStatus.Forbidden,
@@ -29,15 +37,18 @@ export const securityService = {
             }
         }
 
-        await userDeviceMongoRepository.deleteByDeviceIdAndUserId({deviceId, userId})
+        await userDeviceMongoRepository.deleteOneByDeviceIdAndUserId({deviceId, userId})
+
         return {
             status: ResultStatus.Success,
             data: null
         }
     },
-    async checkRateLimit({ip, originUrl}: {ip: string, originUrl: string}): Promise<Result> {
-        const accessLogsCount: number = await apiAccessLogsRepository.countApiLogsByIpAndOriginUrl({ip, originUrl})
-        console.log("accessLogsCount", accessLogsCount)
+    async checkRateLimit({ip, originUrl}: CheckRateLimitInputServiceType): Promise<Result> {
+        const accessLogsCount: number = await apiAccessLogsMongoRepository.countApiAccessLogsByIpAndOriginUrl({
+            ip,
+            originUrl
+        })
         if (accessLogsCount >= 5) {
             return {
                 status: ResultStatus.TooManyRequests,
@@ -46,28 +57,11 @@ export const securityService = {
             }
         }
 
-        console.log("create access log")
-        await apiAccessLogsRepository.createApiAccessLog({ip, originUrl})
+        await apiAccessLogsMongoRepository.createApiAccessLog({ip, originUrl})
 
         return {
             status: ResultStatus.Success,
             data: null
         }
     }
-    // async checkRateLimit({ ip, originUrl }: { ip: string; originUrl: string }): Promise<Result> {
-    //     const accessLogsCount: number = await apiAccessLogsRepository.countApiLogsByIpAndOriginUrl({ ip, originUrl });
-    //     if (accessLogsCount >= 5) {
-    //         return {
-    //             status: ResultStatus.TooManyRequests,
-    //             extensions: [{ field: "requests", message: `Too many requests` }],
-    //             data: null
-    //         };
-    //     }
-    //
-    //     await apiAccessLogsRepository.createApiAccessLog({ ip, originUrl });
-    //     return {
-    //         status: ResultStatus.Success,
-    //         data: null
-    //     };
-    // }
 }

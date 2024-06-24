@@ -1,14 +1,14 @@
 export type LoginInputServiceType = {
     loginOrEmail: string
     password: string
-    ip: string,
-    deviceName: string,
+    ip: string
+    deviceName: string
     refreshToken: string
 }
 
 export type RegistrationInputServiceType = {
-    login: string,
-    password: string,
+    login: string
+    password: string
     email: string
 }
 
@@ -21,7 +21,12 @@ export type RegistrationEmailResendingInputServiceType = {
 }
 
 export type LogoutInputServiceType = {
-    login: string,
-    password: string,
-    email: string
+    deviceId: string
+    iat: string
+}
+
+export type RefreshTokenInputServiceType = {
+    deviceId: string,
+    userId: string,
+    iat: string
 }

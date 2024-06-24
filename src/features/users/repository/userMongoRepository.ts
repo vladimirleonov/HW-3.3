@@ -22,20 +22,10 @@ export const userMongoRepository = {
     findUserByLoginOrEmailField(loginOrEmail: string): Promise<UserDbType | null> {
         return db.getCollections().userCollection.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}]})
     },
-    // findUserByLoginAndEmail(login: string, email: string): Promise<UserDbType | null> {
-    //     return db.getCollections().userCollection.findOne({$or: [{login: login}, {email: email}]})
-    // },
     async create(newUser: UserDbType): Promise<string> {
         const insertedInfo: InsertOneResult<UserDbType> = await db.getCollections().userCollection.insertOne(newUser)
         return insertedInfo.insertedId.toString()
     },
-    // async update(id: string, newUser: DeepPartial<UserDbType>): Promise<boolean> {
-    //     const updatedInfo: UpdateResult<UserDbType> = await db.getCollections().userCollection.updateOne(
-    //         {_id: new ObjectId(id)},
-    //         {$set: {['emailConfirmation.isConfirmed']: newUser}},
-    //     )
-    //     return updatedInfo.matchedCount === 1
-    // },
     async updateIsConfirmed(id: string, isConfirmed: boolean): Promise<boolean> {
         const updatedInfo: UpdateResult<UserDbType> = await db.getCollections().userCollection.updateOne(
             {_id: new ObjectId(id)},
@@ -46,9 +36,11 @@ export const userMongoRepository = {
     async updateConfirmationInfo(id: string, confirmationCode: string, expirationDate: string): Promise<boolean> {
         const updatedInfo: UpdateResult<UserDbType> = await db.getCollections().userCollection.updateOne(
             {_id: new ObjectId(id)},
-            {$set: {
-                ['emailConfirmation.confirmationCode']: confirmationCode,
-                ['emailConfirmation.expirationDate']: expirationDate}
+            {
+                $set: {
+                    ['emailConfirmation.confirmationCode']: confirmationCode,
+                    ['emailConfirmation.expirationDate']: expirationDate
+                }
             }
         )
         return updatedInfo.matchedCount === 1

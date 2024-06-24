@@ -7,7 +7,7 @@ import {RegistrationConfirmationInputControllerType} from "../types/inputTypes/a
 export const registrationConfirmationController = async (req: Request<{}, {}, RegistrationConfirmationInputControllerType>, res: Response) => {
     try {
         const result: Result<Boolean | null> = await authService.confirmRegistration(req.body);
-        if(result.status === ResultStatus.BadRequest) {
+        if (result.status === ResultStatus.BadRequest) {
             res.status(HTTP_CODES.BAD_REQUEST).send({
                 errorsMessages: result.extensions
             })

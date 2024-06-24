@@ -3,24 +3,22 @@ import {jwtAdapter} from "../../../common/adapters/jwt.adapter"
 import {Result, ResultStatus} from "../../../common/types/result"
 import {cryptoAdapter} from "../../../common/adapters/crypto.adapter"
 import {userMongoRepository} from "../../users/repository/userMongoRepository";
-import {ObjectId, WithId} from "mongodb";
+import {ObjectId} from "mongodb";
 import {randomUUID} from "node:crypto";
 import {add} from "date-fns";
 import {nodemailerAdapter} from "../../../common/adapters/nodemailer.adapter";
 import {registrationEmailTemplate} from "../../../common/email-templates/registrationEmailTemplate";
 import {
-    LoginInputServiceType,
+    LoginInputServiceType, LogoutInputServiceType, RefreshTokenInputServiceType,
     RegistrationConfirmationInputServiceType,
     RegistrationEmailResendingInputServiceType,
     RegistrationInputServiceType,
 } from "../types/inputTypes/authInputServiceTypes";
-import {LoginOutputServiceType} from "../types/outputTypes/authOutputServiceTypes";
+import {LoginOutputServiceType, RefreshTokenOutputServiceType} from "../types/outputTypes/authOutputServiceTypes";
 import {JwtPayload} from "jsonwebtoken";
-import {JwtAccessTokenPayloadCustomType, JwtRefreshTokenPayloadCustomType} from "../../../common/types/jwtPayloadType";
 import {userDeviceMongoRepository} from "../../security/repository/userDeviceMongoRepository";
 import {UserDeviceDBType} from "../../../db/db-types/user-devices-db-types";
 import {unixToISOString} from "../../../common/helpers/unixToISOString";
-
 
 export const authService = {
     async registration(input: RegistrationInputServiceType): Promise<Result> {
@@ -178,13 +176,13 @@ export const authService = {
             }
         }
 
-        const JwtAccessTokenPayload: JwtAccessTokenPayloadCustomType = {
+        const JwtAccessTokenPayload: JwtPayload = {
             userId: user._id.toString()
         }
 
         const deviceId: string = randomUUID()
-        console.log("deviceId authSrvice", deviceId)
-        const JwtRefreshTokenPayload: JwtRefreshTokenPayloadCustomType = {
+
+        const JwtRefreshTokenPayload: JwtPayload = {
             userId: user._id.toString(),
             deviceId: deviceId
         }
@@ -192,12 +190,7 @@ export const authService = {
         const accessToken: string = jwtAdapter.generateToken(JwtAccessTokenPayload, '10s')
         const refreshToken: string = jwtAdapter.generateToken(JwtRefreshTokenPayload, '20s')
 
-        /////
-        //user_id  device_id  iat  device_name  ip  exp
-        /////
-
         const decodedRefreshToken: string | JwtPayload | null = jwtAdapter.decode(refreshToken)
-        console.log(decodedRefreshToken)
         if (decodedRefreshToken && typeof decodedRefreshToken !== 'string') {
             const {iat, exp} = decodedRefreshToken
 
@@ -205,15 +198,14 @@ export const authService = {
             const ip: string = input.ip
 
             const newUserDevice: UserDeviceDBType = {
+                _id: new ObjectId(),
                 userId: user._id.toString(),
                 deviceId: decodedRefreshToken.deviceId,
                 iat: unixToISOString(iat),
                 deviceName: deviceName,
                 ip: ip,
-                exp: unixToISOString(iat)
+                exp: unixToISOString(exp)
             }
-
-            console.log(newUserDevice)
 
             await userDeviceMongoRepository.create(newUserDevice)
 
@@ -225,41 +217,32 @@ export const authService = {
                 }
             }
         }
-        /////
 
         return {
             status: ResultStatus.Unauthorized,
             data: null
         }
     },
-    async refreshToken({deviceId, userId, iat: issuedAt}: {
-        deviceId: string,
-        userId: string,
-        iat: string
-    }): Promise<Result<
-        {
-            accessToken: string,
-            refreshToken: string
-        } | null
+    async refreshToken({deviceId, userId, iat: issuedAt}: RefreshTokenInputServiceType): Promise<Result<
+        RefreshTokenOutputServiceType | null
     >> {
-        const device: WithId<UserDeviceDBType> | null = await userDeviceMongoRepository.findOneByDeviceIdAndIat({
+        const device: UserDeviceDBType | null = await userDeviceMongoRepository.findOneByDeviceIdAndIat({
             deviceId,
             iat: issuedAt
         })
         if (!device) {
             return {
                 status: ResultStatus.Unauthorized,
-                //?
                 extensions: [{field: 'refreshToken', message: 'Invalid refresh token'}],
                 data: null
             }
         }
 
-        const JwtAccessTokenPayload: JwtAccessTokenPayloadCustomType = {
+        const JwtAccessTokenPayload: JwtPayload = {
             userId: userId
         }
 
-        const JwtRefreshTokenPayload: JwtRefreshTokenPayloadCustomType = {
+        const JwtRefreshTokenPayload: JwtPayload = {
             userId: userId,
             deviceId: deviceId
         }
@@ -273,7 +256,7 @@ export const authService = {
 
             const issuedAt: string = unixToISOString(iat)
 
-            const isUpdated: boolean = await userDeviceMongoRepository.updateOne({deviceId, iat: issuedAt})
+            const isUpdated: boolean = await userDeviceMongoRepository.update({deviceId, iat: issuedAt})
             if (!isUpdated) {
                 return {
                     status: ResultStatus.Unauthorized,
@@ -296,126 +279,22 @@ export const authService = {
             data: null
         }
     },
-    // async refreshToken(token: string): Promise<Result<RefreshTokenOutputServiceType | null>> {
-    // let payload: JwtRefreshTokenPayloadCustomType
-    // try {
-    //     payload = jwtAdapter.verifyToken(token) as JwtRefreshTokenPayloadCustomType
-    //     if (!payload || !payload.deviceId) {
-    //         return {
-    //             status: ResultStatus.Unauthorized,
-    //             extensions: [{field: 'refreshToken', message: 'Invalid refresh token'}],
-    //             data: null
-    //         }
-    //     }
-    // } catch (err) {
-    //     console.error('Token verification failed:', err)
-    //     return {
-    //         status: ResultStatus.Unauthorized,
-    //         extensions: [{field: 'refreshToken', message: 'Invalid refresh token'}],
-    //         data: null
-    //     }
-    // }
-    //
-    // const isRevoked: RevokedTokenDbType | null = await revokedTokenRepository.findByToken(token)
-    // if(isRevoked) {
-    //     return {
-    //         status: ResultStatus.Unauthorized,
-    //         extensions: [{field: 'refreshToken', message: 'Refresh token has expired'}],
-    //         data: null
-    //     }
-    // }
-    //
-    // const user: UserDbType | null = await userMongoRepository.findUserById(payload.userId)
-    // if (!user) {
-    //     return {
-    //         status: ResultStatus.Unauthorized,
-    //         extensions: [{field: 'refreshToken', message: 'No user found'}],
-    //         data: null
-    //     }
-    // }
-    //
-    // //!!!
-    // const jwtPayload: JwtAccessTokenPayloadCustomType = {
-    //     userId: user._id.toString()
-    // }
-    //
-    // await revokedTokenRepository.create(token, payload.userId)
-    //
-    // const accessToken: string = jwtAdapter.generateToken(jwtPayload, '10s')
-    // const refreshToken: string = jwtAdapter.generateToken(jwtPayload, '20s')
-    //
-    // return {
-    //     status: ResultStatus.Success,
-    //     data: {
-    //         accessToken,
-    //         refreshToken
-    //     }
-    // }
-    // },
-    async logout({deviceId, iat}: { deviceId: string, iat: string }): Promise<Result> {
-        // const isRevoked: RevokedTokenDbType | null = await revokedTokenRepository.findByToken(token)
-        // if(isRevoked) {
-        //     return {
-        //         status: ResultStatus.Unauthorized,
-        //         extensions: [{field: 'refreshToken', message: 'Refresh token has expired'}],
-        //         data: null
-        //     }
-        // }
-
-        const isDelited: boolean = await userDeviceMongoRepository.deleteByDeviceIdAndIat({deviceId, iat})
-        console.log(isDelited)
-        if (!isDelited) {
+    async logout({deviceId, iat}: LogoutInputServiceType): Promise<Result> {
+        const isDeleted: boolean = await userDeviceMongoRepository.deleteOneByDeviceIdAndIAt({deviceId, iat})
+        if (!isDeleted) {
             return {
                 status: ResultStatus.Unauthorized,
                 extensions: [{field: 'refreshToken', message: 'Invalid or expired refresh token'}],
                 data: null
             }
         }
-        //await revokedTokenRepository.create(token, payload.userId)
 
         return {
             status: ResultStatus.Success,
             data: null
         }
     },
-    // async logout (token: string): Promise<Result> {
-    //     console.log(token)
-    //     let payload: JwtPayload
-    //     try {
-    //         payload = jwtAdapter.verifyToken(token) as JwtPayload
-    //         if (!payload || !payload.userId) {
-    //             return {
-    //                 status: ResultStatus.Unauthorized,
-    //                 extensions: [{field: 'refreshToken', message: 'Invalid refresh token'}],
-    //                 data: null
-    //             }
-    //         }
-    //     } catch (err) {
-    //         console.error('Token verification failed:', err)
-    //         return {
-    //             status: ResultStatus.Unauthorized,
-    //             extensions: [{field: 'refreshToken', message: 'Invalid refresh token'}],
-    //             data: null
-    //         }
-    //     }
-    //
-    //     const isRevoked: RevokedTokenDbType | null = await revokedTokenRepository.findByToken(token)
-    //     if(isRevoked) {
-    //         return {
-    //             status: ResultStatus.Unauthorized,
-    //             extensions: [{field: 'refreshToken', message: 'Refresh token has expired'}],
-    //             data: null
-    //         }
-    //     }
-    //
-    //     await revokedTokenRepository.create(token, payload.userId)
-    //
-    //     return {
-    //         status: ResultStatus.Success,
-    //         data: null
-    //     }
-    // },
-    async checkAccessToken(authHeader: string): Promise<Result<JwtAccessTokenPayloadCustomType | null>> {
+    async checkAccessToken(authHeader: string): Promise<Result<JwtPayload | null>> {
         if (!authHeader.startsWith('Bearer ')) {
             return {
                 status: ResultStatus.Unauthorized,
@@ -433,9 +312,9 @@ export const authService = {
             }
         }
 
-        let payload: JwtAccessTokenPayloadCustomType
+        let payload: JwtPayload
         try {
-            payload = jwtAdapter.verifyToken(token) as JwtAccessTokenPayloadCustomType
+            payload = jwtAdapter.verifyToken(token) as JwtPayload
             if (!payload || !payload.userId) {
                 return {
                     status: ResultStatus.Unauthorized,
@@ -477,7 +356,7 @@ export const authService = {
                 }
             }
 
-            //? we check in refresh if device exist
+            //? check if user exist by userId (may also check match user to deviceId)
             const user: UserDbType | null = await userMongoRepository.findUserById(payload.userId)
             if (!user) {
                 return {

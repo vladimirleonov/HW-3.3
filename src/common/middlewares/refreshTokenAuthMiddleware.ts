@@ -13,7 +13,6 @@ export const refreshTokenAuthMiddleware = async (req: Request, res: Response, ne
     }
 
     const result: Result<JwtPayload | null> = await authService.checkRefreshToken(refreshToken)
-    //console.log("refreshTokenAuthMiddleware", result.data)
     if (result.status === ResultStatus.Unauthorized) {
         console.error("refreshTokenAuthMiddleware")
         res.status(HTTP_CODES.UNAUTHORIZED).send()
@@ -27,6 +26,5 @@ export const refreshTokenAuthMiddleware = async (req: Request, res: Response, ne
         //?
         iat: unixToISOString(iat)
     }
-    console.log("req.refreshTokenPayload", req.device)
     next()
 }

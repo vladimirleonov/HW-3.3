@@ -9,17 +9,19 @@ import {LoginOutputServiceType} from "../types/outputTypes/authOutputServiceType
 import {getIpAddress} from "../../../common/helpers/getIpAddress";
 import {getDeviceName} from "../../../common/helpers/getDeviceName";
 
-
 export const loginController = async (req: Request<{}, LoginOutputControllerType, LoginInputControllerType>, res: Response<LoginOutputControllerType | ErrorsMessagesType>) => {
     try {
         let ip: string = getIpAddress(req)
         let deviceName: string = getDeviceName(req)
-        console.log("ip", ip)
-        console.log("deviceName", deviceName)
 
-        const refreshToken  = req.cookies?.refreshToken
+        const refreshToken = req.cookies?.refreshToken
 
-        const result: Result<LoginOutputServiceType | null> = await authService.login({...req.body, ip, deviceName, refreshToken})
+        const result: Result<LoginOutputServiceType | null> = await authService.login({
+            ...req.body,
+            ip,
+            deviceName,
+            refreshToken
+        })
         if (result.status === ResultStatus.BadRequest) {
             res.status(HTTP_CODES.UNAUTHORIZED).send({
                 errorsMessages: result.extensions || [],
@@ -42,30 +44,3 @@ export const loginController = async (req: Request<{}, LoginOutputControllerType
         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
     }
 }
-
-
-// export const loginController = async (req: Request<{}, LoginOutputControllerType, LoginInputControllerType>, res: Response<LoginOutputControllerType | ErrorsMessagesType>) => {
-//     try {
-//         const result: Result<LoginOutputServiceType | null> = await authService.login(req.body)
-//         if (result.status === ResultStatus.BadRequest) {
-//             res.status(HTTP_CODES.UNAUTHORIZED).send({
-//                 errorsMessages: result.extensions || [],
-//             })
-//             return
-//         }
-//
-//         res.cookie('refreshToken', result.data?.refreshToken, {
-//             httpOnly: true, // cookie can only be accessed via http or https
-//             secure: true,
-//             //secure: process.env.NODE_ENV === 'production', // send cookie only over https
-//             sameSite: 'strict' // protects against CSRF attacks
-//         })
-//
-//         res.status(HTTP_CODES.OK).send({
-//             accessToken: result.data?.accessToken!
-//         })
-//     } catch (err) {
-//         console.error('loginController', err);
-//         res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send()
-//     }
-// }
