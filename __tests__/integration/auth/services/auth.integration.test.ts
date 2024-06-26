@@ -11,6 +11,15 @@ import {
     LoginOutputServiceType,
     RefreshTokenOutputServiceType
 } from "../../../../src/features/auth/types/outputTypes/authOutputServiceTypes";
+import {base64Adapter} from "../../../../src/common/adapters/base64.adapter";
+import {cryptoAdapter} from "../../../../src/common/adapters/crypto.adapter";
+import {
+    LogoutInputServiceType,
+    RefreshTokenInputServiceType
+} from "../../../../src/features/auth/types/inputTypes/authInputServiceTypes";
+import {JwtPayload} from "jsonwebtoken";
+import {jwtAdapter} from "../../../../src/common/adapters/jwt.adapter";
+import {unixToISOString} from "../../../../src/common/helpers/unixToISOString";
 
 describe('User registration', () => {
     const registrationUserUseCase = authService.registration
@@ -133,7 +142,7 @@ describe('User registration email resending', () => {
     beforeEach(async () => {
         await db.drop()
     })
-    it('should not resend email registration', async () => {
+    it(`should not resend email registration, user with email doesn't exist`, async () => {
         const result: Result = await registrationEmailResendingUseCase({email: 'qwerty@gmail.com'})
 
         expect(result.status).toBe(ResultStatus.BadRequest)
@@ -141,23 +150,6 @@ describe('User registration email resending', () => {
 
         expect(nodemailerAdapter.sendEmail).not.toHaveBeenCalled()
     });
-    // it('should not resend email registration if email already confirmed', async () => {
-    //     const user = await testSeeder.registerUser(
-    //         'test',
-    //         'test@gmail.com',
-    //         'test1234',
-    //         '1234567890',
-    //         undefined,
-    //         true
-    //     )
-    //
-    //     const result: Result = await registrationEmailResendingUseCase({email: user.email})
-    //
-    //     expect(result.status).toBe(ResultStatus.BadRequest)
-    //     expect(result.data).toBeNull()
-    //
-    //     expect(nodemailerAdapter.sendEmail).not.toHaveBeenCalled()
-    // });
     it('should confirm registration', async () => {
         const user = await testSeeder.registerUser(
             'test',
@@ -174,200 +166,246 @@ describe('User registration email resending', () => {
     });
 })
 
-// describe('User login', () => {
-//     const loginUserUseCase = authService.login
-//
-//     beforeAll(async () => {
-//         const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
-//         await db.run(mongoServer.getUri())
-//     })
-//     afterAll(async () => {
-//         await db.stop()
-//     })
-//     beforeEach(async () => {
-//         await db.drop()
-//         jest.resetAllMocks()
-//     })
-//     it('should login user with correct data', async () => {
-//         const user = await testSeeder.registerUser(
-//             'test123411',
-//             'test12adasd@gmail.com',
-//             'testtest1234',
-//             undefined,
-//             undefined,
-//             true
-//         )
-//
-//         const userToLogin = {
-//             loginOrEmail: 'test12adasd@gmail.com',
-//             password: 'testtest1234'
-//         }
-//
-//         const result: Result<LoginOutputServiceType | null> = await loginUserUseCase(userToLogin)
-//
-//         expect(result.status).toBe(ResultStatus.Success)
-//     });
-//     it('should not login user not confirmed', async () => {
-//         const user = await testSeeder.registerUser(
-//             'test1234',
-//             'test@gmail.com',
-//             'testtest1234'
-//         )
-//
-//         const result: Result<LoginOutputServiceType | null> = await loginUserUseCase({loginOrEmail: user.login, password: user.password})
-//
-//         expect(result.status).toBe(ResultStatus.BadRequest)
-//     });
-//     it('should not login user does not exist', async () => {
-//         const userToLogin = {
-//             loginOrEmail: 'test1234',
-//             password: 'testtest1234'
-//         }
-//
-//         const result: Result<LoginOutputServiceType | null> = await loginUserUseCase(userToLogin)
-//
-//         expect(result.status).toBe(ResultStatus.BadRequest)
-//     });
-// });
-//
-// describe('Refresh token', () => {
-//     const refreshTokenUseCase = authService.refreshToken
-//     const loginUserUseCase = authService.login
-//
-//     beforeAll(async () => {
-//         const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
-//         await db.run(mongoServer.getUri())
-//     })
-//     afterAll(async () => {
-//         await db.stop()
-//     })
-//     beforeEach(async () => {
-//         await db.drop()
-//         jest.resetAllMocks()
-//     })
-//     it('should return unauthorized for an invalid token', async () => {
-//         const invalidToken: string = 'fajfjwqwhrfsnad'
-//         const result: Result<RefreshTokenOutputServiceType | null> = await refreshTokenUseCase(invalidToken)
-//
-//         expect(result.status).toBe(ResultStatus.Unauthorized)
-//     })
-//     it('should return unauthorized for revoked token', async () => {
-//         const user = await testSeeder.registerUser(
-//             'test123411',
-//             'test12adasd@gmail.com',
-//             'testtest1234',
-//             undefined,
-//             undefined,
-//             true
-//         )
-//
-//         const userToLogin = {
-//             loginOrEmail: 'test12adasd@gmail.com',
-//             password: 'testtest1234'
-//         }
-//
-//         const loginResult: Result<LoginOutputServiceType | null> = await loginUserUseCase(userToLogin)
-//         expect(loginResult.status).toBe(ResultStatus.Success)
-//         const refreshToken_1: string = loginResult.data!.refreshToken
-//
-//         const refreshTokenResult_1: Result<RefreshTokenOutputServiceType | null> = await refreshTokenUseCase(refreshToken_1)
-//         expect(refreshTokenResult_1.status).toBe(ResultStatus.Success)
-//         const refreshToken_2 = refreshTokenResult_1.data!.refreshToken
-//
-//         const secondRefreshTokenResult: Result<RefreshTokenOutputServiceType | null> = await refreshTokenUseCase(refreshToken_1)
-//
-//         expect(secondRefreshTokenResult.status).toBe(ResultStatus.Unauthorized)
-//     })
-//     it('should successfully refresh token', async () => {
-//         const user = await testSeeder.registerUser(
-//             'test123411',
-//             'test12adasd@gmail.com',
-//             'testtest1234',
-//             undefined,
-//             undefined,
-//             true
-//         )
-//
-//         const userToLogin = {
-//             loginOrEmail: 'test12adasd@gmail.com',
-//             password: 'testtest1234'
-//         }
-//
-//         const loginResult: Result<LoginOutputServiceType | null> = await loginUserUseCase(userToLogin)
-//         expect(loginResult.status).toBe(ResultStatus.Success)
-//         const refreshToken: string = loginResult.data!.refreshToken
-//
-//         const refreshTokenResult: Result<RefreshTokenOutputServiceType | null> = await refreshTokenUseCase(refreshToken)
-//         expect(refreshTokenResult.status).toBe(ResultStatus.Success)
-//     })
-// })
-//
-// describe('logout', () => {
-//     const logoutUserUseCase = authService.logout
-//     const loginUserUseCase = authService.login
-//     const refreshTokenUseCase = authService.refreshToken
-//
-//     beforeAll(async () => {
-//         const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
-//         await db.run(mongoServer.getUri())
-//     })
-//     afterAll(async () => {
-//         await db.stop()
-//     })
-//     beforeEach(async () => {
-//         await db.drop()
-//         jest.resetAllMocks()
-//     })
-//     it('should return unauthorized for an invalid token', async () => {
-//         const invalidToken = 'afafasgaewrs'
-//         const result: Result<RefreshTokenOutputServiceType | null> = await logoutUserUseCase(invalidToken)
-//
-//         expect(result.status).toBe(ResultStatus.Unauthorized)
-//     })
-//     it('should return unauthorized for revoked token', async () => {
-//         const user = await testSeeder.registerUser(
-//             'test123411',
-//             'test12adasd@gmail.com',
-//             'testtest1234',
-//             undefined,
-//             undefined,
-//             true
-//         )
-//
-//         const userToLogin = {
-//             loginOrEmail: 'test12adasd@gmail.com',
-//             password: 'testtest1234'
-//         }
-//
-//         const loginResult: Result<LoginOutputServiceType | null> = await loginUserUseCase(userToLogin)
-//         expect(loginResult.status).toBe(ResultStatus.Success)
-//
-//         const refreshTokenResult: Result<RefreshTokenOutputServiceType | null> = await refreshTokenUseCase(loginResult.data!.refreshToken)
-//         expect(refreshTokenResult.status).toBe(ResultStatus.Success)
-//
-//         const logoutResult: Result = await logoutUserUseCase(loginResult.data!.refreshToken)
-//         expect(logoutResult.status).toBe(ResultStatus.Unauthorized)
-//     })
-//     it('should successfully logout', async () => {
-//         const user = await testSeeder.registerUser(
-//             'test123411',
-//             'test12adasd@gmail.com',
-//             'testtest1234',
-//             undefined,
-//             undefined,
-//             true
-//         )
-//
-//         const userToLogin = {
-//             loginOrEmail: 'test12adasd@gmail.com',
-//             password: 'testtest1234'
-//         }
-//
-//         const loginResult: Result<LoginOutputServiceType | null> = await loginUserUseCase(userToLogin)
-//         expect(loginResult.status).toBe(ResultStatus.Success)
-//
-//         const logoutResult: Result = await logoutUserUseCase(loginResult.data!.refreshToken)
-//         expect(logoutResult.status).toBe(ResultStatus.Success)
-//         expect(logoutResult.data).toBeNull()
-//     })
-// })
+describe('User login', () => {
+    const loginUserUseCase = authService.login
+
+    const ip: string = '103.12.64.107'
+    const deviceName: string = 'Mozilla/5.0'
+    const refreshToken: string = 'fakeToken'
+
+    const login: string = 'test12adasd'
+    const email: string = 'test12adasd@gmail.com'
+    const password: string = 'testtest1234'
+
+    beforeAll(async () => {
+        const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
+        await db.run(mongoServer.getUri())
+    })
+    afterAll(async () => {
+        await db.stop()
+    })
+    beforeEach(async () => {
+        await db.drop()
+        jest.resetAllMocks()
+    })
+    it('should login user with correct data', async () => {
+        await testSeeder.registerUser(
+            login,
+            email,
+            password,
+            undefined,
+            undefined,
+            true
+        )
+
+        const userToLogin = {
+            loginOrEmail: email,
+            password: password,
+            ip: ip,
+            deviceName: deviceName,
+            refreshToken: refreshToken
+        }
+
+        const result: Result<LoginOutputServiceType | null> = await loginUserUseCase(userToLogin)
+
+        expect(result.status).toBe(ResultStatus.Success)
+    });
+    it('should not login user with correct refresh token. User should log out first!', async () => {
+        await testSeeder.registerUser(
+            login,
+            email,
+            password,
+            undefined,
+            undefined,
+            true
+        )
+
+        const userToLogin_1 = {
+            loginOrEmail: email,
+            password: password,
+            ip: ip,
+            deviceName: deviceName,
+            refreshToken: refreshToken
+        }
+
+        const loginResult_1: Result<LoginOutputServiceType | null> = await loginUserUseCase(userToLogin_1)
+
+        const userToLogin_2 = {
+            loginOrEmail: email,
+            password: password,
+            ip: ip,
+            deviceName: deviceName,
+            refreshToken: loginResult_1.data!.refreshToken
+        }
+
+        const loginResult_2: Result<LoginOutputServiceType | null> = await loginUserUseCase(userToLogin_2)
+
+        expect(loginResult_2.status).toBe(ResultStatus.BadRequest)
+    });
+    it('should not login user not found by login', async () => {
+        const userToLogin = {
+            loginOrEmail: email,
+            password: password,
+            ip: ip,
+            deviceName: deviceName,
+            refreshToken: refreshToken
+        }
+
+        const result: Result<LoginOutputServiceType | null> = await loginUserUseCase(userToLogin)
+
+        expect(result.status).toBe(ResultStatus.BadRequest)
+    });
+    it('should not login user not confirmed', async () => {
+        await testSeeder.registerUser(
+            login,
+            email,
+            password,
+            undefined,
+            undefined,
+            false
+        )
+
+        const userToLogin = {
+            loginOrEmail: email,
+            password: password,
+            ip: ip,
+            deviceName: deviceName,
+            refreshToken: refreshToken
+        }
+
+        const result: Result<LoginOutputServiceType | null> = await loginUserUseCase(userToLogin)
+
+        expect(result.status).toBe(ResultStatus.BadRequest)
+    });
+});
+
+describe('Refresh token', () => {
+    const refreshTokenUseCase = authService.refreshToken
+    const loginUserUseCase = authService.login
+
+    beforeAll(async () => {
+        const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
+        await db.run(mongoServer.getUri())
+    })
+    afterAll(async () => {
+        await db.stop()
+    })
+    beforeEach(async () => {
+        await db.drop()
+        jest.resetAllMocks()
+    })
+    it('should return unauthorized, device session not found', async () => {
+        const deviceId: string = '123'
+        const userId: string = '123'
+        const iat: string = '123'
+
+        const result: Result<RefreshTokenOutputServiceType | null> = await refreshTokenUseCase({deviceId, userId, iat})
+
+        expect(result.status).toBe(ResultStatus.Unauthorized)
+    })
+    it('should successfully refresh token', async () => {
+        const ip: string = '103.12.64.107'
+        const deviceName: string = 'Mozilla/5.0'
+        const refreshToken: string = 'fakeToken'
+
+        const login: string = 'test12adasd'
+        const email: string = 'test12adasd@gmail.com'
+        const password: string = 'testtest1234'
+
+        const user = await testSeeder.registerUser(
+            login,
+            email,
+            password,
+            undefined,
+            undefined,
+            true
+        )
+
+        const userToLogin = {
+            loginOrEmail: email,
+            password: password,
+            ip,
+            deviceName,
+            refreshToken
+        }
+
+        const loginResult: Result<LoginOutputServiceType | null> = await loginUserUseCase(userToLogin)
+        expect(loginResult.status).toBe(ResultStatus.Success)
+
+        const decodedRefreshToken: string | JwtPayload | null = jwtAdapter.decode(loginResult.data!.refreshToken)
+
+        const {iat, deviceId, userId} = decodedRefreshToken as JwtPayload
+
+        const refreshTokenInputServiceType: RefreshTokenInputServiceType = {
+            deviceId,
+            userId,
+            iat: unixToISOString(iat)
+        }
+
+        const refreshTokenResult: Result<RefreshTokenOutputServiceType | null> = await refreshTokenUseCase(refreshTokenInputServiceType)
+        expect(refreshTokenResult.status).toBe(ResultStatus.Success)
+    })
+})
+
+describe('logout', () => {
+    const ip: string = '103.12.64.107'
+    const deviceName: string = 'Mozilla/5.0'
+    const refreshToken: string = 'fakeToken'
+
+    const login: string = 'test12adasd'
+    const email: string = 'test12adasd@gmail.com'
+    const password: string = 'testtest1234'
+
+    const logoutUserUseCase = authService.logout
+    const loginUserUseCase = authService.login
+    const refreshTokenUseCase = authService.refreshToken
+
+    beforeAll(async () => {
+        const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
+        await db.run(mongoServer.getUri())
+    })
+    afterAll(async () => {
+        await db.stop()
+    })
+    beforeEach(async () => {
+        await db.drop()
+        jest.resetAllMocks()
+    })
+    it('should successfully logout', async () => {
+        await testSeeder.registerUser(
+            login,
+            email,
+            password,
+            undefined,
+            undefined,
+            true
+        )
+
+        const userToLogin = {
+            loginOrEmail: email,
+            password: password,
+            ip: ip,
+            deviceName: deviceName,
+            refreshToken: refreshToken
+        }
+
+        const loginResult: Result<LoginOutputServiceType | null> = await loginUserUseCase(userToLogin)
+        expect(loginResult.status).toBe(ResultStatus.Success)
+
+        const decodedRefreshToken: string | JwtPayload | null = jwtAdapter.decode(loginResult.data!.refreshToken)
+
+        const {iat, deviceId} = decodedRefreshToken as JwtPayload
+
+        const logoutInput: LogoutInputServiceType = {
+            deviceId,
+            iat: unixToISOString(iat)
+        }
+
+        const logoutResult: Result = await logoutUserUseCase(logoutInput)
+        expect(logoutResult.status).toBe(ResultStatus.Success)
+    })
+    it('should not logout device, deviceId and iat does not exist', async () => {
+        const logoutResult: Result = await logoutUserUseCase({deviceId: '123', iat: '123'})
+        expect(logoutResult.status).toBe(ResultStatus.Unauthorized)
+    })
+})
