@@ -11,8 +11,6 @@ import {
     LoginOutputServiceType,
     RefreshTokenOutputServiceType
 } from "../../../../src/features/auth/types/outputTypes/authOutputServiceTypes";
-import {base64Adapter} from "../../../../src/common/adapters/base64.adapter";
-import {cryptoAdapter} from "../../../../src/common/adapters/crypto.adapter";
 import {
     LogoutInputServiceType,
     RefreshTokenInputServiceType
@@ -21,7 +19,7 @@ import {JwtPayload} from "jsonwebtoken";
 import {jwtAdapter} from "../../../../src/common/adapters/jwt.adapter";
 import {unixToISOString} from "../../../../src/common/helpers/unixToISOString";
 
-describe('User registration', () => {
+describe('User auth', () => {
     const registrationUserUseCase = authService.registration
     // nodemailerAdapter.sendEmail = nodemailerAdapterMock.sendEmail
     // nodemailerAdapter.sendEmail = jest.fn()// just function, but not returns anything

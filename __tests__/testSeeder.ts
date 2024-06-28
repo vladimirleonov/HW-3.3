@@ -83,5 +83,8 @@ export const testSeeder = {
             id: res.insertedId.toString(),
             ...userWithoutId
         }
+    },
+    async getDevices() {
+        return db.getCollections().userDeviceCollection.find({}).toArray()
     }
 }
