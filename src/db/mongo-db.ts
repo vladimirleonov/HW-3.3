@@ -6,6 +6,7 @@ import {UserDbType} from "./db-types/user-db-types";
 import {CommentDbType} from "./db-types/comment-db-types";
 import {RevokedTokenDbType} from "./db-types/refreshToken-db-types";
 import {UserDeviceDBType} from "./db-types/user-devices-db-types";
+import {setupIndexes} from "./setupIndexes";
 
 export const db = {
     client: {} as MongoClient,
@@ -24,6 +25,12 @@ export const db = {
             await this.client.connect()
             await this.getDBName().command({ping: 1})
             console.log("Connected successfully to mongo server")
+
+            //await this.createCollections()
+
+            // set up indexes
+            await setupIndexes()
+
             return true
         } catch (err: unknown) {
             console.log("Can't connect to mongo server", err)
@@ -49,6 +56,20 @@ export const db = {
         } catch (err) {
             console.error('Error in drop db', err)
             await this.stop()
+        }
+    },
+    async createCollections(): Promise<void> {
+        try {
+            await this.getDBName().createCollection(SETTINGS.BLOG_COLLECTION_NAME as string);
+            await this.getDBName().createCollection(SETTINGS.POST_COLLECTION_NAME as string);
+            await this.getDBName().createCollection(SETTINGS.USER_COLLECTION_NAME as string);
+            await this.getDBName().createCollection(SETTINGS.COMMENT_COLLECTION_NAME as string);
+            await this.getDBName().createCollection(SETTINGS.REVOKED_TOKEN_COLLECTION_NAME as string);
+            await this.getDBName().createCollection(SETTINGS.USER_DEVICE_COLLECTION_NAME as string);
+            await this.getDBName().createCollection(SETTINGS.API_ACCESS_LOGS_COLLECTION_NAME as string);
+        } catch (err) {
+            console.error('Error creating collections', err);
+            await this.stop();
         }
     },
     getCollections() {

@@ -4,7 +4,7 @@ import {securityService} from "../../../../src/features/security/services/securi
 import {ResultStatus} from "../../../../src/common/types/result";
 import {Result} from "../../../../src/common/types/result";
 
-describe('Check RateLimit Test', () => {
+describe('Check RateLimit', () => {
     const checkRateLimitUseCase = securityService.checkRateLimit
 
     const ips: string[] = ['10.0.0.1', '10.0.0.2']
@@ -26,19 +26,18 @@ describe('Check RateLimit Test', () => {
             const result: Result = await checkRateLimitUseCase({ip: ips[0], originUrl: originUrls[0]})
             expect(result.status).toBe(ResultStatus.Success)
         }
-        for (let i = 0; i < 4; i++) {
-            const result = await checkRateLimitUseCase({ip: ips[1], originUrl: originUrls[1]})
+        for (let i: number = 0; i < 4; i++) {
+            const result: Result = await checkRateLimitUseCase({ip: ips[1], originUrl: originUrls[1]})
             expect(result.status).toBe(ResultStatus.Success)
         }
-        //expect(1).toBe(1)
     })
     it('should check rate limit tooManyRequests for 5 and more requests from one ip', async () => {
         for (let i: number = 0; i < 5; i++) {
             const result: Result = await checkRateLimitUseCase({ip: ips[0], originUrl: originUrls[0]})
             expect(result.status).toBe(ResultStatus.Success)
         }
-        for (let i = 0; i < 6; i++) {
-            const result = await checkRateLimitUseCase({ip: ips[1], originUrl: originUrls[1]})
+        for (let i: number = 0; i < 6; i++) {
+            const result: Result = await checkRateLimitUseCase({ip: ips[1], originUrl: originUrls[1]})
             if (i >= 5) {
                 console.log(i)
                 expect(result.status).toBe(ResultStatus.TooManyRequests)
