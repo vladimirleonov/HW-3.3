@@ -1,4 +1,4 @@
-import {PostDbType, PostDocument} from "../../../db/db-types/post-db-types"
+import {PostDbType, PostDocument, PostModel} from "../../../db/models/post.model"
 import {PostBodyInputType} from "../input-output-types/post-types"
 import {db} from "../../../db/mongoose-db-connection"
 import {DeleteResult, ObjectId, UpdateResult} from "mongodb"
@@ -16,7 +16,7 @@ export const postMongoRepository = {
     //     return insertedInfo.insertedId.toString()
     // },
     async update(id: string, {blogId, ...restInput}: PostBodyInputType): Promise<boolean> {
-        const updatedInfo: UpdateResult<PostDbType> = await db.getCollections().postCollection.updateOne(
+        const updatedInfo: UpdateResult<PostDbType> = await PostModel.postCollection.updateOne(
             {_id: new ObjectId(id)},
             {
                 $set: {
@@ -29,12 +29,12 @@ export const postMongoRepository = {
         return updatedInfo.matchedCount === 1
     },
     async delete(id: string): Promise<boolean> {
-        const deletedInfo: DeleteResult = await db.getCollections().postCollection.deleteOne({_id: new ObjectId(id)})
+        const deletedInfo: DeleteResult = await PostModel.deleteOne({_id: new ObjectId(id)})
         return deletedInfo.deletedCount === 1
     },
     async findById(id: string): Promise<PostDbType | null> {
         if (!this.isValidObjectId(id)) return null
-        return await db.getCollections().postCollection.findOne({_id: new ObjectId(id)})
+        return await PostModel.findOne({_id: new ObjectId(id)})
     },
     isValidObjectId(id: string): boolean {
         return ObjectId.isValid(id)

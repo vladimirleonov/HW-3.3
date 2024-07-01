@@ -1,7 +1,7 @@
 import {postMongoRepository} from "../../posts/repository/postMongoRepository"
 import {PostDbType} from "../../../db/db-types/post-db-types"
 import {Result, ResultStatus} from "../../../common/types/result"
-import {CommentDbType, CommentDocument, CommentModel} from "../../../db/db-types/comment-db-types"
+import {CommentDbType, CommentDocument, CommentModel} from "../../../db/models/comment.model"
 import {ObjectId} from "mongodb"
 import {CommentBodyInputType} from "../input-output-types/comment-types"
 import {UserDbType} from "../../../db/db-types/user-db-types"
