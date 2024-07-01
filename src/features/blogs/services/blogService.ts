@@ -1,22 +1,22 @@
 import {blogMongoRepository} from "../repository/blogMongoRepository"
-import {ObjectId} from "mongodb"
 import {BlogBodyInputType} from "../input-output-types/blog-types"
-import {BlogDBType, BlogDocument, BlogModel} from "../../../db/db-types/blog-db-types"
+import {BlogDBType, BlogDocument, BlogModel} from "../../../db/models/blog.model"
 import {Result, ResultStatus} from "../../../common/types/result"
 
 export const blogService = {
     async createBlog(input: BlogBodyInputType): Promise<Result<string>> {
-        console.log("input", input)
 
-        const newBlog: BlogDocument = new BlogModel({
-            _id: new ObjectId(),
+        const newBlogData: BlogDBType = {
             createdAt: new Date().toISOString(),
             isMembership: false,
             ...input,
-        })
+        }
 
-        const createdBlog: BlogDBType = await blogMongoRepository.save(newBlog)
-        
+        const newBlog: BlogDocument = new BlogModel(newBlogData)
+        console.log(newBlog.toObject())
+
+        const createdBlog: BlogDocument = await blogMongoRepository.save(newBlog)
+
         return {
             status: ResultStatus.Success,
             data: createdBlog._id.toString()
@@ -38,7 +38,7 @@ export const blogService = {
         }
     },
     async updateBlog(blogId: string, input: BlogBodyInputType): Promise<Result<boolean>> {
-        const isUpdated = await blogMongoRepository.update(blogId, input)
+        const isUpdated: boolean = await blogMongoRepository.update(blogId, input)
         if (isUpdated) {
             return {
                 status: ResultStatus.Success,

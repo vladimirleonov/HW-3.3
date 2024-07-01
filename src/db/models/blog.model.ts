@@ -1,9 +1,10 @@
 import {ObjectId} from "mongodb"
 import * as mongoose from "mongoose";
 import {HydratedDocument} from "mongoose";
+import { WithId } from 'mongodb'
 
 export type BlogDBType = {
-    _id: ObjectId
+    //_id: ObjectId
     name: string
     description: string
     websiteUrl: string
@@ -12,10 +13,6 @@ export type BlogDBType = {
 }
 
 export type BlogDocument = HydratedDocument<BlogDBType>
-
-// const isValidISOString = (value: string) => {
-//     return !isNaN(Date.parse(value)); //NaN or unix number
-// };
 
 const isValidISOString = (value: string) => {
     const isoRegex: RegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;
@@ -56,26 +53,3 @@ const blogSchema = new mongoose.Schema<BlogDBType>(
 );
 
 export const BlogModel = mongoose.model<BlogDBType>('Blog', blogSchema)
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import {ObjectId} from "mongodb"
-//
-// export type BlogDBType = {
-//     _id: ObjectId
-//     name: string
-//     description: string
-//     websiteUrl: string
-//     createdAt: string
-//     isMembership: boolean
-// }
