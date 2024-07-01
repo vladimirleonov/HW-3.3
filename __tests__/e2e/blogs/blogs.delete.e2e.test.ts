@@ -5,7 +5,7 @@ import {createBlogs} from "../helpers/blog-helpers"
 import {ObjectId} from "mongodb"
 import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types"
 import {MongoMemoryServer} from "mongodb-memory-server"
-import {db} from "../../../src/db/mongo-db"
+import {db} from "../../../src/db/mongo-driver-db-connection"
 
 describe('DELETE /blogs', () => {
     beforeAll(async () => {

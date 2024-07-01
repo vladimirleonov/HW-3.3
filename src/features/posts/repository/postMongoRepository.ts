@@ -1,6 +1,6 @@
 import {PostDbType, PostDocument} from "../../../db/db-types/post-db-types"
 import {PostBodyInputType} from "../input-output-types/post-types"
-import {db} from "../../../db/mongoose-db"
+import {db} from "../../../db/mongoose-db-connection"
 import {DeleteResult, ObjectId, UpdateResult} from "mongodb"
 
 export const postMongoRepository = {

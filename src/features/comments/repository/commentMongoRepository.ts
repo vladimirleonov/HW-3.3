@@ -1,5 +1,5 @@
 import {CommentDbType, CommentDocument} from "../../../db/db-types/comment-db-types"
-import {db} from "../../../db/mongoose-db"
+import {db} from "../../../db/mongoose-db-connection"
 import {DeleteResult, InsertOneResult, ObjectId, UpdateResult} from "mongodb"
 import {CommentBodyInputType} from "../input-output-types/comment-types"
 

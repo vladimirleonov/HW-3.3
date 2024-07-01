@@ -1,5 +1,5 @@
-import {db} from "../../../db/mongoose-db"
-import {BlogDBType, BlogDocument} from "../../../db/db-types/blog-db-types"
+import {db} from "../../../db/mongoose-db-connection"
+import {BlogDBType, BlogDocument} from "../../../db/models/blog.model"
 import {BlogBodyInputType} from "../input-output-types/blog-types"
 import {DeleteResult, ObjectId, UpdateResult} from "mongodb"
 

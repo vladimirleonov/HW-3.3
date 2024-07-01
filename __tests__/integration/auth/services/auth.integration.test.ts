@@ -1,5 +1,5 @@
 import {MongoMemoryServer} from "mongodb-memory-server";
-import {db} from "../../../../src/db/mongo-db";
+import {db} from "../../../../src/db/mongo-driver-db-connection";
 import {testSeeder} from "../../../testSeeder";
 import {authService} from "../../../../src/features/auth/services/authService";
 import {nodemailerAdapter} from "../../../../src/common/adapters/nodemailer.adapter";

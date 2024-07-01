@@ -1,4 +1,4 @@
-import {db} from "../../../db/mongo-db"
+import {db} from "../../../db/mongo-driver-db-connection"
 import {CommentDbType} from "../../../db/db-types/comment-db-types"
 import {CommentOutputType, CommentsPaginationOutputType} from "../input-output-types/comment-types"
 import {ObjectId} from "mongodb"

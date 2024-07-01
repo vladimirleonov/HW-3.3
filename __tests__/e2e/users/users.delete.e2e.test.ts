@@ -5,7 +5,7 @@ import {ObjectId} from "mongodb"
 import {DetailedUserOutputType} from "../../../src/features/users/input-output-types/user-types"
 import {createUser} from "../helpers/user-helpers"
 import {MongoMemoryServer} from "mongodb-memory-server"
-import {db} from "../../../src/db/mongo-db"
+import {db} from "../../../src/db/mongo-driver-db-connection"
 
 describe('DELETE /posts', () => {
     beforeAll(async () => {

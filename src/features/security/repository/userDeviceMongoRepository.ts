@@ -1,5 +1,5 @@
 import {UserDeviceDBType} from "../../../db/db-types/user-devices-db-types";
-import {db} from "../../../db/mongo-db";
+import {db} from "../../../db/mongo-driver-db-connection";
 import {DeleteResult, InsertOneResult, UpdateResult} from "mongodb";
 import {
     deleteAllOtherByDeviceIdAndUserIdInputType,

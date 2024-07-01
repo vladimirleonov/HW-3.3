@@ -4,7 +4,7 @@ import {
     CommentOutputType
 } from "../../../src/features/comments/input-output-types/comment-types"
 import {MongoMemoryServer} from "mongodb-memory-server"
-import {db} from "../../../src/db/mongo-db"
+import {db} from "../../../src/db/mongo-driver-db-connection"
 import {createPost} from "../helpers/post-helpers"
 import {PostOutputType} from "../../../src/features/posts/input-output-types/post-types"
 import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types"

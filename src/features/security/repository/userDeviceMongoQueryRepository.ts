@@ -1,4 +1,4 @@
-import {db} from "../../../db/mongo-db";
+import {db} from "../../../db/mongo-driver-db-connection";
 import {UserDeviceDBType} from "../../../db/db-types/user-devices-db-types";
 import {findAllForOutputType} from "../../auth/types/outputTypes/userDeviceOutputMongoQueryRepositoryTypes";
 

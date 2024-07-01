@@ -5,7 +5,7 @@ import {base64Adapter} from "../../../src/common/adapters/base64.adapter"
 import {AUTH_DATA} from "../../../src/settings"
 import {testSeeder} from "../../testSeeder"
 import {MongoMemoryServer} from "mongodb-memory-server"
-import {db} from "../../../src/db/mongo-db"
+import {db} from "../../../src/db/mongo-driver-db-connection"
 
 describe('POST /blogs', () => {
     beforeAll(async () => {

@@ -2,7 +2,7 @@ import {req} from "../../helpers/req"
 import {SETTINGS} from "../../../src/settings"
 import {HTTP_CODES} from "../../../src/settings"
 import {MongoMemoryServer} from "mongodb-memory-server"
-import {db} from "../../../src/db/mongo-db"
+import {db} from "../../../src/db/mongo-driver-db-connection"
 import {loginUser} from "../helpers/auth-helpers"
 import {LoginOutputControllerType} from "../../../src/features/auth/types/outputTypes/authOutputControllersTypes";
 

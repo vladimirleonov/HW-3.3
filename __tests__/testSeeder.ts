@@ -2,7 +2,7 @@ import {UserDbType} from "../src/db/db-types/user-db-types";
 import {InsertOneResult, ObjectId} from "mongodb";
 import {randomUUID} from "node:crypto";
 import {add} from "date-fns";
-import {db} from "../src/db/mongo-db";
+import {db} from "../src/db/mongo-driver-db-connection";
 import {cryptoAdapter} from "../src/common/adapters/crypto.adapter"
 
 export const testSeeder = {

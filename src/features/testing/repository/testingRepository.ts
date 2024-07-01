@@ -1,5 +1,5 @@
 import {DeleteResult} from "mongodb"
-import {db} from "../../../db/mongo-db"
+import {db} from "../../../db/mongo-driver-db-connection"
 
 export const testingRepository = {
     async deleteAllData(): Promise<boolean> {

@@ -1,4 +1,4 @@
-import {db} from "../../../db/mongo-db";
+import {db} from "../../../db/mongo-driver-db-connection";
 import {InsertOneResult, ObjectId} from "mongodb";
 import {RevokedTokenDbType} from "../../../db/db-types/refreshToken-db-types";
 

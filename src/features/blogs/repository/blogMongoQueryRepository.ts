@@ -1,4 +1,4 @@
-import {db} from "../../../db/mongoose-db"
+import {db} from "../../../db/mongoose-db-connection"
 import {BlogDBType} from "../../../db/db-types/blog-db-types"
 import {BlogsPaginationOutputType, BlogOutputType} from "../input-output-types/blog-types"
 import {ObjectId} from "mongodb"

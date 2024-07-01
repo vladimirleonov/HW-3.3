@@ -1,6 +1,6 @@
 import {UserDbType} from "../../../db/db-types/user-db-types"
 import {DeleteResult, InsertOneResult, ObjectId, UpdateResult} from "mongodb"
-import {db} from "../../../db/mongo-db"
+import {db} from "../../../db/mongo-driver-db-connection"
 import {DeepPartial} from "../../../common/types/deepPartial";
 
 export const userMongoRepository = {

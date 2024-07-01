@@ -1,4 +1,4 @@
-import {db} from "../../../db/mongo-db";
+import {db} from "../../../db/mongo-driver-db-connection";
 import {InsertOneResult} from "mongodb";
 import {
     CountApiAccessLogsByIpAndOriginUrlInputType,

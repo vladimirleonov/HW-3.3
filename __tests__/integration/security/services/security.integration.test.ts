@@ -1,6 +1,6 @@
 import {authService} from "../../../../src/features/auth/services/authService";
 import {MongoMemoryServer} from "mongodb-memory-server";
-import {db} from "../../../../src/db/mongo-db";
+import {db} from "../../../../src/db/mongo-driver-db-connection";
 import {testSeeder} from "../../../testSeeder";
 import {Result, ResultStatus} from "../../../../src/common/types/result";
 import {

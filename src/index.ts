@@ -1,6 +1,6 @@
 import app from "./app"
 import {SETTINGS} from "./settings"
-import {db} from "./db/mongoose-db"
+import {db} from "./db/mongoose-db-connection"
 
 const start = async () => {
     if (!await db.run(SETTINGS.MONGO_URL as string)) {

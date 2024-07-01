@@ -7,7 +7,7 @@ import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blo
 import {createPosts} from "../helpers/post-helpers"
 import {PostOutputType} from "../../../src/features/posts/input-output-types/post-types"
 import {MongoMemoryServer} from "mongodb-memory-server"
-import {db} from "../../../src/db/mongo-db"
+import {db} from "../../../src/db/mongo-driver-db-connection"
 
 describe('GET /blogs', () => {
     beforeAll(async () => {

@@ -6,7 +6,7 @@ import {
 } from "../input-output-types/user-types"
 import {UserDbType} from "../../../db/db-types/user-db-types"
 import {ObjectId} from "mongodb"
-import {db} from "../../../db/mongo-db"
+import {db} from "../../../db/mongo-driver-db-connection"
 
 export const userMongoQueryRepository = {
     async findAllForOutput(query: SanitizedUsersQueryParamsType): Promise<UserPaginationOutputType> {

@@ -1,4 +1,4 @@
-import {db} from "../../../../src/db/mongo-db";
+import {db} from "../../../../src/db/mongo-driver-db-connection";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import {authService} from "../../../../src/features/auth/services/authService";
 import {ResultStatus} from "../../../../src/common/types/result";
