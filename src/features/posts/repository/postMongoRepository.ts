@@ -1,17 +1,20 @@
-import {PostDbType} from "../../../db/db-types/post-db-types"
+import {PostDbType, PostDocument} from "../../../db/db-types/post-db-types"
 import {PostBodyInputType} from "../input-output-types/post-types"
-import {db} from "../../../db/mongo-db"
-import {DeleteResult, InsertOneResult, ObjectId, UpdateResult} from "mongodb"
+import {db} from "../../../db/mongoose-db"
+import {DeleteResult, ObjectId, UpdateResult} from "mongodb"
 
 export const postMongoRepository = {
-    async create(newPost: PostDbType): Promise<string> {
-        const insertedInfo: InsertOneResult<PostDbType> = await db.getCollections().postCollection.insertOne(newPost)
-        return insertedInfo.insertedId.toString()
+    async save(post: PostDocument): Promise<PostDocument> {
+        return post.save()
     },
-    async createBlogPost(newPost: PostDbType): Promise<string> {
-        const insertedInfo: InsertOneResult<PostDbType> = await db.getCollections().postCollection.insertOne(newPost)
-        return insertedInfo.insertedId.toString()
-    },
+    // async create(newPost: PostDbType): Promise<string> {
+    //     const insertedInfo: InsertOneResult<PostDbType> = await db.getCollections().postCollection.insertOne(newPost)
+    //     return insertedInfo.insertedId.toString()
+    // },
+    // async createBlogPost(newPost: PostDbType): Promise<string> {
+    //     const insertedInfo: InsertOneResult<PostDbType> = await db.getCollections().postCollection.insertOne(newPost)
+    //     return insertedInfo.insertedId.toString()
+    // },
     async update(id: string, {blogId, ...restInput}: PostBodyInputType): Promise<boolean> {
         const updatedInfo: UpdateResult<PostDbType> = await db.getCollections().postCollection.updateOne(
             {_id: new ObjectId(id)},
