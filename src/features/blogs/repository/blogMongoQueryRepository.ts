@@ -1,8 +1,7 @@
-import {BlogDBType} from "../../../db/db-types/blog-db-types"
 import {BlogsPaginationOutputType, BlogOutputType} from "../input-output-types/blog-types"
-import {ObjectId} from "mongodb"
+import {ObjectId, WithId} from "mongodb"
 import {SanitizedBlogsQueryParamsType} from "../helpers/sanitizeBlogsQueryParams"
-import {BlogModel} from "../../../db/models/blog.model";
+import {BlogModel, BlogDBType} from "../../../db/models/blog.model";
 
 export const blogMongoQueryRepository = {
     async findAllForOutput(query: SanitizedBlogsQueryParamsType): Promise<BlogsPaginationOutputType> {
@@ -14,7 +13,7 @@ export const blogMongoQueryRepository = {
             ...searchFilter
         }
 
-        const blogs: BlogDBType[] = await BlogModel
+        const blogs: WithId<BlogDBType>[] = await BlogModel
             .find(filter)
             .sort({ [query.sortBy]: query.sortDirection === 'asc' ? 1 : -1 })
             .skip((query.pageNumber - 1) * query.pageSize)
@@ -29,14 +28,14 @@ export const blogMongoQueryRepository = {
             page: query.pageNumber,
             pageSize: query.pageSize,
             totalCount,
-            items: blogs.map((blog: BlogDBType) => this.mapToOutput(blog))
+            items: blogs.map((blog: WithId<BlogDBType>) => this.mapToOutput(blog))
         }
     },
     async findForOutputById(id: string): Promise<BlogOutputType | null> {
-        const blog: BlogDBType | null = await BlogModel.findOne({_id: new ObjectId(id)})
+        const blog: WithId<BlogDBType> | null = await BlogModel.findOne({_id: new ObjectId(id)})
         return blog ? this.mapToOutput(blog) : null
     },
-    mapToOutput({_id, name, description, websiteUrl, createdAt, isMembership, ...rest}: BlogDBType): BlogOutputType {
+    mapToOutput({_id, name, description, websiteUrl, createdAt, isMembership, ...rest}: WithId<BlogDBType>): BlogOutputType {
         return {
             id: _id.toString(),
             name,
