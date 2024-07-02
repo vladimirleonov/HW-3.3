@@ -1,9 +1,10 @@
-import {UserDbType} from "../src/db/db-types/user-db-types";
-import {InsertOneResult, ObjectId} from "mongodb";
+import {UserDbType, UserDocument, UserModel} from "../src/db/models/user.model";
+import {InsertOneResult, ObjectId, WithId} from "mongodb";
 import {randomUUID} from "node:crypto";
 import {add} from "date-fns";
-import {db} from "../src/db/mongo-driver-db-connection";
+import {db} from "../src/db/mongoose-db-connection";
 import {cryptoAdapter} from "../src/common/adapters/crypto.adapter"
+import {UserDeviceDBType, UserDeviceModel} from "../src/db/models/devices.model";
 
 export const testSeeder = {
     createUserDTO() {
@@ -59,8 +60,8 @@ export const testSeeder = {
         const saltRounds: number = 10
         const passwordHash: string = await cryptoAdapter.createHash(password, saltRounds)
 
-        const newUser: UserDbType = {
-            _id: new ObjectId(),
+        const newUser: UserDocument = new UserModel({
+            //_id: new ObjectId(),
             login,
             email,
             password: passwordHash,
@@ -73,18 +74,19 @@ export const testSeeder = {
                 }).toISOString(),
                 isConfirmed: isConfirmed ?? false
             }
-        }
+        });
 
-        const res: InsertOneResult<UserDbType> = await db.getCollections().userCollection.insertOne({...newUser})
+        const res: UserDocument = await newUser.save();
+        //const res: InsertOneResult<UserDbType> = await db.getCollections().userCollection.insertOne({...newUser})
 
         const { _id, ...userWithoutId } = newUser;
 
         return {
-            id: res.insertedId.toString(),
+            id: res._id.toString(),
             ...userWithoutId
         }
     },
-    async getDevices() {
-        return db.getCollections().userDeviceCollection.find({}).toArray()
+    async getDevices(): Promise<WithId<UserDeviceDBType>[]> {
+        return UserDeviceModel.find({}).lean().exec()
     }
 }

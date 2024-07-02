@@ -6,7 +6,7 @@ import {createBlogs} from "../helpers/blog-helpers"
 import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types"
 import {testSeeder} from "../../testSeeder"
 import {MongoMemoryServer} from "mongodb-memory-server"
-import {db} from "../../../src/db/mongo-driver-db-connection"
+import {db} from "../../../src/db/mongoose-db-connection"
 import {base64Adapter} from "../../../src/common/adapters/base64.adapter"
 
 describe('POST /posts', () => {

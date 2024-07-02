@@ -1,6 +1,6 @@
 import {authService} from "../../../../src/features/auth/services/authService";
 import {MongoMemoryServer} from "mongodb-memory-server";
-import {db} from "../../../../src/db/mongo-driver-db-connection";
+import {db} from "../../../../src/db/mongoose-db-connection";
 import {testSeeder} from "../../../testSeeder";
 import {Result, ResultStatus} from "../../../../src/common/types/result";
 import {
@@ -11,8 +11,9 @@ import {jwtAdapter} from "../../../../src/common/adapters/jwt.adapter";
 import {JwtPayload} from "jsonwebtoken";
 import {RefreshTokenInputServiceType} from "../../../../src/features/auth/types/inputTypes/authInputServiceTypes";
 import {unixToISOString} from "../../../../src/common/helpers/unixToISOString";
-import {UserDeviceDBType} from "../../../../src/db/db-types/user-devices-db-types";
+import {UserDeviceDBType} from "../../../../src/db/models/devices.model";
 import {securityService} from "../../../../src/features/security/services/securityService";
+import {WithId} from "mongodb";
 
 // chain actions (after each test change local variables)
 // 1) login 4 user
@@ -137,8 +138,8 @@ describe('Security service test logic chain', () => {
         const result: Result = await terminateDeviceSessionUseCase({deviceId, userId})
         expect(result.status).toBe(ResultStatus.Success)
 
-        deviceArr.splice(elementIndexToDelete,1)
-        const devices: Array<UserDeviceDBType> = await testSeeder.getDevices()
+        deviceArr.splice(elementIndexToDelete, 1)
+        const devices: WithId<UserDeviceDBType>[] = await testSeeder.getDevices()
         expect(devices.length).toBe(deviceArr.length)
     })
     it('should log out device 3', async () => {
@@ -148,8 +149,8 @@ describe('Security service test logic chain', () => {
         const result: Result = await logOutUseCase({deviceId, iat})
         expect(result.status).toBe(ResultStatus.Success)
 
-        deviceArr.splice(elementIndexToDelete,1)
-        const devices: Array<UserDeviceDBType> = await testSeeder.getDevices()
+        deviceArr.splice(elementIndexToDelete, 1)
+        const devices: WithId<UserDeviceDBType>[] = await testSeeder.getDevices()
         expect(devices.length).toBe(deviceArr.length)
         console.log(devices)
         console.log(deviceArr)

@@ -1,4 +1,4 @@
-import {ObjectId} from "mongodb";
+import {ObjectId, WithId} from "mongodb";
 import mongoose, {HydratedDocument} from "mongoose";
 
 export type RevokedTokenDbType = {
@@ -6,18 +6,20 @@ export type RevokedTokenDbType = {
     userId: ObjectId;
 }
 
-export type RevokedTokenDocument = HydratedDocument<RevokedTokenDbType>
+export type RevokedTokenDocument = HydratedDocument<WithId<RevokedTokenDbType>>
 
-const revokedTokenSchema = new mongoose.Schema({
-    token: {
-        type: String,
-        maxLength: 300,
-        required: true
-    },
-    userId: {
-        type: mongoose.Schema.ObjectId,
-        required: true
+const revokedTokenSchema = new mongoose.Schema<RevokedTokenDbType>(
+    {
+        token: {
+            type: String,
+            maxLength: 300,
+            required: true
+        },
+        userId: {
+            type: mongoose.Schema.ObjectId,
+            required: true
+        }
     }
-})
+)
 
-export const RevokedTokenModel = mongoose.model('RevokedToken', revokedTokenSchema)
+export const RevokedTokenModel = mongoose.model<RevokedTokenDbType>('RevokedToken', revokedTokenSchema)

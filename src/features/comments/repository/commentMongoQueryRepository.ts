@@ -41,10 +41,15 @@ export const commentMongoQueryRepository = {
 
         return this.mapToOutput(comment)
     },
-    mapToOutput({_id, postId, ...rest}: WithId<CommentDbType>): CommentOutputType {
+    mapToOutput({_id, postId, content, commentatorInfo: {userId, userLogin}, createdAt, ...rest}: WithId<CommentDbType>): CommentOutputType {
         return {
             id: _id.toString(),
-            ...rest
+            content,
+            commentatorInfo: {
+                userId,
+                userLogin
+            },
+            createdAt
         }
     },
     isValidObjectId(id: string): boolean {

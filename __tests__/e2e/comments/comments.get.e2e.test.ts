@@ -1,7 +1,7 @@
 import {req} from "../../helpers/req"
 import {HTTP_CODES, SETTINGS} from "../../../src/settings"
 import {MongoMemoryServer} from "mongodb-memory-server"
-import {db} from "../../../src/db/mongo-driver-db-connection"
+import {db} from "../../../src/db/mongoose-db-connection"
 import {createPost} from "../helpers/post-helpers"
 import {PostOutputType} from "../../../src/features/posts/input-output-types/post-types"
 import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types"

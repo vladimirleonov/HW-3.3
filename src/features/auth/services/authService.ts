@@ -188,8 +188,8 @@ export const authService = {
             deviceId: deviceId
         }
 
-        const accessToken: string = jwtAdapter.generateToken(JwtAccessTokenPayload, '10s')
-        const refreshToken: string = jwtAdapter.generateToken(JwtRefreshTokenPayload, '20s')
+        const accessToken: string = jwtAdapter.generateToken(JwtAccessTokenPayload, '10h')
+        const refreshToken: string = jwtAdapter.generateToken(JwtRefreshTokenPayload, '20h')
 
         const decodedRefreshToken: string | JwtPayload | null = jwtAdapter.decode(refreshToken)
         if (decodedRefreshToken && typeof decodedRefreshToken !== 'string') {

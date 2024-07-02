@@ -47,10 +47,12 @@ export const userMongoQueryRepository = {
         const user: WithId<UserDbType> | null = await UserModel.findOne({_id: new ObjectId(id)}).lean()
         return user ? this.mapToAuthenticatedUser(user) : null
     },
-    mapToDetailedUser({_id, password, emailConfirmation, ...rest}: WithId<UserDbType>): DetailedUserOutputType {
+    mapToDetailedUser({_id, login, email, createdAt, ...rest}: WithId<UserDbType>): DetailedUserOutputType {
         return {
             id: _id.toString(),
-            ...rest
+            login,
+            email,
+            createdAt
         }
     },
     mapToAuthenticatedUser({_id, password, emailConfirmation, createdAt, ...rest}: WithId<UserDbType>): AuthenticatedUserOutputType {

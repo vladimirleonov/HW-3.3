@@ -5,7 +5,7 @@ import {base64Adapter} from "../../../src/common/adapters/base64.adapter"
 import {createBlogs} from "../helpers/blog-helpers"
 import {testSeeder} from "../../testSeeder"
 import {MongoMemoryServer} from "mongodb-memory-server"
-import {db} from "../../../src/db/mongo-driver-db-connection"
+import {db} from "../../../src/db/mongoose-db-connection"
 
 describe('PUT /blogs', () => {
     beforeAll(async () => {

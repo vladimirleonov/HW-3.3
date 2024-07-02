@@ -26,4 +26,4 @@ const apiAccessLogSchema = new mongoose.Schema<ApiAccessLogDbType>({
     }
 })
 
-export const ApiAccessLogModel = mongoose.model<ApiAccessLogDbType>('RevokedToken', apiAccessLogSchema)
+export const ApiAccessLogModel = mongoose.model<ApiAccessLogDbType>('ApiAccessLog', apiAccessLogSchema)

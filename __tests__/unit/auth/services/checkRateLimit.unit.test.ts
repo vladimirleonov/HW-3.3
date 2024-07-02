@@ -1,5 +1,5 @@
 import {MongoMemoryServer} from "mongodb-memory-server";
-import {db} from "../../../../src/db/mongo-driver-db-connection";
+import {db} from "../../../../src/db/mongoose-db-connection";
 import {securityService} from "../../../../src/features/security/services/securityService";
 import {ResultStatus} from "../../../../src/common/types/result";
 import {Result} from "../../../../src/common/types/result";

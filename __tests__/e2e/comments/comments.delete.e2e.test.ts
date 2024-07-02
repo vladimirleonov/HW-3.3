@@ -6,7 +6,7 @@ import {
 import {base64Adapter} from "../../../src/common/adapters/base64.adapter"
 import {AUTH_DATA} from "../../../src/settings"
 import {MongoMemoryServer} from "mongodb-memory-server"
-import {db} from "../../../src/db/mongo-driver-db-connection"
+import {db} from "../../../src/db/mongoose-db-connection"
 import {createPost} from "../helpers/post-helpers"
 import {PostOutputType} from "../../../src/features/posts/input-output-types/post-types"
 import {BlogOutputType} from "../../../src/features/blogs/input-output-types/blog-types"

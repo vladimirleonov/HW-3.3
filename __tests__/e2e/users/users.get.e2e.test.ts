@@ -4,7 +4,7 @@ import {base64Adapter} from "../../../src/common/adapters/base64.adapter"
 import {createUsers} from "../helpers/user-helpers"
 import {DetailedUserOutputType} from "../../../src/features/users/input-output-types/user-types"
 import {MongoMemoryServer} from "mongodb-memory-server"
-import {db} from "../../../src/db/mongo-driver-db-connection"
+import {db} from "../../../src/db/mongoose-db-connection"
 
 describe('GET /users', () => {
     beforeAll(async () => {

@@ -37,11 +37,15 @@ export const postMongoQueryRepository = {
             .findOne({_id: new ObjectId(id)}).lean()
         return post ? this.mapToOutput(post) : null
     },
-    mapToOutput({_id, blogId, ...rest}: WithId<PostDbType>): PostOutputType {
+    mapToOutput({_id, blogId, title, shortDescription, content, blogName, createdAt, ...rest}: WithId<PostDbType>): PostOutputType {
         return {
             id: _id.toString(),
+            title,
+            shortDescription,
+            content,
             blogId: blogId.toString(),
-            ...rest
+            blogName,
+            createdAt
         }
     }
 }

@@ -22,7 +22,7 @@ const postSchema = new mongoose.Schema<PostDbType>(
     {
         title: {
             type: String,
-            maxlength: 15,
+            maxlength: 30,
             required: true
         },
         shortDescription: {
