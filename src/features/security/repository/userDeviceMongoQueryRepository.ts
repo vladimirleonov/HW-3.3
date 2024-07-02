@@ -1,16 +1,16 @@
-import {db} from "../../../db/mongo-driver-db-connection";
-import {UserDeviceDBType} from "../../../db/db-types/user-devices-db-types";
-import {findAllForOutputType} from "../../auth/types/outputTypes/userDeviceOutputMongoQueryRepositoryTypes";
+import { WithId } from "mongodb"
+import {UserDeviceDBType, UserDeviceModel} from "../../../db/models/devices.model"
+import {findAllForOutputType} from "../../auth/types/outputTypes/userDeviceOutputMongoQueryRepositoryTypes"
 
 export const userDeviceMongoQueryRepository = {
     async findAllForOutput(userId: string): Promise<findAllForOutputType[]> {
-        const userSessions: UserDeviceDBType[] = await db.getCollections().userDeviceCollection.find({
+        const userSessions: WithId<UserDeviceDBType>[] = await UserDeviceModel.find({
             userId: userId
-        }).toArray()
+        }).lean().exec()
 
-        return userSessions.map((session: UserDeviceDBType) => this.mapToOutput(session))
+        return userSessions.map((session: WithId<UserDeviceDBType>) => this.mapToOutput(session))
     },
-    mapToOutput({ip, deviceName, iat, deviceId, ...rest}: UserDeviceDBType): findAllForOutputType {
+    mapToOutput({ip, deviceName, iat, deviceId, ...rest}: WithId<UserDeviceDBType>): findAllForOutputType {
         return {
             ip,
             title: deviceName,

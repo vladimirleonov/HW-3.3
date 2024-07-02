@@ -1,18 +1,19 @@
 import {userDeviceMongoRepository} from "../repository/userDeviceMongoRepository";
 import {Result, ResultStatus} from "../../../common/types/result";
-import {UserDeviceDBType} from "../../../db/db-types/user-devices-db-types";
+import {UserDeviceDBType} from "../../../db/models/devices.model";
 import {apiAccessLogsMongoRepository} from "../../auth/repository/apiAccessLogsMongoRepository";
 import {
     CheckRateLimitInputServiceType,
     TerminateAllOtherDeviceSessionsInputServiceType,
     TerminateDeviceSessionInputServiceType
 } from "../types/inputTypes/securityInputServiceTypes";
+import { ApiAccessLogDocument, ApiAccessLogModel } from "../../../db/models/apiAccessLog.model";
 
 export const securityService = {
     async terminateAllOtherDeviceSessions({
-                                              deviceId,
-                                              userId
-                                          }: TerminateAllOtherDeviceSessionsInputServiceType): Promise<Result> {
+                                            deviceId,
+                                            userId
+                                        }: TerminateAllOtherDeviceSessionsInputServiceType): Promise<Result> {
         await userDeviceMongoRepository.deleteAllOtherByDeviceIdAndUserId({deviceId, userId})
         return {
             status: ResultStatus.Success,
@@ -57,7 +58,14 @@ export const securityService = {
             }
         }
 
-        await apiAccessLogsMongoRepository.createApiAccessLog({ip, originUrl})
+        const newApiAccessLog: ApiAccessLogDocument = new ApiAccessLogModel({
+            ip,
+            URL: originUrl,
+            date: new Date(),
+        })
+
+        await apiAccessLogsMongoRepository.save(newApiAccessLog)
+        //await apiAccessLogsMongoRepository.createApiAccessLog({ip, originUrl})
 
         return {
             status: ResultStatus.Success,

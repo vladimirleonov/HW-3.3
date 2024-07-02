@@ -4,9 +4,8 @@ import {
     DetailedUserOutputType,
     AuthenticatedUserOutputType
 } from "../input-output-types/user-types"
-import {UserDbType} from "../../../db/db-types/user-db-types"
-import {ObjectId} from "mongodb"
-import {db} from "../../../db/mongo-driver-db-connection"
+import {UserModel, UserDbType} from "../../../db/models/user.model"
+import {ObjectId, WithId} from "mongodb"
 
 export const userMongoQueryRepository = {
     async findAllForOutput(query: SanitizedUsersQueryParamsType): Promise<UserPaginationOutputType> {
@@ -23,37 +22,38 @@ export const userMongoQueryRepository = {
 
         const filter = orFilters.length > 0 ? {$or: orFilters} : {}
 
-        const users: UserDbType[] = await db.getCollections().userCollection
+        const users: WithId<UserDbType>[] = await UserModel
             .find(filter)
-            .sort(query.sortBy, query.sortDirection)
+            .sort({ [query.sortBy]: query.sortDirection === 'asc' ? 1 : -1 })
             .skip((query.pageNumber - 1) * query.pageSize)
             .limit(query.pageSize)
-            .toArray()
+            .lean()
+            .exec()
 
-        const totalCount: number = await db.getCollections().userCollection.countDocuments(filter)
+        const totalCount: number = await UserModel.countDocuments(filter)
         return {
             pagesCount: Math.ceil(totalCount / query.pageSize),
             page: query.pageNumber,
             pageSize: query.pageSize,
             totalCount,
-            items: users.map((user: UserDbType) => this.mapToDetailedUser(user))
+            items: users.map((user: WithId<UserDbType>) => this.mapToDetailedUser(user))
         }
     },
     async findDetailedUserById(id: string): Promise<DetailedUserOutputType | null> {
-        const user: UserDbType | null = await db.getCollections().userCollection.findOne({_id: new ObjectId(id)})
+        const user: WithId<UserDbType> | null = await UserModel.findOne({_id: new ObjectId(id)}).lean()
         return user ? this.mapToDetailedUser(user) : null
     },
     async findAuthenticatedUserById(id: string): Promise<AuthenticatedUserOutputType | null> {
-        const user: UserDbType | null = await db.getCollections().userCollection.findOne({_id: new ObjectId(id)})
+        const user: WithId<UserDbType> | null = await UserModel.findOne({_id: new ObjectId(id)}).lean()
         return user ? this.mapToAuthenticatedUser(user) : null
     },
-    mapToDetailedUser({_id, password, emailConfirmation, ...rest}: UserDbType): DetailedUserOutputType {
+    mapToDetailedUser({_id, password, emailConfirmation, ...rest}: WithId<UserDbType>): DetailedUserOutputType {
         return {
             id: _id.toString(),
             ...rest
         }
     },
-    mapToAuthenticatedUser({_id, password, emailConfirmation, createdAt, ...rest}: UserDbType): AuthenticatedUserOutputType {
+    mapToAuthenticatedUser({_id, password, emailConfirmation, createdAt, ...rest}: WithId<UserDbType>): AuthenticatedUserOutputType {
         return {
             ...rest,
             userId: _id.toString(),

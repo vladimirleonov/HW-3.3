@@ -2,7 +2,7 @@ import {ObjectId} from "mongodb"
 import mongoose, {HydratedDocument} from "mongoose"
 
 export type PostDbType = {
-    _id: ObjectId
+    //_id: ObjectId
     title: string
     shortDescription: string
     content: string

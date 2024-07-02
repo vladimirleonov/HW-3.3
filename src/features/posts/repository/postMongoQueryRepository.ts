@@ -1,9 +1,9 @@
-import {PostDbType} from "../../../db/db-types/post-db-types"
 import {PostPaginationOutputType, PostOutputType} from "../input-output-types/post-types"
 import {ObjectId} from "mongodb"
 
 import {SanitizedDefaultQueryParamsType} from "../../../common/helpers/queryParamsSanitizer"
-import {db} from "../../../db/mongo-driver-db-connection"
+import { PostModel, PostDbType } from "../../../db/models/post.model"
+import { WithId } from "mongodb"
 
 export const postMongoQueryRepository = {
     async findAllForOutput(query: SanitizedDefaultQueryParamsType, blogId?: string): Promise<PostPaginationOutputType> {
@@ -13,14 +13,15 @@ export const postMongoQueryRepository = {
             ...byId
         }
 
-        const posts: PostDbType[] = await db.getCollections().postCollection
+        const posts: WithId<PostDbType>[] = await PostModel
             .find(filter)
-            .sort(query.sortBy, query.sortDirection)
+            .sort({ [query.sortBy]: query.sortDirection === 'asc' ? 1 : -1 })
             .skip((query.pageNumber - 1) * query.pageSize)
             .limit(query.pageSize)
-            .toArray()
+            .lean()
+            .exec()
 
-        const totalCount: number = await db.getCollections().postCollection
+        const totalCount: number = await PostModel
             .countDocuments(filter)
 
         return {
@@ -28,15 +29,15 @@ export const postMongoQueryRepository = {
             page: query.pageNumber,
             pageSize: query.pageSize,
             totalCount,
-            items: posts.map((post: PostDbType) => this.mapToOutput(post))
+            items: posts.map((post: WithId<PostDbType>) => this.mapToOutput(post))
         }
     },
     async findForOutputById(id: string): Promise<PostOutputType | null> {
-        const post: PostDbType | null = await db.getCollections().postCollection
-            .findOne({_id: new ObjectId(id)})
+        const post: WithId<PostDbType> | null = await PostModel
+            .findOne({_id: new ObjectId(id)}).lean()
         return post ? this.mapToOutput(post) : null
     },
-    mapToOutput({_id, blogId, ...rest}: PostDbType): PostOutputType {
+    mapToOutput({_id, blogId, ...rest}: WithId<PostDbType>): PostOutputType {
         return {
             id: _id.toString(),
             blogId: blogId.toString(),

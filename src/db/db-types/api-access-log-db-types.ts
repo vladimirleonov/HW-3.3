@@ -1,5 +1,5 @@
-type ApiAccessLogDbType = {
-    ip: string,
-    URL: string,
-    date: Date
-}
+// type ApiAccessLogDbType = {
+//     ip: string,
+//     URL: string,
+//     date: Date
+// }

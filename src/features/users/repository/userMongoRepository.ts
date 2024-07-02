@@ -1,40 +1,41 @@
-import {UserDbType} from "../../../db/db-types/user-db-types"
-import {DeleteResult, InsertOneResult, ObjectId, UpdateResult} from "mongodb"
-import {db} from "../../../db/mongoose-db-connection"
-import {DeepPartial} from "../../../common/types/deepPartial";
+import {UserDbType, UserDocument, UserModel} from "../../../db/models/user.model"
+import {DeleteResult, ObjectId, UpdateResult, WithId} from "mongodb"
 
 export const userMongoRepository = {
-    async findUserById(id: string): Promise<UserDbType | null> {
-        return await UserModel.findOne({_id: new ObjectId(id)})
+    async save(user: UserDocument): Promise<UserDocument> {
+        return user.save()
     },
-    async findUserByField(field: string, value: string): Promise<UserDbType | null> {
-        return await UserModel.findOne({[field]: value})
+    async findUserById(id: string): Promise<WithId<UserDbType> | null> {
+        return await UserModel.findOne({_id: new ObjectId(id)}).lean()
     },
-    async findUserByConfirmationCode(confirmationCode: string): Promise<UserDbType | null> {
-        return await UserModel.findOne({['emailConfirmation.confirmationCode']: confirmationCode})
+    async findUserByField(field: string, value: string): Promise<WithId<UserDbType> | null> {
+        return await UserModel.findOne({[field]: value}).lean()
     },
-    async findUserByEmail(email: string): Promise<UserDbType | null> {
-        return await UserModel.findOne({email: email})
+    async findUserByConfirmationCode(confirmationCode: string): Promise<WithId<UserDbType> | null> {
+        return await UserModel.findOne({['emailConfirmation.confirmationCode']: confirmationCode}).lean()
     },
-    findUserByLogin(login: string): Promise<UserDbType | null> {
-        return UserModel.findOne({login: login})
+    async findUserByEmail(email: string): Promise<WithId<UserDbType> | null> {
+        return await UserModel.findOne({email: email}).lean()
     },
-    findUserByLoginOrEmailField(loginOrEmail: string): Promise<UserDbType | null> {
-        return UserModel.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}]})
+    findUserByLogin(login: string): Promise<WithId<UserDbType> | null> {
+        return UserModel.findOne({login: login}).lean()
     },
-    async create(newUser: UserDbType): Promise<string> {
-        const insertedInfo: InsertOneResult<UserDbType> = await UserModel.insertOne(newUser)
-        return insertedInfo.insertedId.toString()
+    findUserByLoginOrEmailField(loginOrEmail: string): Promise<WithId<UserDbType> | null> {
+        return UserModel.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}]}).lean()
     },
+    // async create(newUser: WithId<UserDbType>): Promise<string> {
+    //     const insertedInfo: InsertOneResult<WithId<UserDbType>> = await UserModel.insertOne(newUser)
+    //     return insertedInfo.insertedId.toString()
+    // },
     async updateIsConfirmed(id: string, isConfirmed: boolean): Promise<boolean> {
-        const updatedInfo: UpdateResult<UserDbType> = await UserModel.updateOne(
+        const updatedInfo: UpdateResult<WithId<UserDbType>> = await UserModel.updateOne(
             {_id: new ObjectId(id)},
             {$set: {['emailConfirmation.isConfirmed']: isConfirmed}},
         )
         return updatedInfo.matchedCount === 1
     },
     async updateConfirmationInfo(id: string, confirmationCode: string, expirationDate: string): Promise<boolean> {
-        const updatedInfo: UpdateResult<UserDbType> = await UserModel.updateOne(
+        const updatedInfo: UpdateResult<WithId<UserDbType>> = await UserModel.updateOne(
             {_id: new ObjectId(id)},
             {
                 $set: {

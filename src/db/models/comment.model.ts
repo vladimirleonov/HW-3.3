@@ -1,4 +1,4 @@
-import {ObjectId} from "mongodb"
+import {ObjectId, WithId} from "mongodb"
 import mongoose, {HydratedDocument} from "mongoose"
 
 type CommentatorInfoType = {
@@ -7,14 +7,14 @@ type CommentatorInfoType = {
 }
 
 export type CommentDbType = {
-    _id: ObjectId,
+    //_id: ObjectId,
     postId: ObjectId,
     content: string,
     commentatorInfo: CommentatorInfoType,
     createdAt: string
 }
 
-export type CommentDocument = HydratedDocument<CommentDbType>
+export type CommentDocument = HydratedDocument<WithId<CommentDbType>>
 
 const isValidISOString = (value: string) => {
     const isoRegex: RegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;
@@ -37,10 +37,10 @@ const commentatorInfoSchema = new mongoose.Schema<CommentatorInfoType>(
 
 const commentSchema = new mongoose.Schema<CommentDbType>(
     {
-        _id: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true
-        },
+        // _id: {
+        //     type: mongoose.Schema.Types.ObjectId,
+        //     required: true
+        // },
         postId: {
             type: mongoose.Schema.Types.ObjectId,
             maxlength: 300,
@@ -66,4 +66,4 @@ const commentSchema = new mongoose.Schema<CommentDbType>(
     }
 )
 
-export const CommentModel = mongoose.model('Comment', commentSchema)
+export const CommentModel = mongoose.model<CommentDbType>('Comment', commentSchema)

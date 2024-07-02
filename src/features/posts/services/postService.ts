@@ -1,15 +1,17 @@
 import {postMongoRepository} from "../repository/postMongoRepository"
 import {ObjectId} from "mongodb"
 import {BlogPostInputType, PostBodyInputType} from "../input-output-types/post-types"
-import {PostDbType, PostDocument, PostModel} from "../../../db/models/post.model"
-import {BlogDBType, BlogDocument} from "../../../db/models/blog.model"
+import {PostDocument, PostModel} from "../../../db/models/post.model"
+import {BlogDBType} from "../../../db/models/blog.model"
 import {blogMongoRepository} from "../../blogs/repository/blogMongoRepository"
 import {Result, ResultStatus} from "../../../common/types/result"
 import {commentMongoRepository} from "../../comments/repository/commentMongoRepository"
+import { BlogDocument } from "../../../db/models/blog.model"
+import { WithId } from "mongodb"
 
 export const postService = {
     async createPost({blogId, ...restInput}: PostBodyInputType): Promise<Result<string | null>> {
-        const blog: BlogDBType | null = await blogMongoRepository.findById(blogId)
+        const blog: WithId<BlogDBType> | null = await blogMongoRepository.findById(blogId)
         if (!blog) {
             return {
                 status: ResultStatus.NotFound,
@@ -35,7 +37,7 @@ export const postService = {
         }
     },
     async createBlogPost(input: BlogPostInputType, blogId: string): Promise<Result<string | null>> {
-        const blog: BlogDBType | null = await blogMongoRepository.findById(blogId)
+        const blog: BlogDocument | null = await blogMongoRepository.findById(blogId)
         if (!blog) {
             return {
                 status: ResultStatus.NotFound,

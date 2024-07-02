@@ -1,18 +1,18 @@
 import {userMongoRepository} from "../repository/userMongoRepository"
-import {UserDbType} from "../../../db/db-types/user-db-types"
+import {UserDbType, UserDocument, UserModel} from "../../../db/models/user.model"
 import {UserBodyInputType} from "../input-output-types/user-types"
-import {ObjectId} from "mongodb"
+import {WithId} from "mongodb"
 import {cryptoAdapter} from "../../../common/adapters/crypto.adapter"
 import {Result, ResultStatus} from "../../../common/types/result"
-import {randomUUID} from "node:crypto";
-import {add} from "date-fns";
+import {randomUUID} from "node:crypto"
+import {add} from "date-fns"
 
 export const userService = {
     async createUser(input: UserBodyInputType): Promise<Result<string | null>> {
 
         const {login, email, password}: UserBodyInputType = input
 
-        const [foundUserByLogin, foundUserByEmail]: [UserDbType | null, UserDbType | null] = await Promise.all([
+        const [foundUserByLogin, foundUserByEmail]: [WithId<UserDbType> | null, WithId<UserDbType> | null] = await Promise.all([
             userMongoRepository.findUserByField('login', login),
             userMongoRepository.findUserByField('email', email)
         ])
@@ -37,8 +37,8 @@ export const userService = {
         const saltRounds: number = 10
         const hash: string = await cryptoAdapter.createHash(password, saltRounds)
 
-        const newUser: UserDbType = {
-            _id: new ObjectId(),
+        const newUser: UserDocument = new UserModel({
+            //_id: new ObjectId(),
             login: login,
             password: hash,
             email: email,
@@ -48,11 +48,14 @@ export const userService = {
                 expirationDate: add(new Date(), {}).toISOString(),
                 isConfirmed: true
             }
-        }
-        const userId: string = await userMongoRepository.create(newUser)
+        })
+
+        const createdUser: UserDocument = await userMongoRepository.save(newUser)
+        //const userId: string = await userMongoRepository.create(newUser)
+
         return {
             status: ResultStatus.Success,
-            data: userId
+            data: createdUser._id.toString()
         }
     },
     async deleteUser(id: string): Promise<Result<boolean>> {

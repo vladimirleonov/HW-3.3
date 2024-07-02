@@ -1,16 +1,17 @@
 import {postMongoRepository} from "../../posts/repository/postMongoRepository"
-import {PostDbType} from "../../../db/db-types/post-db-types"
+import {PostDbType} from "../../../db/models/post.model"
 import {Result, ResultStatus} from "../../../common/types/result"
 import {CommentDbType, CommentDocument, CommentModel} from "../../../db/models/comment.model"
 import {ObjectId} from "mongodb"
 import {CommentBodyInputType} from "../input-output-types/comment-types"
-import {UserDbType} from "../../../db/db-types/user-db-types"
+import {UserDbType} from "../../../db/models/user.model"
 import {userMongoRepository} from "../../users/repository/userMongoRepository"
 import {commentMongoRepository} from "../repository/commentMongoRepository"
+import { WithId } from "mongodb"
 
 export const commentService = {
     async createComment(postId: string, input: CommentBodyInputType, userId: string): Promise<Result<string | null>> {
-        const post: PostDbType | null = await postMongoRepository.findById(postId)
+        const post: WithId<PostDbType> | null = await postMongoRepository.findById(postId)
         if (!post) {
             return {
                 status: ResultStatus.NotFound,
@@ -48,7 +49,7 @@ export const commentService = {
         }
     },
     async updateComment(id: string, input: CommentBodyInputType, userId: string): Promise<Result> {
-        const comment: CommentDbType | null = await commentMongoRepository.findById(id)
+        const comment: WithId<CommentDbType> | null = await commentMongoRepository.findById(id)
         if (!comment) {
             return {
                 status: ResultStatus.NotFound,
@@ -79,7 +80,7 @@ export const commentService = {
         }
     },
     async deleteComment(id: string, userId: string): Promise<Result> {
-        const comment: CommentDbType | null = await commentMongoRepository.findById(id)
+        const comment: WithId<CommentDbType> | null = await commentMongoRepository.findById(id)
         if (!comment) {
             return {
                 status: ResultStatus.NotFound,

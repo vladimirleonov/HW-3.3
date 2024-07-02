@@ -1,4 +1,3 @@
-import {ObjectId} from "mongodb"
 import * as mongoose from "mongoose";
 import {HydratedDocument} from "mongoose";
 import { WithId } from 'mongodb'
@@ -12,7 +11,7 @@ export type BlogDBType = {
     isMembership: boolean
 }
 
-export type BlogDocument = HydratedDocument<BlogDBType>
+export type BlogDocument = HydratedDocument<WithId<BlogDBType>>
 
 const isValidISOString = (value: string) => {
     const isoRegex: RegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;
