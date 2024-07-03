@@ -9,10 +9,13 @@ import {add} from "date-fns";
 import {nodemailerAdapter} from "../../../common/adapters/nodemailer.adapter";
 import {registrationEmailTemplate} from "../../../common/email-templates/registrationEmailTemplate";
 import {
-    LoginInputServiceType, LogoutInputServiceType, RefreshTokenInputServiceType,
+    LoginInputServiceType,
+    LogoutInputServiceType,
+    RefreshTokenInputServiceType,
     RegistrationConfirmationInputServiceType,
     RegistrationEmailResendingInputServiceType,
     RegistrationInputServiceType,
+    RegistrationPasswordRecoveryInputServiceType,
 } from "../types/inputTypes/authInputServiceTypes";
 import {LoginOutputServiceType, RefreshTokenOutputServiceType} from "../types/outputTypes/authOutputServiceTypes";
 import {JwtPayload} from "jsonwebtoken";
@@ -55,7 +58,11 @@ export const authService = {
                     hours: 1,
                     minutes: 30,
                 }).toISOString(),
-                isConfirmed: false
+                isConfirmed: true
+            },
+            passwordRecovery: {
+                confirmationCode: '',
+                expirationDate: '',
             }
         })
 
@@ -64,12 +71,45 @@ export const authService = {
 
         nodemailerAdapter.sendEmail(
             newUser.email,
-            registrationEmailTemplate(newUser.emailConfirmation.confirmationCode!)
+            registrationEmailTemplate(newUser.emailConfirmation.confirmationCode!),
+            'Registration Confirmation'
         )
 
         return {
             status: ResultStatus.Success,
             data: null,
+        }
+    },
+    async registrationPasswordRecovery(input: RegistrationPasswordRecoveryInputServiceType): Promise<Result> {
+        const existingUser: WithId<UserDbType> | null = await userMongoRepository.findUserByEmail(input.email)
+        if (!existingUser) {
+            return {
+                status: ResultStatus.NotFound,
+                extensions: [{
+                    field: 'email',
+                    message: `User with email ${input.email} does not exist`
+                }],
+                data: null
+            }
+        }
+
+        const newConfirmationCode: string = randomUUID();
+        const newExpirationDate: string = add(new Date(), {
+            hours: 1,
+            minutes: 30,
+        }).toISOString()
+
+        await userMongoRepository.updatePasswordRecoveryInfo(existingUser._id.toString(), newConfirmationCode, newExpirationDate)
+
+        await nodemailerAdapter.sendEmail(
+            input.email,
+            registrationEmailTemplate(newConfirmationCode),
+            'Password Recovery'
+        )
+
+        return {
+            status: ResultStatus.Success,
+            data: null
         }
     },
     async confirmRegistration(input: RegistrationConfirmationInputServiceType): Promise<Result> {
@@ -126,17 +166,18 @@ export const authService = {
         //     }
         // }
 
-        const newConfirmationCode = randomUUID();
-        const newExpirationDate = add(new Date(), {
+        const newConfirmationCode: string = randomUUID();
+        const newExpirationDate: string = add(new Date(), {
             hours: 1,
             minutes: 30,
         }).toISOString()
 
-        await userMongoRepository.updateConfirmationInfo(existingUser._id.toString(), newConfirmationCode, newExpirationDate)
+        await userMongoRepository.updateEmailConfirmationInfo(existingUser._id.toString(), newConfirmationCode, newExpirationDate)
 
         await nodemailerAdapter.sendEmail(
             input.email,
-            registrationEmailTemplate(newConfirmationCode)
+            registrationEmailTemplate(newConfirmationCode),
+            'Registration Confirmation'
         )
 
         return {
@@ -385,15 +426,6 @@ export const authService = {
         }
     }
 }
-
-
-
-
-
-
-
-
-
 
 
 // export const authService = {

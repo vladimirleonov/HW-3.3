@@ -34,13 +34,25 @@ export const userMongoRepository = {
         )
         return updatedInfo.matchedCount === 1
     },
-    async updateConfirmationInfo(id: string, confirmationCode: string, expirationDate: string): Promise<boolean> {
+    async updateEmailConfirmationInfo(id: string, confirmationCode: string, expirationDate: string): Promise<boolean> {
         const updatedInfo: UpdateResult<WithId<UserDbType>> = await UserModel.updateOne(
             {_id: new ObjectId(id)},
             {
                 $set: {
                     ['emailConfirmation.confirmationCode']: confirmationCode,
                     ['emailConfirmation.expirationDate']: expirationDate
+                }
+            }
+        )
+        return updatedInfo.matchedCount === 1
+    },
+    async updatePasswordRecoveryInfo(id: string, confirmationCode: string, expirationDate: string): Promise<boolean> {
+        const updatedInfo: UpdateResult<WithId<UserDbType>> = await UserModel.updateOne(
+            {_id: new ObjectId(id)},
+            {
+                $set: {
+                    ['passwordRecovery.confirmationCode']: confirmationCode,
+                    ['passwordRecovery.expirationDate']: expirationDate
                 }
             }
         )

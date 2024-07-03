@@ -8,6 +8,11 @@ type EmailConfirmation = {
     isConfirmed: boolean
 }
 
+type PasswordRecovery = {
+    confirmationCode: string,
+    expirationDate: string,
+}
+
 export type UserDbType = {
     //_id: ObjectId,
     login: string,
@@ -15,6 +20,7 @@ export type UserDbType = {
     email: string,
     createdAt: string
     emailConfirmation: EmailConfirmation,
+    passwordRecovery: PasswordRecovery
 }
 
 export type UserDocument = HydratedDocument<WithId<UserDbType>>
@@ -40,6 +46,22 @@ const emailConfirmationSchema = new mongoose.Schema<EmailConfirmation>({
     },
     isConfirmed: {
         type: Boolean,
+        required: true
+    }
+}, { _id: false })
+
+const passwordRecoverySchema = new mongoose.Schema<EmailConfirmation>({
+    confirmationCode: {
+        type: String,
+        maxlength: 40,
+        required: true
+    },
+    expirationDate: {
+        type: String,
+        validate: {
+            validator: isValidISOString,
+            message: "expirationDate must be a valid ISO string",
+        },
         required: true
     }
 }, { _id: false })
@@ -74,7 +96,11 @@ const userSchema = new mongoose.Schema<UserDbType>({
     emailConfirmation: {
         type: emailConfirmationSchema,
         required: true
-    }
+    },
+    passwordRecovery: {
+        type: passwordRecoverySchema,
+        required: true
+    },
 })
 
 export const UserModel = mongoose.model<UserDbType>('User', userSchema)

@@ -1,3 +1,5 @@
+import {type} from "node:os";
+
 export type LoginInputServiceType = {
     loginOrEmail: string
     password: string
@@ -16,9 +18,12 @@ export type RegistrationConfirmationInputServiceType = {
     code: string
 }
 
-export type RegistrationEmailResendingInputServiceType = {
+type EmailBodyInputServiceType = {
     email: string
 }
+
+export type RegistrationEmailResendingInputServiceType = EmailBodyInputServiceType
+export type RegistrationPasswordRecoveryInputServiceType = EmailBodyInputServiceType
 
 export type LogoutInputServiceType = {
     deviceId: string

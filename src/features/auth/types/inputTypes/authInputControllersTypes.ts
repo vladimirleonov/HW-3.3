@@ -1,3 +1,5 @@
+import {type} from "node:os";
+
 export type LoginInputControllerType = {
     loginOrEmail: string
     password: string
@@ -13,6 +15,10 @@ export type RegistrationConfirmationInputControllerType = {
     code: string
 }
 
-export type RegistrationEmailResendingInputControllerType = {
+type BaseEmailType = {
     email: string
 }
+
+export type RegistrationEmailResendingInputControllerType = BaseEmailType
+
+export type RegistrationPasswordRecoveryInputControllerType = BaseEmailType

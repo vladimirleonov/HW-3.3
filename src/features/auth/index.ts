@@ -16,10 +16,13 @@ import {refreshTokenController} from "./controllers/refreshTokenController";
 import {logoutController} from "./controllers/logoutController";
 import {refreshTokenAuthMiddleware} from "../../common/middlewares/refreshTokenAuthMiddleware";
 import {rateLimitMiddleware} from "../../common/middlewares/rateLimitMiddleware";
+import {passwordRecoveryBodyValidator} from "./validators/passwordRecoveryBodyValidator";
+import {registrationPasswordRecoveryController} from "./controllers/registrationPasswordRecoveryController";
 
 export const authRouter: Router = Router()
 
 authRouter.post('/login', rateLimitMiddleware, loginBodyValidator, inputCheckErrorsMiddleware, loginController)
+authRouter.post('/password-recovery', rateLimitMiddleware, passwordRecoveryBodyValidator, inputCheckErrorsMiddleware, registrationPasswordRecoveryController)
 authRouter.post('/registration', rateLimitMiddleware, registrationUserBodyValidator, inputCheckErrorsMiddleware, registrationController)
 authRouter.post('/registration-confirmation', rateLimitMiddleware, registrationConfirmationBodyValidator, registrationConfirmationController)
 authRouter.post('/registration-email-resending', rateLimitMiddleware, registrationEmailResendingBodyValidator, inputCheckErrorsMiddleware, registrationEmailResendingController)
