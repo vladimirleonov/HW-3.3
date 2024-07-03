@@ -94,7 +94,7 @@ describe('Confirm registration', () => {
         )
 
         const result: Result<boolean | null> = await confirmRegistrationUseCase({code: user.emailConfirmation.confirmationCode})
-
+        console.log(result)
         expect(result.status).toBe(ResultStatus.BadRequest)
         expect(result.data).toBeNull()
     });
@@ -171,7 +171,7 @@ describe('User login', () => {
     const deviceName: string = 'Mozilla/5.0'
     const refreshToken: string = 'fakeToken'
 
-    const login: string = 'test12adasd'
+    const login: string = 'test12ada'
     const email: string = 'test12adasd@gmail.com'
     const password: string = 'testtest1234'
 
@@ -306,7 +306,7 @@ describe('Refresh token', () => {
         const deviceName: string = 'Mozilla/5.0'
         const refreshToken: string = 'fakeToken'
 
-        const login: string = 'test12adasd'
+        const login: string = 'test12ada'
         const email: string = 'test12adasd@gmail.com'
         const password: string = 'testtest1234'
 
@@ -350,7 +350,7 @@ describe('logout', () => {
     const deviceName: string = 'Mozilla/5.0'
     const refreshToken: string = 'fakeToken'
 
-    const login: string = 'test12adasd'
+    const login: string = 'test12ada'
     const email: string = 'test12adasd@gmail.com'
     const password: string = 'testtest1234'
 

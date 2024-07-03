@@ -17,12 +17,14 @@ export const userDeviceMongoRepository = {
     //     return insertedInfo.insertedId.toString()
     // },
     async update({deviceId, iat}: UpdateInputType): Promise<boolean> {
+        console.log(iat)
         const updatedInfo: UpdateResult<WithId<UserDeviceDBType>> = await UserDeviceModel.updateOne({
                 deviceId: deviceId,
             },
             {
                 $set: {iat: iat}
             })
+        console.log("updatedInfo", updatedInfo)
 
         return updatedInfo.matchedCount === 1
     },

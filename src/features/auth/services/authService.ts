@@ -55,17 +55,17 @@ export const authService = {
                     hours: 1,
                     minutes: 30,
                 }).toISOString(),
-                isConfirmed: true
+                isConfirmed: false
             }
         })
 
         await userMongoRepository.save(newUser)
         //await userMongoRepository.create(newUser)
 
-        // nodemailerAdapter.sendEmail(
-        //     newUser.email,
-        //     registrationEmailTemplate(newUser.emailConfirmation.confirmationCode!)
-        // )
+        nodemailerAdapter.sendEmail(
+            newUser.email,
+            registrationEmailTemplate(newUser.emailConfirmation.confirmationCode!)
+        )
 
         return {
             status: ResultStatus.Success,
@@ -74,6 +74,7 @@ export const authService = {
     },
     async confirmRegistration(input: RegistrationConfirmationInputServiceType): Promise<Result> {
         const existingUser: WithId<UserDbType> | null = await userMongoRepository.findUserByConfirmationCode(input.code)
+        console.log(existingUser)
         if (!existingUser) {
             return {
                 status: ResultStatus.BadRequest,
@@ -188,8 +189,8 @@ export const authService = {
             deviceId: deviceId
         }
 
-        const accessToken: string = jwtAdapter.generateToken(JwtAccessTokenPayload, '10h')
-        const refreshToken: string = jwtAdapter.generateToken(JwtRefreshTokenPayload, '20h')
+        const accessToken: string = jwtAdapter.generateToken(JwtAccessTokenPayload, '10s')
+        const refreshToken: string = jwtAdapter.generateToken(JwtRefreshTokenPayload, '20s')
 
         const decodedRefreshToken: string | JwtPayload | null = jwtAdapter.decode(refreshToken)
         if (decodedRefreshToken && typeof decodedRefreshToken !== 'string') {
@@ -239,6 +240,7 @@ export const authService = {
                 data: null
             }
         }
+        console.log("old issued at", issuedAt)
 
         const JwtAccessTokenPayload: JwtPayload = {
             userId: userId
@@ -255,6 +257,7 @@ export const authService = {
         const decodedRefreshToken: string | JwtPayload | null = jwtAdapter.decode(refreshToken)
         if (decodedRefreshToken) {
             const {iat} = decodedRefreshToken as JwtPayload
+            console.log("new refresh token iat", unixToISOString(iat))
 
             const issuedAt: string = unixToISOString(iat)
 

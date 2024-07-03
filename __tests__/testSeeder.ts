@@ -74,16 +74,18 @@ export const testSeeder = {
                 }).toISOString(),
                 isConfirmed: isConfirmed ?? false
             }
-        });
+        })
 
-        const res: UserDocument = await newUser.save();
+        const res: UserDocument = await newUser.save()
         //const res: InsertOneResult<UserDbType> = await db.getCollections().userCollection.insertOne({...newUser})
 
-        const { _id, ...userWithoutId } = newUser;
+        const user: WithId<UserDbType> = res.toObject({ versionKey: false })
+
+        const { _id: userId, ...restUser} = user
 
         return {
             id: res._id.toString(),
-            ...userWithoutId
+            ...restUser
         }
     },
     async getDevices(): Promise<WithId<UserDeviceDBType>[]> {

@@ -35,7 +35,7 @@ describe('Security service test logic chain', () => {
     let deviceArr: Array<UserDeviceDBType> = []
     const ip: string = '103.12.64.107'
 
-    const login: string = 'test12adasd'
+    const login: string = 'test12ada'
     const email: string = 'test12adasd@gmail.com'
     const password: string = 'testtest1234'
 
@@ -99,6 +99,7 @@ describe('Security service test logic chain', () => {
         // refresh token 1
         ///
         const decodedRefreshToken: string | JwtPayload | null = jwtAdapter.decode(refreshToken1)
+        console.log("decodedRefreshToken", decodedRefreshToken)
         const {iat, deviceId, userId} = decodedRefreshToken as JwtPayload
         const refreshTokenInputServiceType: RefreshTokenInputServiceType = {
             deviceId,
@@ -107,12 +108,14 @@ describe('Security service test logic chain', () => {
         }
 
         const refreshToken1BeforeUpdate: string = refreshToken1
+        console.log("refreshToken1BeforeUpdate", refreshToken1BeforeUpdate)
 
         //delay before update refresh token to get different iat
         await new Promise(resolve => setTimeout(resolve, 2000));
 
         const refreshTokenResult: Result<RefreshTokenOutputServiceType | null> = await refreshTokenUseCase(refreshTokenInputServiceType)
         refreshToken1 = refreshTokenResult.data!.refreshToken
+        console.log("refreshTokenResult", refreshTokenResult)
 
         expect(refreshTokenResult.status).toBe(ResultStatus.Success)
         expect(refreshTokenResult.data!.refreshToken).not.toBe(refreshToken1BeforeUpdate)
@@ -123,6 +126,9 @@ describe('Security service test logic chain', () => {
         const devices: Array<UserDeviceDBType> = await testSeeder.getDevices()
 
         expect(deviceArr.length).toBe(devices.length)
+
+        console.log("devices[0]", devices[0])
+        console.log("deviceArr[0]", deviceArr[0])
 
         expect(devices[0].iat).not.toBe(deviceArr[0].iat)
         expect(devices[1].iat).toBe(deviceArr[1].iat)
@@ -152,8 +158,6 @@ describe('Security service test logic chain', () => {
         deviceArr.splice(elementIndexToDelete, 1)
         const devices: WithId<UserDeviceDBType>[] = await testSeeder.getDevices()
         expect(devices.length).toBe(deviceArr.length)
-        console.log(devices)
-        console.log(deviceArr)
         expect(devices).toEqual(deviceArr)
     })
     it('should delete all devices exclude current device 1', async () => {

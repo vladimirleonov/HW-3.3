@@ -34,13 +34,11 @@ describe('Check RateLimit', () => {
     it('should check rate limit tooManyRequests for 5 and more requests from one ip', async () => {
         for (let i: number = 0; i < 5; i++) {
             const result: Result = await checkRateLimitUseCase({ip: ips[0], originUrl: originUrls[0]})
-            console.log(`rate limit result ip ${ips[0]} i=${i}`, result)
             expect(result.status).toBe(ResultStatus.Success)
         }
         for (let i: number = 0; i < 6; i++) {
             const result: Result = await checkRateLimitUseCase({ip: ips[1], originUrl: originUrls[1]})
             if (i >= 5) {
-                console.log(i)
                 expect(result.status).toBe(ResultStatus.TooManyRequests)
             } else {
                 expect(result.status).toBe(ResultStatus.Success)

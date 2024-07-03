@@ -42,7 +42,7 @@ const emailConfirmationSchema = new mongoose.Schema<EmailConfirmation>({
         type: Boolean,
         required: true
     }
-})
+}, { _id: false })
 
 const userSchema = new mongoose.Schema<UserDbType>({
     login: {
