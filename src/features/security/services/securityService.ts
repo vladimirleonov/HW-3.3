@@ -50,6 +50,7 @@ export const securityService = {
             ip,
             originUrl
         })
+        console.log("accessLogsCount", accessLogsCount)
         if (accessLogsCount >= 5) {
             return {
                 status: ResultStatus.TooManyRequests,

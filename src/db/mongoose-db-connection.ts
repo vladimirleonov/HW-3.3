@@ -34,13 +34,13 @@ export const db = {
     async drop(): Promise<boolean> {
         try {
             await Promise.all([
-                BlogModel,
-                PostModel,
-                CommentModel,
-                UserModel,
-                ApiAccessLogModel,
-                RevokedTokenModel,
-                UserDeviceModel
+                BlogModel.deleteMany({}),
+                PostModel.deleteMany({}),
+                CommentModel.deleteMany({}),
+                UserModel.deleteMany({}),
+                ApiAccessLogModel.deleteMany({}),
+                RevokedTokenModel.deleteMany({}),
+                UserDeviceModel.deleteMany({})
             ]);
             console.log('Cleared all collections in MongoDB');
             return true
