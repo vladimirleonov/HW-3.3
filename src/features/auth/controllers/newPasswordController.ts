@@ -8,7 +8,9 @@ export const newPasswordController = async (req: Request<{}, {}, NewPasswordInpu
     try {
         const result: Result = await authService.setNewPassword(req.body)
         if (result.status === ResultStatus.BadRequest) {
-            res.status(HTTP_CODES.BAD_REQUEST).send()
+            res.status(HTTP_CODES.BAD_REQUEST).send({
+                errorsMessages: result.extensions
+            })
             return
         }
         res.status(HTTP_CODES.NO_CONTENT).send()

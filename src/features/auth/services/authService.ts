@@ -117,7 +117,7 @@ export const authService = {
         }
     },
     async setNewPassword(input: NewPasswordInputServiceType): Promise<Result> {
-        const user: UserDocument | null = await userMongoRepository.findUserByRecoveryCode(input.code)
+        const user: UserDocument | null = await userMongoRepository.findUserByRecoveryCode(input.recoveryCode)
         if (!user) {
             return {
                 status: ResultStatus.BadRequest,
@@ -138,7 +138,7 @@ export const authService = {
         }
 
         const saltRounds: number = 10
-        const newPasswordHash: string = await cryptoAdapter.createHash(input.password, saltRounds)
+        const newPasswordHash: string = await cryptoAdapter.createHash(input.newPassword, saltRounds)
 
         user.password = newPasswordHash
         user.passwordRecovery.recoveryCode = ''; // set '' after successful update

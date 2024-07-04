@@ -37,6 +37,6 @@ export type RefreshTokenInputServiceType = {
 }
 
 export type NewPasswordInputServiceType = {
-    password: string,
-    code: string
+    newPassword: string,
+    recoveryCode: string
 }
