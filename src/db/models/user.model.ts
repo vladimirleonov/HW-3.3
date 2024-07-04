@@ -1,29 +1,8 @@
 import {HydratedDocument} from "mongoose";
 import mongoose from "mongoose"
-import { WithId } from "mongodb";
+import {EmailConfirmation, PasswordRecovery, UserDbType} from "../db-types/user-db-types";
 
-type EmailConfirmation = {
-    confirmationCode: string,
-    expirationDate: string,
-    isConfirmed: boolean
-}
-
-type PasswordRecovery = {
-    confirmationCode: string,
-    expirationDate: string,
-}
-
-export type UserDbType = {
-    //_id: ObjectId,
-    login: string,
-    password: string,
-    email: string,
-    createdAt: string
-    emailConfirmation: EmailConfirmation,
-    passwordRecovery: PasswordRecovery
-}
-
-export type UserDocument = HydratedDocument<WithId<UserDbType>>
+export type UserDocument = HydratedDocument<UserDbType>
 
 const isValidISOString = (value: string) => {
     const isoRegex: RegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;
@@ -50,19 +29,17 @@ const emailConfirmationSchema = new mongoose.Schema<EmailConfirmation>({
     }
 }, { _id: false })
 
-const passwordRecoverySchema = new mongoose.Schema<EmailConfirmation>({
-    confirmationCode: {
+const passwordRecoverySchema = new mongoose.Schema<PasswordRecovery>({
+    recoveryCode: {
         type: String,
-        maxlength: 40,
-        required: true
+        maxlength: 40
     },
     expirationDate: {
         type: String,
-        validate: {
-            validator: isValidISOString,
-            message: "expirationDate must be a valid ISO string",
-        },
-        required: true
+        // validate: {
+        //     validator: isValidISOString,
+        //     message: "expirationDate must be a valid ISO string",
+        // }
     }
 }, { _id: false })
 
@@ -98,8 +75,7 @@ const userSchema = new mongoose.Schema<UserDbType>({
         required: true
     },
     passwordRecovery: {
-        type: passwordRecoverySchema,
-        required: true
+        type: passwordRecoverySchema
     },
 })
 

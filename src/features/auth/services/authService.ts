@@ -11,6 +11,7 @@ import {registrationEmailTemplate} from "../../../common/email-templates/registr
 import {
     LoginInputServiceType,
     LogoutInputServiceType,
+    NewPasswordInputServiceType,
     RefreshTokenInputServiceType,
     RegistrationConfirmationInputServiceType,
     RegistrationEmailResendingInputServiceType,
@@ -22,6 +23,7 @@ import {JwtPayload} from "jsonwebtoken";
 import {userDeviceMongoRepository} from "../../security/repository/userDeviceMongoRepository";
 import {UserDeviceDBType, UserDeviceDocument, UserDeviceModel} from "../../../db/models/devices.model";
 import {unixToISOString} from "../../../common/helpers/unixToISOString";
+import {passwordRecoveryEmailTemplate} from "../../../common/email-templates/passwordRecoveryEmailTemplate";
 
 export const authService = {
     async registration(input: RegistrationInputServiceType): Promise<Result> {
@@ -58,10 +60,10 @@ export const authService = {
                     hours: 1,
                     minutes: 30,
                 }).toISOString(),
-                isConfirmed: true
+                isConfirmed: false
             },
             passwordRecovery: {
-                confirmationCode: '',
+                recoveryCode: '',
                 expirationDate: '',
             }
         })
@@ -81,7 +83,9 @@ export const authService = {
         }
     },
     async registrationPasswordRecovery(input: RegistrationPasswordRecoveryInputServiceType): Promise<Result> {
+        console.log(input)
         const existingUser: WithId<UserDbType> | null = await userMongoRepository.findUserByEmail(input.email)
+        console.log(existingUser)
         if (!existingUser) {
             return {
                 status: ResultStatus.NotFound,
@@ -93,19 +97,53 @@ export const authService = {
             }
         }
 
-        const newConfirmationCode: string = randomUUID();
+        const newRecoveryCode: string = randomUUID();
         const newExpirationDate: string = add(new Date(), {
             hours: 1,
             minutes: 30,
         }).toISOString()
 
-        await userMongoRepository.updatePasswordRecoveryInfo(existingUser._id.toString(), newConfirmationCode, newExpirationDate)
+        await userMongoRepository.updatePasswordRecoveryInfo(existingUser._id.toString(), newRecoveryCode, newExpirationDate)
 
         await nodemailerAdapter.sendEmail(
             input.email,
-            registrationEmailTemplate(newConfirmationCode),
+            passwordRecoveryEmailTemplate(newRecoveryCode),
             'Password Recovery'
         )
+
+        return {
+            status: ResultStatus.Success,
+            data: null
+        }
+    },
+    async setNewPassword(input: NewPasswordInputServiceType): Promise<Result> {
+        const user: UserDocument | null = await userMongoRepository.findUserByRecoveryCode(input.code)
+        if (!user) {
+            return {
+                status: ResultStatus.BadRequest,
+                extensions: [{field: 'recoveryCode', message: 'Incorrect recovery code'}],
+                data: null
+            }
+        }
+
+        const currentDate: Date = new Date()
+        const expirationDate: Date = new Date(user.passwordRecovery.expirationDate)
+
+        if (expirationDate < currentDate) {
+            return {
+                status: ResultStatus.BadRequest,
+                extensions: [{field: 'recoveryCode', message: 'Recovery code has expired'}],
+                data: null
+            }
+        }
+
+        const saltRounds: number = 10
+        const newPasswordHash: string = await cryptoAdapter.createHash(input.password, saltRounds)
+
+        user.password = newPasswordHash
+        user.passwordRecovery.recoveryCode = ''; // set '' after successful update
+        user.passwordRecovery.expirationDate = ''; // set '' after successful update
+        await userMongoRepository.save(user)
 
         return {
             status: ResultStatus.Success,

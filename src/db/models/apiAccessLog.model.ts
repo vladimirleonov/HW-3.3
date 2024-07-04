@@ -1,10 +1,5 @@
 import mongoose, {HydratedDocument} from "mongoose"
-
-export type ApiAccessLogDbType = {
-    ip: string,
-    URL: string,
-    date: Date
-}
+import {ApiAccessLogDbType} from "../db-types/api-access-log-db-types";
 
 export type ApiAccessLogDocument = HydratedDocument<ApiAccessLogDbType>
 

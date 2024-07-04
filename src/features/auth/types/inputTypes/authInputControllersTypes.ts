@@ -22,3 +22,8 @@ type BaseEmailType = {
 export type RegistrationEmailResendingInputControllerType = BaseEmailType
 
 export type RegistrationPasswordRecoveryInputControllerType = BaseEmailType
+
+export type NewPasswordInputControllerType = {
+    password: string,
+    code: string
+}

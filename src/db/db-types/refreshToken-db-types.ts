@@ -1,6 +1,6 @@
-// import {ObjectId} from "mongodb";
+import {ObjectId, WithId} from "mongodb";
 
-// export type RevokedTokenDbType = {
-//     token: string;
-//     userId: ObjectId;
-// }
+export type RevokedTokenDbType = WithId<{
+    token: string;
+    userId: ObjectId;
+}>

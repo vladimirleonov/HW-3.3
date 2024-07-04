@@ -35,3 +35,8 @@ export type RefreshTokenInputServiceType = {
     userId: string,
     iat: string
 }
+
+export type NewPasswordInputServiceType = {
+    password: string,
+    code: string
+}

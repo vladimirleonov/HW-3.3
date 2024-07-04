@@ -1,15 +1,5 @@
-import {ObjectId} from "mongodb"
 import mongoose, {HydratedDocument} from "mongoose"
-
-export type PostDbType = {
-    //_id: ObjectId
-    title: string
-    shortDescription: string
-    content: string
-    blogId: ObjectId
-    blogName: string
-    createdAt: string
-}
+import {PostDbType} from "../db-types/post-db-types";
 
 export type PostDocument = HydratedDocument<PostDbType>
 
@@ -55,4 +45,4 @@ const postSchema = new mongoose.Schema<PostDbType>(
     }
 )
 
-export const PostModel = mongoose.model('Post', postSchema)
+export const PostModel = mongoose.model<PostDbType>('Post', postSchema)

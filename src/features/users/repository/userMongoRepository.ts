@@ -5,22 +5,28 @@ export const userMongoRepository = {
     async save(user: UserDocument): Promise<UserDocument> {
         return user.save()
     },
-    async findUserById(id: string): Promise<WithId<UserDbType> | null> {
-        return await UserModel.findOne({_id: new ObjectId(id)}).lean()
+    async findAll(): Promise<UserDocument[] | null> {
+        return UserModel.find({}).lean()
+    },
+    async findUserById(id: string): Promise<UserDocument | null> {
+        return UserModel.findOne({_id: new ObjectId(id)})
     },
     async findUserByField(field: string, value: string): Promise<WithId<UserDbType> | null> {
-        return await UserModel.findOne({[field]: value}).lean()
+        return UserModel.findOne({[field]: value}).lean()
     },
     async findUserByConfirmationCode(confirmationCode: string): Promise<WithId<UserDbType> | null> {
-        return await UserModel.findOne({['emailConfirmation.confirmationCode']: confirmationCode}).lean()
+        return UserModel.findOne({['emailConfirmation.confirmationCode']: confirmationCode}).lean()
+    },
+    async findUserByRecoveryCode(recoveryCode: string): Promise<UserDocument | null> {
+        return UserModel.findOne({['passwordRecovery.recoveryCode']: recoveryCode})
     },
     async findUserByEmail(email: string): Promise<WithId<UserDbType> | null> {
-        return await UserModel.findOne({email: email}).lean()
+        return UserModel.findOne({email: email}).lean()
     },
-    findUserByLogin(login: string): Promise<WithId<UserDbType> | null> {
+    async findUserByLogin(login: string): Promise<WithId<UserDbType> | null> {
         return UserModel.findOne({login: login}).lean()
     },
-    findUserByLoginOrEmailField(loginOrEmail: string): Promise<WithId<UserDbType> | null> {
+    async findUserByLoginOrEmailField(loginOrEmail: string): Promise<WithId<UserDbType> | null> {
         return UserModel.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}]}).lean()
     },
     // async create(newUser: WithId<UserDbType>): Promise<string> {
@@ -47,11 +53,12 @@ export const userMongoRepository = {
         return updatedInfo.matchedCount === 1
     },
     async updatePasswordRecoveryInfo(id: string, confirmationCode: string, expirationDate: string): Promise<boolean> {
+        console.log(id)
         const updatedInfo: UpdateResult<WithId<UserDbType>> = await UserModel.updateOne(
             {_id: new ObjectId(id)},
             {
                 $set: {
-                    ['passwordRecovery.confirmationCode']: confirmationCode,
+                    ['passwordRecovery.recoveryCode']: confirmationCode,
                     ['passwordRecovery.expirationDate']: expirationDate
                 }
             }

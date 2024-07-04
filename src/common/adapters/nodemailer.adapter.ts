@@ -17,7 +17,7 @@ export const nodemailerAdapter = {
         let info: SMTPTransport.SentMessageInfo = await transporter.sendMail({
             from: SETTINGS.EMAIL.USER,
             to: recipient,
-            subject: 'Registration Confirmation',
+            subject: subject,
             html: emailTemplate
         });
 

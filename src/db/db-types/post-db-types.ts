@@ -1,11 +1,10 @@
-// import {ObjectId} from "mongodb"
+import {ObjectId, WithId} from "mongodb";
 
-// export type PostDbType = {
-//     _id: ObjectId
-//     title: string
-//     shortDescription: string
-//     content: string
-//     blogId: ObjectId
-//     blogName: string
-//     createdAt: string
-// }
+export type PostDbType = WithId<{
+    title: string
+    shortDescription: string
+    content: string
+    blogId: ObjectId
+    blogName: string
+    createdAt: string
+}>

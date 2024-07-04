@@ -1,18 +1,9 @@
 import mongoose, {HydratedDocument} from "mongoose";
-
-export type UserDeviceDBType = {
-    //_id: ObjectId
-    userId: string
-    deviceId: string
-    iat: string
-    deviceName: string
-    ip: string
-    exp: string
-}
+import {UserDeviceDBType} from "../db-types/user-devices-db-types";
 
 export type UserDeviceDocument = HydratedDocument<UserDeviceDBType>
 
-const userDeviceSchema = new mongoose.Schema({
+const userDeviceSchema = new mongoose.Schema<UserDeviceDBType>({
     userId: {
         type: String,
         maxLength: 50,
@@ -45,4 +36,4 @@ const userDeviceSchema = new mongoose.Schema({
     },
 })
 
-export const UserDeviceModel = mongoose.model('UserDevice', userDeviceSchema)
+export const UserDeviceModel = mongoose.model<UserDeviceDBType>('UserDevice', userDeviceSchema)
