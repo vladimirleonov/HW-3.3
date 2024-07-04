@@ -9,7 +9,7 @@ import {UserDbType, UserDocument} from "../src/db/db-types/user-db-types";
 export const testSeeder = {
     createUserDTO() {
         return {
-            login: 'test',
+            login: 'test123',
             email: 'test@gmail.com',
             password: 'test1234',
         }
@@ -19,7 +19,7 @@ export const testSeeder = {
 
         for (let i = 0; i <= count; i++) {
             users.push({
-                login: 'test' + i,
+                login: 'test123' + i,
                 email: `test${i}@gmail.com`,
                 password: 'test'
             })
@@ -51,9 +51,11 @@ export const testSeeder = {
         login: string,
         email: string,
         password: string,
-        code?: string,
+        confirmationCode?: string,
         expirationDate?: string,
         isConfirmed?: boolean,
+        recoveryCode?: string,
+        expirationRecoveryDate?: string
     )
     // : Promise<IUserService>
     {
@@ -67,12 +69,19 @@ export const testSeeder = {
             password: passwordHash,
             createdAt: new Date().toISOString(),
             emailConfirmation: {
-                confirmationCode: code ?? randomUUID(),
+                confirmationCode: confirmationCode ?? randomUUID(),
                 expirationDate: expirationDate ?? add(new Date(), {
                     hours: 1,
                     minutes: 30,
                 }).toISOString(),
                 isConfirmed: isConfirmed ?? false
+            },
+            passwordRecovery: {
+                recoveryCode: recoveryCode ?? randomUUID(),
+                expirationDate: expirationRecoveryDate ?? add(new Date(), {
+                    hours: 1,
+                    minutes: 30,
+                }).toISOString(),
             }
         })
 

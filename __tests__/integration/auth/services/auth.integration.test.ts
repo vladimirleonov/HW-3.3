@@ -18,151 +18,7 @@ import {
 import {JwtPayload} from "jsonwebtoken";
 import {jwtAdapter} from "../../../../src/common/adapters/jwt.adapter";
 import {unixToISOString} from "../../../../src/common/helpers/unixToISOString";
-
-describe('User auth', () => {
-    const registrationUserUseCase = authService.registration
-    // nodemailerAdapter.sendEmail = nodemailerAdapterMock.sendEmail
-    // nodemailerAdapter.sendEmail = jest.fn()// just function, but not returns anything
-    nodemailerAdapter.sendEmail = jest.fn().mockImplementation(async (recipient: string, emailTemplate: string): Promise<boolean> => {
-        return Promise.resolve(true);
-    });
-
-    beforeAll(async () => {
-        const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
-        await db.run(mongoServer.getUri())
-    })
-    afterAll(async () => {
-        await db.stop()
-    })
-    beforeEach(async () => {
-        await db.drop()
-        jest.resetAllMocks()
-    })
-    it('should register user with correct data', async () => {
-        const userDTO = testSeeder.createUserDTO()
-
-        const result: Result = await registrationUserUseCase(userDTO)
-
-        expect(result.status).toBe(ResultStatus.Success)
-        expect(result.data).toBeNull()
-
-        expect(nodemailerAdapter.sendEmail).toHaveBeenCalled()
-        expect(nodemailerAdapter.sendEmail).toHaveBeenCalledTimes(1)
-    });
-    it('should not register user twice', async () => {
-        const userDTO = testSeeder.createUserDTO()
-
-        await testSeeder.registerUser('test2', userDTO.email, 'qwerty')
-
-        await userMongoRepository.findUserByEmail(userDTO.email);
-
-        const result: Result = await registrationUserUseCase(userDTO)
-
-        expect(result.status).toBe(ResultStatus.BadRequest)
-        expect(result.data).toBeNull()
-
-        expect(nodemailerAdapter.sendEmail).not.toHaveBeenCalled()
-    });
-});
-
-describe('Confirm registration', () => {
-    const confirmRegistrationUseCase = authService.confirmRegistration
-
-    beforeAll(async () => {
-        const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
-        await db.run(mongoServer.getUri())
-    })
-    afterAll(async () => {
-        await db.stop()
-    })
-    beforeEach(async () => {
-        await db.drop()
-    })
-    it('should not confirm email if user does not exist', async () => {
-        const result: Result<boolean | null> = await confirmRegistrationUseCase({code: '123'})
-
-        expect(result.status).toBe(ResultStatus.BadRequest)
-        expect(result.data).toBeNull()
-    });
-    it('should not confirm email if confirmation code has expired', async () => {
-        const user = await testSeeder.registerUser(
-            'test',
-            'test@gmail.com',
-            'test1234',
-            randomUUID(),
-            new Date().toISOString()
-        )
-
-        const result: Result<boolean | null> = await confirmRegistrationUseCase({code: user.emailConfirmation.confirmationCode})
-
-        expect(result.status).toBe(ResultStatus.BadRequest)
-        expect(result.data).toBeNull()
-    });
-    it('should not confirm email if user account already confirmed', async () => {
-        const user = await testSeeder.registerUser(
-            'test',
-            'test@gmail.com',
-            'test1234',
-            randomUUID(),
-            undefined,
-            true
-        )
-
-        const result: Result<boolean | null> = await confirmRegistrationUseCase({code: user.emailConfirmation.confirmationCode})
-
-        expect(result.status).toBe(ResultStatus.BadRequest)
-        expect(result.data).toBeNull()
-    });
-    it('should confirm email', async () => {
-        const user = await testSeeder.registerUser(
-            'test',
-            'test@gmail.com',
-            'test1234',
-        )
-
-        const result: Result<boolean | null> = await confirmRegistrationUseCase({code: user.emailConfirmation.confirmationCode})
-
-        expect(result.status).toBe(ResultStatus.Success)
-    });
-})
-
-describe('User registration email resending', () => {
-    const registrationEmailResendingUseCase = authService.registrationEmailResending
-    nodemailerAdapter.sendEmail = jest.fn().mockImplementation(async (recipient: string, emailTemplate: string): Promise<boolean> => true)
-
-    beforeAll(async () => {
-        const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
-        await db.run(mongoServer.getUri())
-    })
-    afterAll(async () => {
-        await db.stop()
-    })
-    beforeEach(async () => {
-        await db.drop()
-    })
-    it(`should not resend email registration, user with email doesn't exist`, async () => {
-        const result: Result = await registrationEmailResendingUseCase({email: 'qwerty@gmail.com'})
-
-        expect(result.status).toBe(ResultStatus.BadRequest)
-        expect(result.data).toBeNull()
-
-        expect(nodemailerAdapter.sendEmail).not.toHaveBeenCalled()
-    });
-    it('should confirm registration', async () => {
-        const user = await testSeeder.registerUser(
-            'test',
-            'test@gmail.com',
-            'test1234',
-        )
-
-        const result: Result = await registrationEmailResendingUseCase({email: user.email})
-
-        expect(result.status).toBe(ResultStatus.Success)
-        expect(result.data).toBeNull()
-
-        expect(nodemailerAdapter.sendEmail).toHaveBeenCalled()
-    });
-})
+import {subMinutes} from "date-fns";
 
 describe('User login', () => {
     const loginUserUseCase = authService.login
@@ -275,7 +131,140 @@ describe('User login', () => {
 
         expect(result.status).toBe(ResultStatus.BadRequest)
     });
-});
+})
+
+describe('Password recovery', () => {
+    const passwordRecoveryUseCase = authService.registrationPasswordRecovery
+    nodemailerAdapter.sendEmail = jest.fn().mockImplementation(async (recipient: string, emailTemplate: string, subject: string): Promise<boolean> => {
+        return Promise.resolve(true)
+    })
+
+    beforeAll(async () => {
+        const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
+        await db.run(mongoServer.getUri())
+    })
+    beforeEach(async () => {
+        await db.drop()
+        jest.resetAllMocks()
+    })
+    afterAll(async () => {
+        await db.stop()
+    })
+    it('should return no content even if current email is not registered (for prevent user\'s email detection)', async () => {
+        const result: Result = await passwordRecoveryUseCase({
+            email: "qeasfs@gmail.com"
+        })
+
+        expect(result.status).toBe(ResultStatus.NotFound)
+        expect(nodemailerAdapter.sendEmail).not.toHaveBeenCalled()
+    })
+    it('should return no content successfully send recovery email ', async () => {
+        await testSeeder.registerUser(
+            'test123',
+            'test123@gmail.com',
+            'test123',
+            undefined,
+            undefined,
+            true
+        )
+
+        const result: Result = await passwordRecoveryUseCase({
+            email: 'test123@gmail.com'
+        })
+
+        expect(result.status).toBe(ResultStatus.Success)
+        expect(nodemailerAdapter.sendEmail).toHaveBeenCalledTimes(1)
+    })
+    it('should return bad request for incorrect email passed', async () => {
+        const result: Result = await passwordRecoveryUseCase({
+            email: "qeas#f^s@gmail.com"
+        })
+
+        expect(result.status).toBe(ResultStatus.NotFound)
+        expect(nodemailerAdapter.sendEmail).not.toHaveBeenCalled()
+    })
+    it('should return bad request for incorrect email passed', async () => {
+        const result: Result = await passwordRecoveryUseCase({
+            email: "qeas#f^s@gmail.com"
+        })
+
+        expect(result.status).toBe(ResultStatus.NotFound)
+        expect(nodemailerAdapter.sendEmail).not.toHaveBeenCalled()
+    })
+})
+
+describe('Set new password', () => {
+    const setNewPasswordUseCase = authService.setNewPassword
+    beforeAll(async () => {
+        const MongoServer: MongoMemoryServer = await MongoMemoryServer.create()
+        await db.run(MongoServer.getUri())
+    })
+    beforeEach(async () => {
+        await db.drop()
+    })
+    afterAll(async () => {
+        await db.stop()
+    })
+    it('should successfully set new password', async () => {
+        const user = await testSeeder.registerUser(
+            'test123',
+            'test123@gmail.com',
+            'test123',
+            undefined,
+            undefined,
+            true,
+            '123456789',
+            undefined
+        )
+
+        const result: Result = await setNewPasswordUseCase({
+            newPassword: 'qwerty',
+            recoveryCode: '123456789'
+        })
+
+        expect(result.status).toBe(ResultStatus.Success)
+    })
+    it('should return 400 recovery code is incorrect', async () => {
+        const user = await testSeeder.registerUser(
+            'test123',
+            'test123@gmail.com',
+            'test123',
+            undefined,
+            undefined,
+            true,
+            undefined,
+            undefined
+        )
+
+        const result: Result = await setNewPasswordUseCase({
+            newPassword: 'qwerty',
+            recoveryCode: '123456789'
+        })
+
+        expect(result.status).toBe(ResultStatus.BadRequest)
+        expect(result.extensions![0]).toEqual({field: 'recoveryCode', message: 'Incorrect recovery code'})
+    })
+    it('should return 400 recovery code has expired', async () => {
+        const user = await testSeeder.registerUser(
+            'test123',
+            'test123@gmail.com',
+            'test123',
+            undefined,
+            undefined,
+            true,
+            '123456789',
+            subMinutes(new Date(), 5).toISOString()
+        )
+
+        const result: Result = await setNewPasswordUseCase({
+            newPassword: 'qwerty',
+            recoveryCode: '123456789'
+        })
+
+        expect(result.status).toBe(ResultStatus.BadRequest)
+        expect(result.extensions![0]).toEqual({field: 'recoveryCode', message: 'Recovery code has expired'})
+    })
+})
 
 describe('Refresh token', () => {
     const refreshTokenUseCase = authService.refreshToken
@@ -343,6 +332,151 @@ describe('Refresh token', () => {
         const refreshTokenResult: Result<RefreshTokenOutputServiceType | null> = await refreshTokenUseCase(refreshTokenInputServiceType)
         expect(refreshTokenResult.status).toBe(ResultStatus.Success)
     })
+})
+
+describe('Confirm registration', () => {
+    const confirmRegistrationUseCase = authService.confirmRegistration
+
+    beforeAll(async () => {
+        const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
+        await db.run(mongoServer.getUri())
+    })
+    afterAll(async () => {
+        await db.stop()
+    })
+    beforeEach(async () => {
+        await db.drop()
+    })
+    it('should not confirm email if user does not exist', async () => {
+        const result: Result<boolean | null> = await confirmRegistrationUseCase({code: '123'})
+
+        expect(result.status).toBe(ResultStatus.BadRequest)
+        expect(result.data).toBeNull()
+    });
+    it('should not confirm email if confirmation code has expired', async () => {
+        const user = await testSeeder.registerUser(
+            'test',
+            'test@gmail.com',
+            'test1234',
+            randomUUID(),
+            new Date().toISOString()
+        )
+
+        const result: Result<boolean | null> = await confirmRegistrationUseCase({code: user.emailConfirmation.confirmationCode})
+
+        expect(result.status).toBe(ResultStatus.BadRequest)
+        expect(result.data).toBeNull()
+    });
+    it('should not confirm email if user account already confirmed', async () => {
+        const user = await testSeeder.registerUser(
+            'test',
+            'test@gmail.com',
+            'test1234',
+            randomUUID(),
+            undefined,
+            true
+        )
+
+        const result: Result<boolean | null> = await confirmRegistrationUseCase({code: user.emailConfirmation.confirmationCode})
+
+        expect(result.status).toBe(ResultStatus.BadRequest)
+        expect(result.data).toBeNull()
+    });
+    it('should confirm email', async () => {
+        const user = await testSeeder.registerUser(
+            'test',
+            'test@gmail.com',
+            'test1234',
+        )
+
+        const result: Result<boolean | null> = await confirmRegistrationUseCase({code: user.emailConfirmation.confirmationCode})
+
+        expect(result.status).toBe(ResultStatus.Success)
+    });
+})
+
+describe('User auth', () => {
+    const registrationUserUseCase = authService.registration
+    // nodemailerAdapter.sendEmail = nodemailerAdapterMock.sendEmail
+    // nodemailerAdapter.sendEmail = jest.fn()// just function, but not returns anything
+    nodemailerAdapter.sendEmail = jest.fn().mockImplementation(async (recipient: string, emailTemplate: string): Promise<boolean> => {
+        return Promise.resolve(true);
+    });
+
+    beforeAll(async () => {
+        const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
+        await db.run(mongoServer.getUri())
+    })
+    afterAll(async () => {
+        await db.stop()
+    })
+    beforeEach(async () => {
+        await db.drop()
+        jest.resetAllMocks()
+    })
+    it('should register user with correct data', async () => {
+        const userDTO = testSeeder.createUserDTO()
+
+        const result: Result = await registrationUserUseCase(userDTO)
+
+        expect(result.status).toBe(ResultStatus.Success)
+        expect(result.data).toBeNull()
+
+        expect(nodemailerAdapter.sendEmail).toHaveBeenCalled()
+        expect(nodemailerAdapter.sendEmail).toHaveBeenCalledTimes(1)
+    });
+    it('should not register user twice', async () => {
+        const userDTO = testSeeder.createUserDTO()
+
+        await testSeeder.registerUser('test2', userDTO.email, 'qwerty')
+
+        await userMongoRepository.findUserByEmail(userDTO.email);
+
+        const result: Result = await registrationUserUseCase(userDTO)
+
+        expect(result.status).toBe(ResultStatus.BadRequest)
+        expect(result.data).toBeNull()
+
+        expect(nodemailerAdapter.sendEmail).not.toHaveBeenCalled()
+    });
+})
+
+describe('User registration email resending', () => {
+    const registrationEmailResendingUseCase = authService.registrationEmailResending
+    nodemailerAdapter.sendEmail = jest.fn().mockImplementation(async (recipient: string, emailTemplate: string): Promise<boolean> => true)
+
+    beforeAll(async () => {
+        const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
+        await db.run(mongoServer.getUri())
+    })
+    afterAll(async () => {
+        await db.stop()
+    })
+    beforeEach(async () => {
+        await db.drop()
+    })
+    it(`should not resend email registration, user with email doesn't exist`, async () => {
+        const result: Result = await registrationEmailResendingUseCase({email: 'qwerty@gmail.com'})
+
+        expect(result.status).toBe(ResultStatus.BadRequest)
+        expect(result.data).toBeNull()
+
+        expect(nodemailerAdapter.sendEmail).not.toHaveBeenCalled()
+    });
+    it('should confirm registration', async () => {
+        const user = await testSeeder.registerUser(
+            'test',
+            'test@gmail.com',
+            'test1234',
+        )
+
+        const result: Result = await registrationEmailResendingUseCase({email: user.email})
+
+        expect(result.status).toBe(ResultStatus.Success)
+        expect(result.data).toBeNull()
+
+        expect(nodemailerAdapter.sendEmail).toHaveBeenCalled()
+    });
 })
 
 describe('logout', () => {
