@@ -1,7 +1,5 @@
-import mongoose, {HydratedDocument} from "mongoose";
+import mongoose from "mongoose";
 import {UserDeviceDBType} from "../db-types/user-devices-db-types";
-
-export type UserDeviceDocument = HydratedDocument<UserDeviceDBType>
 
 const userDeviceSchema = new mongoose.Schema<UserDeviceDBType>({
     userId: {

@@ -1,4 +1,5 @@
-import {WithId} from "mongodb";
+import {WithId} from "mongodb"
+import {HydratedDocument} from "mongoose"
 
 export type UserDeviceDBType = WithId<{
     userId: string
@@ -8,3 +9,5 @@ export type UserDeviceDBType = WithId<{
     ip: string
     exp: string
 }>
+
+export type UserDeviceDocument = HydratedDocument<UserDeviceDBType>

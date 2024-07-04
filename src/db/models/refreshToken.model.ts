@@ -1,7 +1,5 @@
-import mongoose, {HydratedDocument} from "mongoose";
+import mongoose from "mongoose";
 import {RevokedTokenDbType} from "../db-types/refreshToken-db-types";
-
-export type RevokedTokenDocument = HydratedDocument<RevokedTokenDbType>
 
 const revokedTokenSchema = new mongoose.Schema<RevokedTokenDbType>(
     {

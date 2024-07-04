@@ -1,4 +1,5 @@
 import {ObjectId, WithId} from "mongodb";
+import {HydratedDocument} from "mongoose";
 
 export type PostDbType = WithId<{
     title: string
@@ -8,3 +9,5 @@ export type PostDbType = WithId<{
     blogName: string
     createdAt: string
 }>
+
+export type PostDocument = HydratedDocument<PostDbType>

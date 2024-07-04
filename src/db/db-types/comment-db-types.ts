@@ -1,4 +1,5 @@
-import {ObjectId, WithId} from "mongodb";
+import {ObjectId, WithId} from "mongodb"
+import {HydratedDocument} from "mongoose";
 
 export type CommentatorInfoType = {
     userId: string,
@@ -11,3 +12,5 @@ export type CommentDbType = WithId<{
     commentatorInfo: CommentatorInfoType,
     createdAt: string
 }>
+
+export type CommentDocument = HydratedDocument<CommentDbType>

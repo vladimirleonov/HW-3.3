@@ -1,7 +1,5 @@
-import mongoose, {HydratedDocument} from "mongoose"
+import mongoose from "mongoose"
 import {PostDbType} from "../db-types/post-db-types";
-
-export type PostDocument = HydratedDocument<PostDbType>
 
 const isValidISOString = (value: string) => {
     const isoRegex: RegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;

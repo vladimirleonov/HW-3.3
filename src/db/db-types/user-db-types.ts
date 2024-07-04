@@ -1,4 +1,5 @@
 import {WithId} from "mongodb";
+import {HydratedDocument} from "mongoose";
 
 export type EmailConfirmation = {
     confirmationCode: string,
@@ -30,3 +31,5 @@ export type UserDbType = WithId<{
     emailConfirmation: EmailConfirmation,
     passwordRecovery: PasswordRecovery
 }>
+
+export type UserDocument = HydratedDocument<UserDbType>

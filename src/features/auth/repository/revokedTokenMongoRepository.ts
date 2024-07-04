@@ -1,9 +1,8 @@
-import {InsertOneResult, ObjectId} from "mongodb";
 import {
     RevokedTokenDbType,
     RevokedTokenDocument,
     RevokedTokenModel
-} from "../../../db/models/refreshToken.model";
+} from "../../../db/models/refreshToken.model"
 
 export const revokedTokenMongoRepository = {
     async(newRevokedToken: RevokedTokenDocument): Promise<RevokedTokenDocument> {

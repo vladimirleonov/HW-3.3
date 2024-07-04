@@ -1,8 +1,5 @@
-import {HydratedDocument} from "mongoose";
 import mongoose from "mongoose"
 import {EmailConfirmation, PasswordRecovery, UserDbType} from "../db-types/user-db-types";
-
-export type UserDocument = HydratedDocument<UserDbType>
 
 const isValidISOString = (value: string) => {
     const isoRegex: RegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;

@@ -1,7 +1,5 @@
-import mongoose, {HydratedDocument} from "mongoose"
-import {ApiAccessLogDbType} from "../db-types/api-access-log-db-types";
-
-export type ApiAccessLogDocument = HydratedDocument<ApiAccessLogDbType>
+import mongoose from "mongoose"
+import {ApiAccessLogDbType} from "../db-types/api-access-log-db-types"
 
 const apiAccessLogSchema = new mongoose.Schema<ApiAccessLogDbType>({
     ip: {

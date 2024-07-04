@@ -1,7 +1,5 @@
-import mongoose, {HydratedDocument} from "mongoose"
+import mongoose from "mongoose"
 import {CommentatorInfoType, CommentDbType} from "../db-types/comment-db-types";
-
-export type CommentDocument = HydratedDocument<CommentDbType>
 
 const isValidISOString = (value: string) => {
     const isoRegex: RegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;
