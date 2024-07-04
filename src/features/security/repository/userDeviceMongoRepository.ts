@@ -1,5 +1,5 @@
 import {UserDeviceModel} from "../../../db/models/devices.model";
-import {DeleteResult, UpdateResult, WithId} from "mongodb";
+import {DeleteResult, InsertOneResult, UpdateResult} from "mongodb";
 import {
     deleteAllOtherByDeviceIdAndUserIdInputType,
     deleteOneByDeviceIdAndIAtInputType,
@@ -13,19 +13,13 @@ export const userDeviceMongoRepository = {
     async save(userDevice: UserDeviceDocument): Promise<UserDeviceDocument> {
         return userDevice.save()
     },
-    // async create(userSession: WithId<UserDeviceDBType>): Promise<string> {
-    //     const insertedInfo: InsertOneResult<WithId<UserDeviceDBType>> = await UserDeviceModel.insertOne(userSession)
-    //     return insertedInfo.insertedId.toString()
-    // },
     async update({deviceId, iat}: UpdateInputType): Promise<boolean> {
-        console.log(iat)
-        const updatedInfo: UpdateResult<WithId<UserDeviceDBType>> = await UserDeviceModel.updateOne({
+        const updatedInfo: UpdateResult<UserDeviceDBType> = await UserDeviceModel.updateOne({
                 deviceId: deviceId,
             },
             {
                 $set: {iat: iat}
             })
-        console.log("updatedInfo", updatedInfo)
 
         return updatedInfo.matchedCount === 1
     },
@@ -54,14 +48,14 @@ export const userDeviceMongoRepository = {
 
         return deletedInfo.deletedCount === 1
     },
-    async findByDeviceId(deviceId: string): Promise<WithId<UserDeviceDBType> | null> {
-        return UserDeviceModel.findOne({deviceId}).lean()
+    async findByDeviceId(deviceId: string): Promise<UserDeviceDBType | null> {
+        return UserDeviceModel.findOne({deviceId})
     },
-    async findOneByDeviceIdAndIat({deviceId, iat}: findOneByDeviceIdAndIatInputType): Promise<WithId<UserDeviceDBType> | null> {
-        return await UserDeviceModel.findOne({
+    async findOneByDeviceIdAndIat({deviceId, iat}: findOneByDeviceIdAndIatInputType): Promise<UserDeviceDBType | null> {
+        return UserDeviceModel.findOne({
             deviceId,
             iat
-        }).lean()
+        })
     }
 }
 
@@ -69,12 +63,12 @@ export const userDeviceMongoRepository = {
 
 
 // export const userDeviceMongoRepository = {
-//     async create(userSession: WithId<UserDeviceDBType>): Promise<string> {
-//         const insertedInfo: InsertOneResult<WithId<UserDeviceDBType>> = await UserDeviceModel.insertOne(userSession)
+//     async create(userSession: UserDeviceDBType): Promise<string> {
+//         const insertedInfo: InsertOneResult<UserDeviceDBType> = await UserDeviceModel.insertOne(userSession)
 //         return insertedInfo.insertedId.toString()
 //     },
 //     async update({deviceId, iat}: UpdateInputType): Promise<boolean> {
-//         const updatedInfo: UpdateResult<WithId<UserDeviceDBType>> = await UserDeviceModel.updateOne({
+//         const updatedInfo: UpdateResult<UserDeviceDBType> = await UserDeviceModel.updateOne({
 //                 deviceId: deviceId,
 //             },
 //             {
@@ -112,7 +106,7 @@ export const userDeviceMongoRepository = {
 //         return UserDeviceModel.findOne({deviceId})
 //     },
 //     async findOneByDeviceIdAndIat({deviceId, iat}: findOneByDeviceIdAndIatInputType) {
-//         return await UserDeviceModel.findOne({
+//         return UserDeviceModel.findOne({
 //             deviceId,
 //             iat
 //         })

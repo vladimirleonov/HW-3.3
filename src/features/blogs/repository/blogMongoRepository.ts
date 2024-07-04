@@ -1,6 +1,6 @@
 import {BlogModel} from "../../../db/models/blog.model"
 import {BlogBodyInputType} from "../input-output-types/blog-types"
-import {DeleteResult, ObjectId, UpdateResult, WithId} from "mongodb"
+import {DeleteResult, ObjectId, UpdateResult} from "mongodb"
 import {BlogDBType, BlogDocument} from "../../../db/db-types/blog-db-types";
 
 export const blogMongoRepository = {
@@ -18,8 +18,8 @@ export const blogMongoRepository = {
         const deletedInfo: DeleteResult = await BlogModel.deleteOne({_id: new ObjectId(id)})
         return deletedInfo.deletedCount === 1
     },
-    async findById(id: string): Promise<WithId<BlogDocument> | null> {
-        return BlogModel.findOne({_id: new ObjectId(id)}).lean()
+    async findById(id: string): Promise<BlogDocument | null> {
+        return BlogModel.findOne({_id: new ObjectId(id)})
     }
 }
 

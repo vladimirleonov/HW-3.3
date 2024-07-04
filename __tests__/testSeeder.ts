@@ -1,10 +1,10 @@
-import {UserDbType, UserDocument, UserModel} from "../src/db/models/user.model";
-import {InsertOneResult, ObjectId, WithId} from "mongodb";
+import {UserModel} from "../src/db/models/user.model";
 import {randomUUID} from "node:crypto";
 import {add} from "date-fns";
-import {db} from "../src/db/mongoose-db-connection";
 import {cryptoAdapter} from "../src/common/adapters/crypto.adapter"
-import {UserDeviceDBType, UserDeviceModel} from "../src/db/models/devices.model";
+import {UserDeviceModel} from "../src/db/models/devices.model";
+import {UserDeviceDBType} from "../src/db/db-types/user-devices-db-types";
+import {UserDbType, UserDocument} from "../src/db/db-types/user-db-types";
 
 export const testSeeder = {
     createUserDTO() {
@@ -77,9 +77,8 @@ export const testSeeder = {
         })
 
         const res: UserDocument = await newUser.save()
-        //const res: InsertOneResult<UserDbType> = await db.getCollections().userCollection.insertOne({...newUser})
 
-        const user: WithId<UserDbType> = res.toObject({ versionKey: false })
+        const user: UserDbType = res.toObject({ versionKey: false })
 
         const { _id: userId, ...restUser} = user
 
@@ -88,7 +87,7 @@ export const testSeeder = {
             ...restUser
         }
     },
-    async getDevices(): Promise<WithId<UserDeviceDBType>[]> {
-        return UserDeviceModel.find({}).lean().exec()
+    async getDevices(): Promise<UserDeviceDBType[]> {
+        return UserDeviceModel.find({})
     }
 }

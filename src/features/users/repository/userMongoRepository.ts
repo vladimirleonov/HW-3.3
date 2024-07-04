@@ -1,5 +1,5 @@
 import {UserModel} from "../../../db/models/user.model"
-import {DeleteResult, ObjectId, UpdateResult, WithId} from "mongodb"
+import {DeleteResult, ObjectId, UpdateResult} from "mongodb"
 import {UserDbType, UserDocument} from "../../../db/db-types/user-db-types";
 
 export const userMongoRepository = {
@@ -9,37 +9,33 @@ export const userMongoRepository = {
     async findUserById(id: string): Promise<UserDocument | null> {
         return UserModel.findOne({_id: new ObjectId(id)})
     },
-    async findUserByField(field: string, value: string): Promise<WithId<UserDbType> | null> {
-        return UserModel.findOne({[field]: value}).lean()
+    async findUserByField(field: string, value: string): Promise<UserDbType | null> {
+        return UserModel.findOne({[field]: value})
     },
-    async findUserByConfirmationCode(confirmationCode: string): Promise<WithId<UserDbType> | null> {
-        return UserModel.findOne({['emailConfirmation.confirmationCode']: confirmationCode}).lean()
+    async findUserByConfirmationCode(confirmationCode: string): Promise<UserDbType | null> {
+        return UserModel.findOne({['emailConfirmation.confirmationCode']: confirmationCode})
     },
     async findUserByRecoveryCode(recoveryCode: string): Promise<UserDocument | null> {
         return UserModel.findOne({['passwordRecovery.recoveryCode']: recoveryCode})
     },
-    async findUserByEmail(email: string): Promise<WithId<UserDbType> | null> {
-        return UserModel.findOne({email: email}).lean()
+    async findUserByEmail(email: string): Promise<UserDbType | null> {
+        return UserModel.findOne({email: email})
     },
-    async findUserByLogin(login: string): Promise<WithId<UserDbType> | null> {
-        return UserModel.findOne({login: login}).lean()
+    async findUserByLogin(login: string): Promise<UserDbType | null> {
+        return UserModel.findOne({login: login})
     },
-    async findUserByLoginOrEmailField(loginOrEmail: string): Promise<WithId<UserDbType> | null> {
-        return UserModel.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}]}).lean()
+    async findUserByLoginOrEmailField(loginOrEmail: string): Promise<UserDbType | null> {
+        return UserModel.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}]})
     },
-    // async create(newUser: WithId<UserDbType>): Promise<string> {
-    //     const insertedInfo: InsertOneResult<WithId<UserDbType>> = await UserModel.insertOne(newUser)
-    //     return insertedInfo.insertedId.toString()
-    // },
     async updateIsConfirmed(id: string, isConfirmed: boolean): Promise<boolean> {
-        const updatedInfo: UpdateResult<WithId<UserDbType>> = await UserModel.updateOne(
+        const updatedInfo: UpdateResult<UserDbType> = await UserModel.updateOne(
             {_id: new ObjectId(id)},
             {$set: {['emailConfirmation.isConfirmed']: isConfirmed}},
         )
         return updatedInfo.matchedCount === 1
     },
     async updateEmailConfirmationInfo(id: string, confirmationCode: string, expirationDate: string): Promise<boolean> {
-        const updatedInfo: UpdateResult<WithId<UserDbType>> = await UserModel.updateOne(
+        const updatedInfo: UpdateResult<UserDbType> = await UserModel.updateOne(
             {_id: new ObjectId(id)},
             {
                 $set: {
@@ -51,8 +47,7 @@ export const userMongoRepository = {
         return updatedInfo.matchedCount === 1
     },
     async updatePasswordRecoveryInfo(id: string, confirmationCode: string, expirationDate: string): Promise<boolean> {
-        console.log(id)
-        const updatedInfo: UpdateResult<WithId<UserDbType>> = await UserModel.updateOne(
+        const updatedInfo: UpdateResult<UserDbType> = await UserModel.updateOne(
             {_id: new ObjectId(id)},
             {
                 $set: {

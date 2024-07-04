@@ -9,15 +9,6 @@ export const apiAccessLogsMongoRepository = {
     async save(apiAccessLog: ApiAccessLogDocument) {
         return apiAccessLog.save()
     },
-    // async createApiAccessLog({ip, originUrl}: CreateApiAccessLogInputType): Promise<string> {
-    //     const insertedInfo: InsertOneResult<ApiAccessLogDbType> = await ApiAccessLogModel.insertOne({
-    //         ip,
-    //         URL: originUrl,
-    //         date: new Date(),
-    //     })
-
-    //     return insertedInfo.insertedId.toString()
-    // },
     async countApiAccessLogsByIpAndOriginUrl({
                                                 ip,
                                                 originUrl

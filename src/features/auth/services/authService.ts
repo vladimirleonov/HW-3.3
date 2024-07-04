@@ -85,9 +85,7 @@ export const authService = {
         }
     },
     async registrationPasswordRecovery(input: RegistrationPasswordRecoveryInputServiceType): Promise<Result> {
-        console.log(input)
         const existingUser: WithId<UserDbType> | null = await userMongoRepository.findUserByEmail(input.email)
-        console.log(existingUser)
         if (!existingUser) {
             return {
                 status: ResultStatus.NotFound,
@@ -154,7 +152,6 @@ export const authService = {
     },
     async confirmRegistration(input: RegistrationConfirmationInputServiceType): Promise<Result> {
         const existingUser: WithId<UserDbType> | null = await userMongoRepository.findUserByConfirmationCode(input.code)
-        console.log(existingUser)
         if (!existingUser) {
             return {
                 status: ResultStatus.BadRequest,
@@ -321,7 +318,6 @@ export const authService = {
                 data: null
             }
         }
-        console.log("old issued at", issuedAt)
 
         const JwtAccessTokenPayload: JwtPayload = {
             userId: userId
@@ -336,9 +332,11 @@ export const authService = {
         const refreshToken: string = jwtAdapter.generateToken(JwtRefreshTokenPayload, '20s')
 
         const decodedRefreshToken: string | JwtPayload | null = jwtAdapter.decode(refreshToken)
+        console.log("old iat", issuedAt)
         if (decodedRefreshToken) {
             const {iat} = decodedRefreshToken as JwtPayload
-            console.log("new refresh token iat", unixToISOString(iat))
+
+            console.log("new iat", unixToISOString(iat))
 
             const issuedAt: string = unixToISOString(iat)
 

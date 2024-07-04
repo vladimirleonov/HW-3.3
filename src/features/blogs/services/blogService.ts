@@ -16,7 +16,6 @@ export const blogService = {
         }
 
         const newBlog: BlogDocument = new BlogModel(newBlogData)
-        console.log(newBlog.toObject())
 
         const createdBlog: BlogDocument = await blogMongoRepository.save(newBlog)
 

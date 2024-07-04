@@ -94,7 +94,7 @@ describe('Confirm registration', () => {
         )
 
         const result: Result<boolean | null> = await confirmRegistrationUseCase({code: user.emailConfirmation.confirmationCode})
-        console.log(result)
+
         expect(result.status).toBe(ResultStatus.BadRequest)
         expect(result.data).toBeNull()
     });

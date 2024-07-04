@@ -38,7 +38,7 @@ describe('AUTH /login', () => {
             }).expect(HTTP_CODES.BAD_REQUEST)
 
         expect(loginRes.body.errorsMessages[0]).toEqual({
-            message: 'password is required',
+            message: 'password is less than 6 characters long',
             field: 'password'
         })
     })
