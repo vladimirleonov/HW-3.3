@@ -1,4 +1,4 @@
-import {BlogDBType} from "../../db/models/blog.model"
+import {BlogDBType} from "../../db/db-types/blog-db-types";
 
 export type DefaultQueryParamsInputType = {
     sortBy?: keyof BlogDBType,

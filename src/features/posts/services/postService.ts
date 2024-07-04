@@ -1,13 +1,13 @@
 import {postMongoRepository} from "../repository/postMongoRepository"
 import {ObjectId} from "mongodb"
 import {BlogPostInputType, PostBodyInputType} from "../input-output-types/post-types"
-import {PostDocument, PostModel} from "../../../db/models/post.model"
-import {BlogDBType} from "../../../db/models/blog.model"
+import {PostModel} from "../../../db/models/post.model"
 import {blogMongoRepository} from "../../blogs/repository/blogMongoRepository"
 import {Result, ResultStatus} from "../../../common/types/result"
 import {commentMongoRepository} from "../../comments/repository/commentMongoRepository"
-import { BlogDocument } from "../../../db/models/blog.model"
 import { WithId } from "mongodb"
+import {BlogDBType, BlogDocument} from "../../../db/db-types/blog-db-types";
+import {PostDocument} from "../../../db/db-types/post-db-types";
 
 export const postService = {
     async createPost({blogId, ...restInput}: PostBodyInputType): Promise<Result<string | null>> {

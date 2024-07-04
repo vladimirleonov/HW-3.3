@@ -1,4 +1,4 @@
-import {UserDbType, UserDocument, UserModel} from "../../../db/models/user.model"
+import {UserModel} from "../../../db/models/user.model"
 import {jwtAdapter} from "../../../common/adapters/jwt.adapter"
 import {Result, ResultStatus} from "../../../common/types/result"
 import {cryptoAdapter} from "../../../common/adapters/crypto.adapter"
@@ -21,9 +21,11 @@ import {
 import {LoginOutputServiceType, RefreshTokenOutputServiceType} from "../types/outputTypes/authOutputServiceTypes";
 import {JwtPayload} from "jsonwebtoken";
 import {userDeviceMongoRepository} from "../../security/repository/userDeviceMongoRepository";
-import {UserDeviceDBType, UserDeviceDocument, UserDeviceModel} from "../../../db/models/devices.model";
+import {UserDeviceModel} from "../../../db/models/devices.model";
 import {unixToISOString} from "../../../common/helpers/unixToISOString";
 import {passwordRecoveryEmailTemplate} from "../../../common/email-templates/passwordRecoveryEmailTemplate";
+import {UserDbType, UserDocument} from "../../../db/db-types/user-db-types";
+import {UserDeviceDBType, UserDeviceDocument} from "../../../db/db-types/user-devices-db-types";
 
 export const authService = {
     async registration(input: RegistrationInputServiceType): Promise<Result> {

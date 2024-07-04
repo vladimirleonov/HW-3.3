@@ -1,11 +1,12 @@
 import {userMongoRepository} from "../repository/userMongoRepository"
-import {UserDbType, UserDocument, UserModel} from "../../../db/models/user.model"
+import {UserModel} from "../../../db/models/user.model"
 import {UserBodyInputType} from "../input-output-types/user-types"
 import {WithId} from "mongodb"
 import {cryptoAdapter} from "../../../common/adapters/crypto.adapter"
 import {Result, ResultStatus} from "../../../common/types/result"
 import {randomUUID} from "node:crypto"
 import {add} from "date-fns"
+import {UserDbType, UserDocument} from "../../../db/db-types/user-db-types";
 
 export const userService = {
     async createUser(input: UserBodyInputType): Promise<Result<string | null>> {

@@ -4,8 +4,9 @@ import {
     DetailedUserOutputType,
     AuthenticatedUserOutputType
 } from "../input-output-types/user-types"
-import {UserModel, UserDbType} from "../../../db/models/user.model"
+import {UserModel} from "../../../db/models/user.model"
 import {ObjectId, WithId} from "mongodb"
+import {UserDbType} from "../../../db/db-types/user-db-types";
 
 export const userMongoQueryRepository = {
     async findAllForOutput(query: SanitizedUsersQueryParamsType): Promise<UserPaginationOutputType> {

@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from "express"
 import {HTTP_CODES} from "../../../settings"
-import {BlogDBType} from "../../../db/models/blog.model"
 import {blogMongoRepository} from "../repository/blogMongoRepository"
+import {BlogDBType} from "../../../db/db-types/blog-db-types";
 
 export const blogIdParamValidator = async (req: Request, res: Response, next: NextFunction) => {
     const blogId: string = req.params.blogId

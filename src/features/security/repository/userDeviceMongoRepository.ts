@@ -1,4 +1,4 @@
-import {UserDeviceDBType, UserDeviceDocument, UserDeviceModel} from "../../../db/models/devices.model";
+import {UserDeviceModel} from "../../../db/models/devices.model";
 import {DeleteResult, UpdateResult, WithId} from "mongodb";
 import {
     deleteAllOtherByDeviceIdAndUserIdInputType,
@@ -7,6 +7,7 @@ import {
     findOneByDeviceIdAndIatInputType,
     UpdateInputType
 } from "../../auth/types/inputTypes/userDeviceInputMongoRepositoryTypes";
+import {UserDeviceDBType, UserDeviceDocument} from "../../../db/db-types/user-devices-db-types";
 
 export const userDeviceMongoRepository = {
     async save(userDevice: UserDeviceDocument): Promise<UserDeviceDocument> {

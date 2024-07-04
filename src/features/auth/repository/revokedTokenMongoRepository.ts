@@ -1,8 +1,7 @@
 import {
-    RevokedTokenDbType,
-    RevokedTokenDocument,
     RevokedTokenModel
 } from "../../../db/models/refreshToken.model"
+import {RevokedTokenDbType, RevokedTokenDocument} from "../../../db/db-types/refreshToken-db-types";
 
 export const revokedTokenMongoRepository = {
     async(newRevokedToken: RevokedTokenDocument): Promise<RevokedTokenDocument> {

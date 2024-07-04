@@ -2,7 +2,8 @@ import {
     CountApiAccessLogsByIpAndOriginUrlInputType
 } from "../types/inputTypes/apiAccessLogsMongoRepositoryTypes";
 import {getTenSecondsAgo} from "../../../common/helpers/getTenSecondsAgo";
-import { ApiAccessLogModel, ApiAccessLogDocument } from "../../../db/models/apiAccessLog.model";
+import { ApiAccessLogModel } from "../../../db/models/apiAccessLog.model";
+import {ApiAccessLogDocument} from "../../../db/db-types/api-access-log-db-types";
 
 export const apiAccessLogsMongoRepository = {
     async save(apiAccessLog: ApiAccessLogDocument) {

@@ -1,6 +1,7 @@
-import {BlogDBType, BlogDocument, BlogModel} from "../../../db/models/blog.model"
+import {BlogModel} from "../../../db/models/blog.model"
 import {BlogBodyInputType} from "../input-output-types/blog-types"
 import {DeleteResult, ObjectId, UpdateResult, WithId} from "mongodb"
+import {BlogDBType, BlogDocument} from "../../../db/db-types/blog-db-types";
 
 export const blogMongoRepository = {
     async save(blog: BlogDocument): Promise<BlogDocument> {

@@ -1,12 +1,10 @@
-import {UserDbType, UserDocument, UserModel} from "../../../db/models/user.model"
+import {UserModel} from "../../../db/models/user.model"
 import {DeleteResult, ObjectId, UpdateResult, WithId} from "mongodb"
+import {UserDbType, UserDocument} from "../../../db/db-types/user-db-types";
 
 export const userMongoRepository = {
     async save(user: UserDocument): Promise<UserDocument> {
         return user.save()
-    },
-    async findAll(): Promise<UserDocument[] | null> {
-        return UserModel.find({}).lean()
     },
     async findUserById(id: string): Promise<UserDocument | null> {
         return UserModel.findOne({_id: new ObjectId(id)})

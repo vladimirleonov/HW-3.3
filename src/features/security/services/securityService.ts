@@ -1,13 +1,14 @@
-import {userDeviceMongoRepository} from "../repository/userDeviceMongoRepository";
-import {Result, ResultStatus} from "../../../common/types/result";
-import {UserDeviceDBType} from "../../../db/models/devices.model";
-import {apiAccessLogsMongoRepository} from "../../auth/repository/apiAccessLogsMongoRepository";
+import {userDeviceMongoRepository} from "../repository/userDeviceMongoRepository"
+import {Result, ResultStatus} from "../../../common/types/result"
+import {apiAccessLogsMongoRepository} from "../../auth/repository/apiAccessLogsMongoRepository"
 import {
     CheckRateLimitInputServiceType,
     TerminateAllOtherDeviceSessionsInputServiceType,
     TerminateDeviceSessionInputServiceType
-} from "../types/inputTypes/securityInputServiceTypes";
-import { ApiAccessLogDocument, ApiAccessLogModel } from "../../../db/models/apiAccessLog.model";
+} from "../types/inputTypes/securityInputServiceTypes"
+import { ApiAccessLogModel } from "../../../db/models/apiAccessLog.model"
+import {UserDeviceDBType} from "../../../db/db-types/user-devices-db-types";
+import {ApiAccessLogDocument} from "../../../db/db-types/api-access-log-db-types";
 
 export const securityService = {
     async terminateAllOtherDeviceSessions({

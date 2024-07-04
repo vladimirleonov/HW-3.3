@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose"
-import {BlogDBType} from "../db-types/blog-db-types"
+import {BlogDBType} from "../db-types/blog-db-types";
 
 const isValidISOString = (value: string) => {
     const isoRegex: RegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;

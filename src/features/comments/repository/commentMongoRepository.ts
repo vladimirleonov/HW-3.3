@@ -1,6 +1,7 @@
-import {CommentDbType, CommentModel, CommentDocument} from "../../../db/models/comment.model"
+import {CommentModel} from "../../../db/models/comment.model"
 import {DeleteResult, ObjectId, UpdateResult, WithId} from "mongodb"
 import {CommentBodyInputType} from "../input-output-types/comment-types"
+import {CommentDbType, CommentDocument} from "../../../db/db-types/comment-db-types";
 
 export const commentMongoRepository = {
     async save(comment: CommentDocument): Promise<CommentDocument> {

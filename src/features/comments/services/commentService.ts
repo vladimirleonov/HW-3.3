@@ -1,13 +1,14 @@
 import {postMongoRepository} from "../../posts/repository/postMongoRepository"
-import {PostDbType} from "../../../db/models/post.model"
 import {Result, ResultStatus} from "../../../common/types/result"
-import {CommentDbType, CommentDocument, CommentModel} from "../../../db/models/comment.model"
+import {CommentModel} from "../../../db/models/comment.model"
 import {ObjectId} from "mongodb"
 import {CommentBodyInputType} from "../input-output-types/comment-types"
-import {UserDbType} from "../../../db/models/user.model"
 import {userMongoRepository} from "../../users/repository/userMongoRepository"
 import {commentMongoRepository} from "../repository/commentMongoRepository"
 import { WithId } from "mongodb"
+import {CommentDbType, CommentDocument} from "../../../db/db-types/comment-db-types";
+import {PostDbType} from "../../../db/db-types/post-db-types";
+import {UserDbType} from "../../../db/db-types/user-db-types";
 
 export const commentService = {
     async createComment(postId: string, input: CommentBodyInputType, userId: string): Promise<Result<string | null>> {

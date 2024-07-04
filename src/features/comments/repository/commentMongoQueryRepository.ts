@@ -1,8 +1,9 @@
-import {CommentDbType, CommentModel} from "../../../db/models/comment.model"
+import {CommentModel} from "../../../db/models/comment.model"
 import {CommentOutputType, CommentsPaginationOutputType} from "../input-output-types/comment-types"
 import {ObjectId} from "mongodb"
 import {SanitizedDefaultQueryParamsType} from "../../../common/helpers/queryParamsSanitizer"
 import { WithId } from "mongodb"
+import {CommentDbType} from "../../../db/db-types/comment-db-types";
 
 export const commentMongoQueryRepository = {
     async findAllPostCommentsForOutput(query: SanitizedDefaultQueryParamsType, postId: string): Promise<CommentsPaginationOutputType> {

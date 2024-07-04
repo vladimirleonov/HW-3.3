@@ -1,6 +1,7 @@
 import { WithId } from "mongodb"
-import {UserDeviceDBType, UserDeviceModel} from "../../../db/models/devices.model"
+import {UserDeviceModel} from "../../../db/models/devices.model"
 import {findAllForOutputType} from "../../auth/types/outputTypes/userDeviceOutputMongoQueryRepositoryTypes"
+import {UserDeviceDBType} from "../../../db/db-types/user-devices-db-types";
 
 export const userDeviceMongoQueryRepository = {
     async findAllForOutput(userId: string): Promise<findAllForOutputType[]> {
