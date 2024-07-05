@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import {CommentatorInfoType, CommentDbType} from "../db-types/comment-db-types";
+import {CommentatorInfoType, CommentDbType, LikeStatus, LikeType} from "../db-types/comment-db-types";
 
 const isValidISOString = (value: string) => {
     const isoRegex: RegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;
@@ -19,6 +19,26 @@ const commentatorInfoSchema = new mongoose.Schema<CommentatorInfoType>(
     }
 }, { _id: false })
 
+const likeSchema = new mongoose.Schema<LikeType>({
+    createdAt: {
+        type: String,
+        validate: {
+            validator: isValidISOString,
+            message: "createdAt must be a valid ISO string",
+        },
+        required: true
+    },
+    status: {
+        type: String,
+        enum: LikeStatus,
+        required: true
+    },
+    authorId: {
+        type: String,
+        required: true
+    }
+}, { _id: false })
+
 const commentSchema = new mongoose.Schema<CommentDbType>(
     {
         postId: {
@@ -33,6 +53,19 @@ const commentSchema = new mongoose.Schema<CommentDbType>(
         },
         commentatorInfo: {
             type: commentatorInfoSchema,
+            required: true
+        },
+        likes: {
+            type: [likeSchema]
+        },
+        likesCount: {
+            type: Number,
+            default: 0,
+            required: true
+        },
+        dislikesCount: {
+            type: Number,
+            default: 0,
             required: true
         },
         createdAt: {
