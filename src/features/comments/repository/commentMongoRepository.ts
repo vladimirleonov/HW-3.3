@@ -7,7 +7,7 @@ export const commentMongoRepository = {
     async save(comment: CommentDocument): Promise<CommentDocument> {
         return comment.save()
     },
-    async findById(id: string): Promise<CommentDbType | null> {
+    async findById(id: string): Promise<CommentDocument | null> {
         if (!this.isValidObjectId(id)) return null
         return CommentModel.findOne({_id: new ObjectId(id)})
     },

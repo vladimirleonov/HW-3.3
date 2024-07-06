@@ -2,7 +2,7 @@ import {CommentModel} from "../../../db/models/comment.model"
 import {CommentOutputType, CommentsPaginationOutputType} from "../input-output-types/comment-types"
 import {ObjectId} from "mongodb"
 import {SanitizedDefaultQueryParamsType} from "../../../common/helpers/queryParamsSanitizer"
-import {CommentDbType} from "../../../db/db-types/comment-db-types";
+import {CommentDbType, LikeStatus} from "../../../db/db-types/comment-db-types";
 
 export const commentMongoQueryRepository = {
     async findAllPostCommentsForOutput(query: SanitizedDefaultQueryParamsType, postId: string): Promise<CommentsPaginationOutputType> {
@@ -39,7 +39,7 @@ export const commentMongoQueryRepository = {
 
         return this.mapToOutput(comment)
     },
-    mapToOutput({_id, postId, content, commentatorInfo: {userId, userLogin}, createdAt, ...rest}: CommentDbType): CommentOutputType {
+    mapToOutput({_id, postId, content, commentatorInfo: {userId, userLogin}, createdAt, likesCount, dislikesCount, ...rest}: CommentDbType): CommentOutputType {
         return {
             id: _id.toString(),
             content,
@@ -47,7 +47,12 @@ export const commentMongoQueryRepository = {
                 userId,
                 userLogin
             },
-            createdAt
+            createdAt,
+            likesInfo: {
+                likesCount: likesCount,
+                dislikesCount: dislikesCount,
+                myStatus: CommentModel.get
+            }
         }
     },
     isValidObjectId(id: string): boolean {

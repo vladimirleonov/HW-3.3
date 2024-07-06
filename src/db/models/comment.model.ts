@@ -56,11 +56,13 @@ const commentSchema = new mongoose.Schema<CommentDbType>(
             required: true
         },
         likes: {
-            type: [likeSchema]
+            type: [likeSchema],
+            required: true
         },
         likesCount: {
             type: Number,
             default: 0,
+            min: 0,
             required: true
         },
         dislikesCount: {
@@ -75,8 +77,13 @@ const commentSchema = new mongoose.Schema<CommentDbType>(
                 message: "createdAt must be a valid ISO string",
             },
             required: true
-        },
+        }
     }
 )
+
+commentSchema.methods.getUserLikeStatusByUserId = function (userId: string): LikeStatus {
+    const userLike = this.likes.find((like: LikeType): boolean => like.authorId === userId)
+    return userLike ? userLike.likeStatus : null
+}
 
 export const CommentModel = mongoose.model<CommentDbType>('Comment', commentSchema)

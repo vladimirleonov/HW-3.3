@@ -1,3 +1,5 @@
+import {LikeStatus} from "../../../db/db-types/comment-db-types";
+
 export type CommentIdParamInputType = {
     commentId: string
 }
@@ -16,6 +18,11 @@ export type CommentOutputType = {
     content: string,
     commentatorInfo: commentatorInfoType,
     createdAt: string,
+    likesInfo: {
+        likesCount: number,
+        dislikesCount: number,
+        myStatus: LikeStatus
+    }
 }
 
 export type CommentsPaginationOutputType = {

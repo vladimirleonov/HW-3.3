@@ -1,14 +1,14 @@
 import {postMongoRepository} from "../../posts/repository/postMongoRepository"
 import {Result, ResultStatus} from "../../../common/types/result"
 import {CommentModel} from "../../../db/models/comment.model"
-import {ObjectId} from "mongodb"
+import {ObjectId, WithId} from "mongodb"
 import {CommentBodyInputType} from "../input-output-types/comment-types"
 import {userMongoRepository} from "../../users/repository/userMongoRepository"
 import {commentMongoRepository} from "../repository/commentMongoRepository"
-import { WithId } from "mongodb"
-import {CommentDbType, CommentDocument} from "../../../db/db-types/comment-db-types";
+import {CommentDbType, CommentDocument, LikeStatus, LikeType} from "../../../db/db-types/comment-db-types";
 import {PostDbType} from "../../../db/db-types/post-db-types";
 import {UserDbType} from "../../../db/db-types/user-db-types";
+import {LikeBodyInputServiceType} from "../input-output-types/comment-like-types";
 
 export const commentService = {
     async createComment(postId: string, input: CommentBodyInputType, userId: string): Promise<Result<string | null>> {
@@ -75,6 +75,64 @@ export const commentService = {
                 data: null
             }
         }
+        return {
+            status: ResultStatus.Success,
+            data: null
+        }
+    },
+    async updateLikeStatus(input: LikeBodyInputServiceType):Promise<Result> {
+        console.log("input", input)
+        // input {
+        //     commentId: '6687d769b7dec08d74da8d4a',
+        //         likeStatus: 'Like',
+        //         userId: '6687d6ab73799f48aa5d87ba'
+        // }
+        const comment: CommentDocument | null = await commentMongoRepository.findById(input.commentId)
+        console.log("comment", comment)
+        // postId: new ObjectId('6687d6feb7dec08d74da8d33'),
+        //         content: 'contentcontentcontentcontent3',
+        //         commentatorInfo: { userId: '6687d6ab73799f48aa5d87ba', userLogin: 'test123' },
+        //         likesCount: 0,
+        //         dislikesCount: 0,
+        //         createdAt: '2024-07-05T11:22:17.393Z',
+        //         likes: [],
+        //         __v: 0
+        // }
+        if (!comment) {
+            return {
+                status: ResultStatus.NotFound,
+                extensions: [{field: 'commentId', message: `Comment with ${input.commentId} does not exist`}],
+                data: null
+            }
+        }
+
+        const userLike: LikeType | undefined = comment.likes.find(like => like.authorId === input.userId)
+
+        if (!userLike) {
+            console.log("!userLike")
+            const likeToAdd: LikeType = {
+                createdAt: new Date().toISOString(),
+                status: input.likeStatus as LikeStatus,
+                authorId: input.userId,
+            }
+            comment.likes.push(likeToAdd)
+            comment.likesCount = Number(comment.likesCount) + 1
+        // LikeStatus the same
+        } else if (userLike && userLike.status === input.likeStatus) {
+            console.log("nothing change")
+            // Like
+        } else if (userLike && input.likeStatus === LikeStatus.Like) {
+            console.log("Like")
+            userLike.status = LikeStatus.Like
+            comment.likesCount = Number(comment.likesCount) + 1
+        // Dislike
+        } else if (userLike && input.likeStatus === LikeStatus.Dislike) {
+            console.log("Dislike")
+            userLike.status = LikeStatus.Dislike
+            comment.likesCount = Number(comment.likesCount) - 1
+        }
+        await commentMongoRepository.save(comment)
+
         return {
             status: ResultStatus.Success,
             data: null

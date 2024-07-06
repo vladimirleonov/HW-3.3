@@ -23,8 +23,8 @@ export type CommentDbType = WithId<{
     content: string
     commentatorInfo: CommentatorInfoType
     likes: LikeType[]
-    likesCount: Number
-    dislikesCount: Number
+    likesCount: number
+    dislikesCount: number
     createdAt: string
 }>
 
