@@ -4,7 +4,7 @@ import {SanitizedBlogsQueryParamsType} from "../helpers/sanitizeBlogsQueryParams
 import {BlogModel} from "../../../db/models/blog.model";
 import {BlogDBType} from "../../../db/db-types/blog-db-types";
 
-export const blogMongoQueryRepository = {
+class BlogMongoQueryRepository {
     async findAllForOutput(query: SanitizedBlogsQueryParamsType): Promise<BlogsPaginationOutputType> {
         const searchFilter = query.searchNameTerm
             ? {name: {$regex: query.searchNameTerm, $options: 'i'}}
@@ -19,7 +19,7 @@ export const blogMongoQueryRepository = {
             .sort({ [query.sortBy]: query.sortDirection === 'asc' ? 1 : -1 })
             .skip((query.pageNumber - 1) * query.pageSize)
             .limit(query.pageSize)
-        
+
         const totalCount: number = await BlogModel.countDocuments(filter)
 
         return {
@@ -29,11 +29,11 @@ export const blogMongoQueryRepository = {
             totalCount,
             items: blogs.map((blog: BlogDBType) => this.mapToOutput(blog))
         }
-    },
+    }
     async findForOutputById(id: string): Promise<BlogOutputType | null> {
         const blog: BlogDBType | null = await BlogModel.findOne({_id: new ObjectId(id)})
         return blog ? this.mapToOutput(blog) : null
-    },
+    }
     mapToOutput({_id, name, description, websiteUrl, createdAt, isMembership, ...rest}: BlogDBType): BlogOutputType {
         return {
             id: _id.toString(),
@@ -45,6 +45,52 @@ export const blogMongoQueryRepository = {
         }
     }
 }
+
+export const blogMongoQueryRepository: BlogMongoQueryRepository = new BlogMongoQueryRepository()
+
+
+
+// export const blogMongoQueryRepository = {
+//     async findAllForOutput(query: SanitizedBlogsQueryParamsType): Promise<BlogsPaginationOutputType> {
+//         const searchFilter = query.searchNameTerm
+//             ? {name: {$regex: query.searchNameTerm, $options: 'i'}}
+//             : {}
+//
+//         const filter = {
+//             ...searchFilter
+//         }
+//
+//         const blogs: BlogDBType[] = await BlogModel
+//             .find(filter)
+//             .sort({ [query.sortBy]: query.sortDirection === 'asc' ? 1 : -1 })
+//             .skip((query.pageNumber - 1) * query.pageSize)
+//             .limit(query.pageSize)
+//
+//         const totalCount: number = await BlogModel.countDocuments(filter)
+//
+//         return {
+//             pagesCount: Math.ceil(totalCount / query.pageSize),
+//             page: query.pageNumber,
+//             pageSize: query.pageSize,
+//             totalCount,
+//             items: blogs.map((blog: BlogDBType) => this.mapToOutput(blog))
+//         }
+//     },
+//     async findForOutputById(id: string): Promise<BlogOutputType | null> {
+//         const blog: BlogDBType | null = await BlogModel.findOne({_id: new ObjectId(id)})
+//         return blog ? this.mapToOutput(blog) : null
+//     },
+//     mapToOutput({_id, name, description, websiteUrl, createdAt, isMembership, ...rest}: BlogDBType): BlogOutputType {
+//         return {
+//             id: _id.toString(),
+//             name,
+//             description,
+//             websiteUrl,
+//             createdAt,
+//             isMembership
+//         }
+//     }
+// }
 
 
 

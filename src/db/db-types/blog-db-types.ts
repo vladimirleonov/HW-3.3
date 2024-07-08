@@ -17,8 +17,7 @@ export class BlogDBType {
         public websiteUrl: string,
         public createdAt: string,
         public isMembership: boolean
-    ) {
-    }
+    ) {}
 }
 
 export type BlogDocument = HydratedDocument<BlogDBType>
