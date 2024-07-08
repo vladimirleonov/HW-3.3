@@ -5,9 +5,9 @@ import {ObjectId, WithId} from "mongodb"
 import {CommentBodyInputType} from "../input-output-types/comment-types"
 import {userMongoRepository} from "../../users/repository/userMongoRepository"
 import {commentMongoRepository} from "../repository/commentMongoRepository"
-import {CommentDbType, CommentDocument, LikeStatus, LikeType} from "../../../db/db-types/comment-db-types";
+import {Comment, CommentDocument, LikeStatus, Like, CommentatorInfo} from "../../../db/db-types/comment-db-types";
 import {PostDbType} from "../../../db/db-types/post-db-types";
-import {UserDbType} from "../../../db/db-types/user-db-types";
+import {UserDocument} from "../../../db/db-types/user-db-types";
 import {LikeBodyInputServiceType} from "../input-output-types/comment-like-types";
 
 export const commentService = {
@@ -21,7 +21,8 @@ export const commentService = {
             }
         }
 
-        const user: UserDbType | null = await userMongoRepository.findUserById(userId)
+        const user: UserDocument | null = await userMongoRepository.findUserById(userId)
+        const userLogin = user!.login
         if (!user) {
             return {
                 status: ResultStatus.Unauthorized,
@@ -29,6 +30,20 @@ export const commentService = {
                 data: null
             }
         }
+
+        const commentData: Comment = new Comment(
+            new ObjectId(),
+            new ObjectId(postId),
+            input.content,
+            {
+                userId,
+                userLogin
+            },
+            [],
+            0,
+            0,
+            new Date().toISOString()
+        )
 
         const newComment: CommentDocument = new CommentModel({
             _id: new ObjectId(),
@@ -42,7 +57,6 @@ export const commentService = {
         })
 
         const createdComment: CommentDocument = await commentMongoRepository.save(newComment)
-        //const createdId: string = await commentMongoRepository.create(newComment)
 
         return {
             status: ResultStatus.Success,
@@ -50,7 +64,7 @@ export const commentService = {
         }
     },
     async updateComment(id: string, input: CommentBodyInputType, userId: string): Promise<Result> {
-        const comment: WithId<CommentDbType> | null = await commentMongoRepository.findById(id)
+        const comment: CommentDocument | null = await commentMongoRepository.findById(id)
         if (!comment) {
             return {
                 status: ResultStatus.NotFound,
@@ -107,7 +121,7 @@ export const commentService = {
         }
 
         // get use like
-        const userLike: LikeType | undefined = comment.likes.find(like => like.authorId === input.userId)
+        const userLike: Like | undefined = comment.likes.find(like => like.authorId === input.userId)
 
         // add like to comment likes
         if (!userLike) {
@@ -120,7 +134,7 @@ export const commentService = {
                 }
             }
             // input.likeStatus = (LikeStatus.Like || LikeStatus.Dislike)
-            const likeToAdd: LikeType = {
+            const likeToAdd: Like = {
                 createdAt: new Date().toISOString(),
                 status: input.likeStatus as LikeStatus,
                 authorId: input.userId,
@@ -146,7 +160,7 @@ export const commentService = {
         // None
         } else if (userLike && input.likeStatus === LikeStatus.None) {
             console.log("None")
-            comment.likes = comment.likes.filter((like: LikeType) => like.authorId !== input.userId)
+            comment.likes = comment.likes.filter((like: Like) => like.authorId !== input.userId)
             // was dislike
             if (userLike.status === LikeStatus.Dislike) {
                 console.log("was dislike")
@@ -192,7 +206,7 @@ export const commentService = {
         }
     },
     async deleteComment(id: string, userId: string): Promise<Result> {
-        const comment: WithId<CommentDbType> | null = await commentMongoRepository.findById(id)
+        const comment: WithId<Comment> | null = await commentMongoRepository.findById(id)
         if (!comment) {
             return {
                 status: ResultStatus.NotFound,

@@ -8,7 +8,7 @@ import {ObjectId} from "mongodb";
 class BlogService {
     async createBlog(input: BlogBodyInputType): Promise<Result<string>> {
 
-        const newBlogData: BlogDBType = new BlogDBType(
+        const blogData: BlogDBType = new BlogDBType(
             new ObjectId(),
             input.name,
             input.description,
@@ -17,9 +17,9 @@ class BlogService {
             false,
         )
 
-        const newBlog: BlogDocument = new BlogModel(newBlogData)
+        const blogDocument: BlogDocument = new BlogModel(blogData)
 
-        const createdBlog: BlogDocument = await blogMongoRepository.save(newBlog)
+        const createdBlog: BlogDocument = await blogMongoRepository.save(blogDocument)
 
         return {
             status: ResultStatus.Success,

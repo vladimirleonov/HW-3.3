@@ -1,19 +1,19 @@
 import {userMongoRepository} from "../repository/userMongoRepository"
 import {UserModel} from "../../../db/models/user.model"
 import {UserBodyInputType} from "../input-output-types/user-types"
-import {WithId} from "mongodb"
+import {ObjectId, WithId} from "mongodb"
 import {cryptoAdapter} from "../../../common/adapters/crypto.adapter"
 import {Result, ResultStatus} from "../../../common/types/result"
 import {randomUUID} from "node:crypto"
 import {add} from "date-fns"
-import {UserDbType, UserDocument} from "../../../db/db-types/user-db-types";
+import {EmailConfirmation, PasswordRecovery, User, UserDocument} from "../../../db/db-types/user-db-types";
 
 export const userService = {
     async createUser(input: UserBodyInputType): Promise<Result<string | null>> {
 
         const {login, email, password}: UserBodyInputType = input
 
-        const [foundUserByLogin, foundUserByEmail]: [WithId<UserDbType> | null, WithId<UserDbType> | null] = await Promise.all([
+        const [foundUserByLogin, foundUserByEmail]: [WithId<User> | null, WithId<User> | null] = await Promise.all([
             userMongoRepository.findUserByField('login', login),
             userMongoRepository.findUserByField('email', email)
         ])
@@ -27,7 +27,6 @@ export const userService = {
         }
 
         if (foundUserByEmail) {
-            //return {error: generateErrorsMessages('email', 'email should be unique')}
             return {
                 status: ResultStatus.BadRequest,
                 extensions: [{field: 'email', message: 'email should be unique'}],
@@ -38,21 +37,25 @@ export const userService = {
         const saltRounds: number = 10
         const hash: string = await cryptoAdapter.createHash(password, saltRounds)
 
-        const newUser: UserDocument = new UserModel({
-            //_id: new ObjectId(),
-            login: login,
-            password: hash,
-            email: email,
-            createdAt: new Date().toISOString(),
-            emailConfirmation: {
-                confirmationCode: randomUUID(),
-                expirationDate: add(new Date(), {}).toISOString(),
-                isConfirmed: true
-            }
-        })
+        const userData: User = new User(
+            new ObjectId(),
+            login,
+            hash,
+            email,
+            new Date().toISOString(),
+            new EmailConfirmation (
+                randomUUID(),
+                add(new Date(), {}).toISOString(),
+                false
+            ),
+            new PasswordRecovery(
+                '',
+                ''
+            )
+        )
 
-        const createdUser: UserDocument = await userMongoRepository.save(newUser)
-        //const userId: string = await userMongoRepository.create(newUser)
+        const userDocument: UserDocument = new UserModel(userData)
+        const createdUser: UserDocument = await userMongoRepository.save(userDocument)
 
         return {
             status: ResultStatus.Success,

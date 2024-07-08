@@ -1,36 +1,24 @@
 import {Router} from "express"
-import {loginController} from "./controllers/loginController"
 import {loginBodyValidator} from "./validators/loginBodyValidator"
 import {inputCheckErrorsMiddleware} from "../../common/middlewares/inputCheckErrorsMiddleware"
-import {authMeController} from "./controllers/authMeController"
 import {authMiddleware} from "../../common/middlewares/authMiddleware"
-import {registrationController} from "./controllers/registrationController";
-import {registrationUserBodyValidator} from "./validators/registrationBodyValidator";
-import {registrationConfirmationController} from "./controllers/registrationConfirmationController";
-import {registrationConfirmationBodyValidator} from "./validators/registrationConfirmationBodyValidator";
-import {registrationEmailResendingBodyValidator} from "./validators/registrationEmailResendingBodyValidator";
-import {
-    registrationEmailResendingController
-} from "./controllers/registrationEmailResendingController";
-import {refreshTokenController} from "./controllers/refreshTokenController";
-import {logoutController} from "./controllers/logoutController";
-import {refreshTokenAuthMiddleware} from "../../common/middlewares/refreshTokenAuthMiddleware";
-import {rateLimitMiddleware} from "../../common/middlewares/rateLimitMiddleware";
-import {passwordRecoveryBodyValidator} from "./validators/passwordRecoveryBodyValidator";
-import {registrationPasswordRecoveryController} from "./controllers/registrationPasswordRecoveryController";
-import {newPasswordBodyValidator} from "./validators/newPasswordBodyValidator";
-import {newPasswordController} from "./controllers/newPasswordController";
+import {registrationUserBodyValidator} from "./validators/registrationBodyValidator"
+import {registrationConfirmationBodyValidator} from "./validators/registrationConfirmationBodyValidator"
+import {registrationEmailResendingBodyValidator} from "./validators/registrationEmailResendingBodyValidator"
+import {refreshTokenAuthMiddleware} from "../../common/middlewares/refreshTokenAuthMiddleware"
+import {rateLimitMiddleware} from "../../common/middlewares/rateLimitMiddleware"
+import {passwordRecoveryBodyValidator} from "./validators/passwordRecoveryBodyValidator"
+import {newPasswordBodyValidator} from "./validators/newPasswordBodyValidator"
+import {authController} from "./controllers/authController"
 
 export const authRouter: Router = Router()
 
-authRouter.post('/login', rateLimitMiddleware, loginBodyValidator, inputCheckErrorsMiddleware, loginController)
-authRouter.post('/password-recovery', rateLimitMiddleware, passwordRecoveryBodyValidator, inputCheckErrorsMiddleware, registrationPasswordRecoveryController)
-authRouter.post('/new-password', rateLimitMiddleware, newPasswordBodyValidator, inputCheckErrorsMiddleware, newPasswordController)
-authRouter.post('/registration', rateLimitMiddleware, registrationUserBodyValidator, inputCheckErrorsMiddleware, registrationController)
-authRouter.post('/registration-confirmation', rateLimitMiddleware, registrationConfirmationBodyValidator, registrationConfirmationController)
-authRouter.post('/registration-email-resending', rateLimitMiddleware, registrationEmailResendingBodyValidator, inputCheckErrorsMiddleware, registrationEmailResendingController)
-authRouter.post('/refresh-token', refreshTokenAuthMiddleware, refreshTokenController)
-authRouter.post('/logout', refreshTokenAuthMiddleware, logoutController)
-
-
-authRouter.get('/me', authMiddleware, authMeController)
+authRouter.post('/registration', rateLimitMiddleware, registrationUserBodyValidator, inputCheckErrorsMiddleware, authController.registration)
+authRouter.post('/registration-confirmation', rateLimitMiddleware, registrationConfirmationBodyValidator, authController.registrationConfirmation)
+authRouter.post('/registration-email-resending', rateLimitMiddleware, registrationEmailResendingBodyValidator, inputCheckErrorsMiddleware, authController.registrationEmailResending)
+authRouter.post('/password-recovery', rateLimitMiddleware, passwordRecoveryBodyValidator, inputCheckErrorsMiddleware, authController.registrationPasswordRecovery)
+authRouter.post('/new-password', rateLimitMiddleware, newPasswordBodyValidator, inputCheckErrorsMiddleware, authController.setNewPassword)
+authRouter.post('/login', rateLimitMiddleware, loginBodyValidator, inputCheckErrorsMiddleware, authController.login)
+authRouter.post('/refresh-token', refreshTokenAuthMiddleware, authController.refreshToken)
+authRouter.get('/me', authMiddleware, authController.authMe)
+authRouter.post('/logout', refreshTokenAuthMiddleware, authController.logout)

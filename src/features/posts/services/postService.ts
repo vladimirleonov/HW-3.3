@@ -7,9 +7,9 @@ import {Result, ResultStatus} from "../../../common/types/result"
 import {commentMongoRepository} from "../../comments/repository/commentMongoRepository"
 import { WithId } from "mongodb"
 import {BlogDBType, BlogDocument} from "../../../db/db-types/blog-db-types";
-import {PostDocument} from "../../../db/db-types/post-db-types";
+import {PostDbType, PostDocument} from "../../../db/db-types/post-db-types";
 
-export const postService = {
+class PostService {
     async createPost({blogId, ...restInput}: PostBodyInputType): Promise<Result<string | null>> {
         const blog: WithId<BlogDBType> | null = await blogMongoRepository.findById(blogId)
         if (!blog) {
@@ -20,22 +20,25 @@ export const postService = {
             }
         }
 
-        const newPost: PostDocument = new PostModel({
-            _id: new ObjectId(),
-            ...restInput,
-            blogId: new ObjectId(blogId),
-            blogName: blog.name,
-            createdAt: new Date().toISOString()
-        })
+        const postData: PostDbType = new PostDbType(
+            new ObjectId(),
+            restInput.title,
+            restInput.shortDescription,
+            restInput.content,
+            new ObjectId(blogId),
+            blog.name,
+            new Date().toISOString()
+        )
 
-        const createdPost: PostDocument = await postMongoRepository.save(newPost)
-        //const createdPostId: string = await postMongoRepository.create(newPost)
+        const postDocument: PostDocument = new PostModel(postData)
+
+        const createdPost: PostDocument = await postMongoRepository.save(postDocument)
 
         return {
             status: ResultStatus.Success,
             data: createdPost._id.toString()
         }
-    },
+    }
     async createBlogPost(input: BlogPostInputType, blogId: string): Promise<Result<string | null>> {
         const blog: BlogDocument | null = await blogMongoRepository.findById(blogId)
         if (!blog) {
@@ -46,22 +49,25 @@ export const postService = {
             }
         }
 
-        const newPost: PostDocument = new PostModel({
-            _id: new ObjectId(),
-            ...input,
-            blogId: new ObjectId(blogId),
-            blogName: blog.name,
-            createdAt: new Date().toISOString()
-        })
+        const postData: PostDbType = new PostDbType(
+            new ObjectId(),
+            input.title,
+            input.shortDescription,
+            input.content,
+            new ObjectId(blogId),
+            blog.name,
+            new Date().toISOString()
+        )
 
-        const createdPost: PostDocument = await postMongoRepository.save(newPost)
-        //const createdBlogId: string = await postMongoRepository.createBlogPost(newPost)
+        const postDocument: PostDocument = new PostModel(postData)
+
+        const createdPost: PostDocument = await postMongoRepository.save(postDocument)
 
         return {
             status: ResultStatus.Success,
             data: createdPost._id.toString()
         }
-    },
+    }
     async deletePost(postId: string): Promise<Result<boolean | null>> {
         const isDeleted: boolean = await postMongoRepository.delete(postId)
         if (!isDeleted) {
@@ -78,7 +84,7 @@ export const postService = {
                 data: isDeleted
             }
         }
-    },
+    }
     async updatePost(postId: string, input: PostBodyInputType): Promise<Result<boolean | null>> {
         const isUpdated: boolean = await postMongoRepository.update(postId, input)
         if (!isUpdated) {
@@ -95,6 +101,8 @@ export const postService = {
         }
     }
 }
+
+export const postService: PostService = new PostService()
 
 
 // export const postService = {

@@ -1,12 +1,12 @@
 import mongoose from "mongoose"
-import {CommentatorInfoType, CommentDbType, LikeStatus, LikeType} from "../db-types/comment-db-types";
+import {CommentatorInfo, Comment, LikeStatus, Like} from "../db-types/comment-db-types";
 
 const isValidISOString = (value: string) => {
     const isoRegex: RegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;
     return isoRegex.test(value);
 };
 
-const commentatorInfoSchema = new mongoose.Schema<CommentatorInfoType>(
+const commentatorInfoSchema = new mongoose.Schema<CommentatorInfo>(
 {
     userId: {
         type: String,
@@ -19,7 +19,7 @@ const commentatorInfoSchema = new mongoose.Schema<CommentatorInfoType>(
     }
 }, { _id: false })
 
-const likeSchema = new mongoose.Schema<LikeType>({
+const likeSchema = new mongoose.Schema<Like>({
     createdAt: {
         type: String,
         validate: {
@@ -39,7 +39,7 @@ const likeSchema = new mongoose.Schema<LikeType>({
     }
 }, { _id: false })
 
-const commentSchema = new mongoose.Schema<CommentDbType>(
+const commentSchema = new mongoose.Schema<Comment>(
     {
         postId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -83,9 +83,9 @@ const commentSchema = new mongoose.Schema<CommentDbType>(
 
 commentSchema.methods.getUserLikeStatusByUserId = function (userId: string): LikeStatus {
     console.log("in getUserLikeStatusByUserId", userId)
-    const userLike = this.likes.find((like: LikeType): boolean => like.authorId === userId)
+    const userLike = this.likes.find((like: Like): boolean => like.authorId === userId)
     console.log("userLike", userLike)
     return userLike ? userLike.status : 'None'
 }
 
-export const CommentModel = mongoose.model<CommentDbType>('Comment', commentSchema)
+export const CommentModel = mongoose.model<Comment>('Comment', commentSchema)
