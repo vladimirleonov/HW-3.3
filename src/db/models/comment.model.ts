@@ -82,8 +82,10 @@ const commentSchema = new mongoose.Schema<CommentDbType>(
 )
 
 commentSchema.methods.getUserLikeStatusByUserId = function (userId: string): LikeStatus {
+    console.log("in getUserLikeStatusByUserId", userId)
     const userLike = this.likes.find((like: LikeType): boolean => like.authorId === userId)
-    return userLike ? userLike.likeStatus : null
+    console.log("userLike", userLike)
+    return userLike ? userLike.status : 'None'
 }
 
 export const CommentModel = mongoose.model<CommentDbType>('Comment', commentSchema)

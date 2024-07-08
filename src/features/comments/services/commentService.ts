@@ -80,15 +80,15 @@ export const commentService = {
             data: null
         }
     },
-    async updateLikeStatus(input: LikeBodyInputServiceType):Promise<Result> {
-        console.log("input", input)
+    async updateLikeStatus(input: LikeBodyInputServiceType): Promise<Result> {
+        // console.log("input", input)
         // input {
         //     commentId: '6687d769b7dec08d74da8d4a',
         //         likeStatus: 'Like',
         //         userId: '6687d6ab73799f48aa5d87ba'
         // }
         const comment: CommentDocument | null = await commentMongoRepository.findById(input.commentId)
-        console.log("comment", comment)
+        // console.log("comment", comment)
         // postId: new ObjectId('6687d6feb7dec08d74da8d33'),
         //         content: 'contentcontentcontentcontent3',
         //         commentatorInfo: { userId: '6687d6ab73799f48aa5d87ba', userLogin: 'test123' },
@@ -106,32 +106,85 @@ export const commentService = {
             }
         }
 
+        // get use like
         const userLike: LikeType | undefined = comment.likes.find(like => like.authorId === input.userId)
 
+        // add like to comment likes
         if (!userLike) {
             console.log("!userLike")
+            // for input.likeStatus = None
+            if (input.likeStatus === LikeStatus.None) {
+                return {
+                    status: ResultStatus.Success,
+                    data: null
+                }
+            }
+            // input.likeStatus = (LikeStatus.Like || LikeStatus.Dislike)
             const likeToAdd: LikeType = {
                 createdAt: new Date().toISOString(),
                 status: input.likeStatus as LikeStatus,
                 authorId: input.userId,
             }
             comment.likes.push(likeToAdd)
-            comment.likesCount = Number(comment.likesCount) + 1
+            // for input.likeStatus = LikeStatus.Like
+            if (input.likeStatus === LikeStatus.Like) {
+                console.log("!userLike && Like")
+                comment.likesCount += 1
+            // for input.likeStatus = LikeStatus.Dislike
+            } else if (input.likeStatus === LikeStatus.Dislike) {
+                console.log("!userLike && Dislike")
+                comment.dislikesCount += 1
+            }
+
         // LikeStatus the same
         } else if (userLike && userLike.status === input.likeStatus) {
             console.log("nothing change")
-            // Like
+            return {
+                status: ResultStatus.Success,
+                data: null
+            }
+        // None
+        } else if (userLike && input.likeStatus === LikeStatus.None) {
+            console.log("None")
+            comment.likes = comment.likes.filter((like: LikeType) => like.authorId !== input.userId)
+            // was dislike
+            if (userLike.status === LikeStatus.Dislike) {
+                console.log("was dislike")
+                comment.dislikesCount -= 1
+            // was like
+            } else if (userLike.status === LikeStatus.Like) {
+                console.log("was like")
+                comment.likesCount -= 1
+            }
+        // Like
         } else if (userLike && input.likeStatus === LikeStatus.Like) {
             console.log("Like")
-            userLike.status = LikeStatus.Like
-            comment.likesCount = Number(comment.likesCount) + 1
+            // was dislike
+            if (userLike.status === LikeStatus.Dislike) {
+                console.log("was dislike")
+                comment.dislikesCount -= 1
+            }
+            comment.likesCount += 1
+
+            userLike.status = input.likeStatus
+            userLike.createdAt = new Date().toISOString()
         // Dislike
         } else if (userLike && input.likeStatus === LikeStatus.Dislike) {
             console.log("Dislike")
-            userLike.status = LikeStatus.Dislike
-            comment.likesCount = Number(comment.likesCount) - 1
+            // was like
+            if (userLike.status === LikeStatus.Like) {
+                console.log("was like")
+                console.log("before comment.likesCount", comment.likesCount)
+                comment.likesCount -= 1
+                console.log("after comment.likesCount", comment.likesCount)
+            }
+            comment.dislikesCount += 1
+
+            userLike.status = input.likeStatus
+            userLike.createdAt = new Date().toISOString()
         }
-        await commentMongoRepository.save(comment)
+        const res = await commentMongoRepository.save(comment)
+        console.log("like-status res", res)
 
         return {
             status: ResultStatus.Success,
@@ -170,10 +223,6 @@ export const commentService = {
         }
     }
 }
-
-
-
-
 
 
 // export const commentService = {

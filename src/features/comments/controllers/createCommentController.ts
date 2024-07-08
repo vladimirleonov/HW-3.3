@@ -26,7 +26,7 @@ export const createCommentController = async (req: Request<PostIdParamType, Comm
             return
         }
 
-        const comment: CommentOutputType | null = await commentMongoQueryRepository.findForOutputById(result.data!)
+        const comment: CommentOutputType | null = await commentMongoQueryRepository.findForOutputById({commentId: result.data!, userId: req.user.userId})
         //?
         if(!comment) {
             //error if just created comment not found

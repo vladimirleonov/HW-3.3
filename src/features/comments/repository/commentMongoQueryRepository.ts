@@ -5,7 +5,7 @@ import {SanitizedDefaultQueryParamsType} from "../../../common/helpers/queryPara
 import {CommentDbType, LikeStatus} from "../../../db/db-types/comment-db-types";
 
 export const commentMongoQueryRepository = {
-    async findAllPostCommentsForOutput(query: SanitizedDefaultQueryParamsType, postId: string): Promise<CommentsPaginationOutputType> {
+    async findAllPostCommentsForOutput(query: SanitizedDefaultQueryParamsType, postId: string, userId: string): Promise<CommentsPaginationOutputType> {
         const byId = postId ? {postId: new ObjectId(postId)} : {}
 
         const filter = {
@@ -25,33 +25,39 @@ export const commentMongoQueryRepository = {
             page: query.pageNumber,
             pageSize: query.pageSize,
             totalCount,
-            items: comments.map((comment: CommentDbType) => this.mapToOutput(comment))
+            items: comments.map((comment: CommentDbType) => this.mapToOutput(comment, userId))
         }
     },
-    async findForOutputById(id: string): Promise<CommentOutputType | null> {
-        if (!this.isValidObjectId(id)) {
+    async findForOutputById({userId, commentId}: {userId: string, commentId: string}): Promise<CommentOutputType | null> {
+        console.log("userId", userId)
+        console.log("commentId", commentId)
+        if(userId && !this.isValidObjectId(userId)) {
             return null
         }
-        const comment: CommentDbType | null = await CommentModel.findOne({_id: new ObjectId(id)})
+        if (!this.isValidObjectId(commentId)) {
+            return null
+        }
+        const comment: CommentDbType | null = await CommentModel.findById(new ObjectId(commentId))
         if(!comment) {
             return null
         }
 
-        return this.mapToOutput(comment)
+        return this.mapToOutput(comment, userId)
     },
-    mapToOutput({_id, postId, content, commentatorInfo: {userId, userLogin}, createdAt, likesCount, dislikesCount, ...rest}: CommentDbType): CommentOutputType {
+    mapToOutput(comment: CommentDbType, userId: string): CommentOutputType {
+        const {_id, postId, content, commentatorInfo: {userId: commentatorUserId, userLogin}, createdAt, likesCount, dislikesCount, ...rest} = comment
         return {
             id: _id.toString(),
             content,
             commentatorInfo: {
-                userId,
+                userId: commentatorUserId,
                 userLogin
             },
             createdAt,
             likesInfo: {
                 likesCount: likesCount,
                 dislikesCount: dislikesCount,
-                myStatus: CommentModel.get
+                myStatus: userId ? comment.getUserLikeStatusByUserId(userId): LikeStatus.None
             }
         }
     },

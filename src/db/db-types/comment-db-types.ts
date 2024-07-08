@@ -25,7 +25,8 @@ export type CommentDbType = WithId<{
     likes: LikeType[]
     likesCount: number
     dislikesCount: number
-    createdAt: string
+    createdAt: string,
+    getUserLikeStatusByUserId: (userId: string) => LikeStatus
 }>
 
 export type CommentDocument = HydratedDocument<CommentDbType>

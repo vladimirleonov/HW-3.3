@@ -3,10 +3,22 @@ import {commentMongoQueryRepository} from "../repository/commentMongoQueryReposi
 import {IdParamInputType} from "../../../common/input-output-types/common-types"
 import {CommentOutputType} from "../input-output-types/comment-types"
 import {HTTP_CODES} from "../../../settings"
+import {Result, ResultStatus} from "../../../common/types/result";
+import {JwtPayload} from "jsonwebtoken";
+import {authService} from "../../auth/services/authService";
 
 export const getCommentController = async (req: Request<IdParamInputType, CommentOutputType>, res: Response<CommentOutputType>) => {
     try {
-        const comment: CommentOutputType | null = await commentMongoQueryRepository.findForOutputById(req.params.id)
+        let userId = null
+        if (req.headers.authorization) {
+            const result: Result<JwtPayload | null> = await authService.checkAccessToken(req.headers.authorization)
+            if (result.status === ResultStatus.Success) {
+                userId = result.data!.userId
+            }
+        }
+        console.log("userId", userId)
+
+        const comment: CommentOutputType | null = await commentMongoQueryRepository.findForOutputById({userId: userId, commentId: req.params.id})
         if (!comment) {
             res.status(HTTP_CODES.NOT_FOUND).send()
             return

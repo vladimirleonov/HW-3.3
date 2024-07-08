@@ -20,7 +20,7 @@ export const updateLikeStatusController = async (req: Request<CommentIdParamInpu
 
         const result: Result = await commentService.updateLikeStatus(dto)
         if (result.status === ResultStatus.NotFound) {
-            res.status(HTTP_CODES.BAD_REQUEST).send()
+            res.status(HTTP_CODES.NOT_FOUND).send()
             return
         }
 
