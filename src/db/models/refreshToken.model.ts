@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import {RevokedTokenDbType} from "../db-types/refreshToken-db-types";
+import {RevokedToken} from "../db-types/refreshToken-db-types";
 
-const revokedTokenSchema = new mongoose.Schema<RevokedTokenDbType>(
+const revokedTokenSchema = new mongoose.Schema<RevokedToken>(
     {
         token: {
             type: String,
@@ -12,7 +12,7 @@ const revokedTokenSchema = new mongoose.Schema<RevokedTokenDbType>(
             type: mongoose.Schema.ObjectId,
             required: true
         }
-    }
+    }, { _id: false }
 )
 
-export const RevokedTokenModel = mongoose.model<RevokedTokenDbType>('RevokedToken', revokedTokenSchema)
+export const RevokedTokenModel = mongoose.model<RevokedToken>('RevokedToken', revokedTokenSchema)

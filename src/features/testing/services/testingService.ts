@@ -1,7 +1,7 @@
 import {testingRepository} from "../repository/testingRepository"
 import {Result, ResultStatus} from "../../../common/types/result"
 
-export const testingService = {
+class TestingService {
     async deleteAllData(): Promise<Result<boolean>> {
         const isDeletes: boolean = await testingRepository.deleteAllData()
         return {
@@ -10,3 +10,5 @@ export const testingService = {
         }
     }
 }
+
+export const testingService: TestingService = new TestingService()

@@ -1,10 +1,18 @@
 import {WithId} from "mongodb"
 import {HydratedDocument} from "mongoose"
 
-export type ApiAccessLogDbType = WithId<{
-    ip: string,
-    URL: string,
-    date: Date
-}>
+// export type ApiAccessLogDbType = WithId<{
+//     ip: string,
+//     URL: string,
+//     date: Date
+// }>
 
-export type ApiAccessLogDocument = HydratedDocument<ApiAccessLogDbType>
+export class ApiAccessLog {
+    constructor(
+        public ip: string,
+        public URL: string,
+        public date: Date
+    ) {}
+}
+
+export type ApiAccessLogDocument = HydratedDocument<ApiAccessLog>

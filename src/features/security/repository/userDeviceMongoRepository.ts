@@ -1,5 +1,5 @@
 import {UserDeviceModel} from "../../../db/models/devices.model";
-import {DeleteResult, InsertOneResult, UpdateResult} from "mongodb";
+import {DeleteResult, UpdateResult} from "mongodb";
 import {
     deleteAllOtherByDeviceIdAndUserIdInputType,
     deleteOneByDeviceIdAndIAtInputType,
@@ -7,14 +7,14 @@ import {
     findOneByDeviceIdAndIatInputType,
     UpdateInputType
 } from "../../auth/types/inputTypes/userDeviceInputMongoRepositoryTypes";
-import {UserDeviceDBType, UserDeviceDocument} from "../../../db/db-types/user-devices-db-types";
+import {UserDevice, UserDeviceDocument} from "../../../db/db-types/user-devices-db-types";
 
-export const userDeviceMongoRepository = {
+class UserDeviceMongoRepository {
     async save(userDevice: UserDeviceDocument): Promise<UserDeviceDocument> {
         return userDevice.save()
-    },
+    }
     async update({deviceId, iat}: UpdateInputType): Promise<boolean> {
-        const updatedInfo: UpdateResult<UserDeviceDBType> = await UserDeviceModel.updateOne({
+        const updatedInfo: UpdateResult<UserDevice> = await UserDeviceModel.updateOne({
                 deviceId: deviceId,
             },
             {
@@ -22,7 +22,7 @@ export const userDeviceMongoRepository = {
             })
 
         return updatedInfo.matchedCount === 1
-    },
+    }
     async deleteAllOtherByDeviceIdAndUserId({
                                                 deviceId,
                                                 userId
@@ -31,7 +31,7 @@ export const userDeviceMongoRepository = {
             deviceId: {$ne: deviceId},
             userId: {$eq: userId}
         });
-    },
+    }
     async deleteOneByDeviceIdAndUserId({deviceId, userId}: deleteOneByDeviceIdAndUserIdInputType): Promise<boolean> {
         const deletedInfo: DeleteResult = await UserDeviceModel.deleteOne({
             deviceId: {$eq: deviceId},
@@ -39,7 +39,7 @@ export const userDeviceMongoRepository = {
         })
 
         return deletedInfo.deletedCount === 1
-    },
+    }
     async deleteOneByDeviceIdAndIAt({deviceId, iat}: deleteOneByDeviceIdAndIAtInputType): Promise<boolean> {
         const deletedInfo: DeleteResult = await UserDeviceModel.deleteOne({
             deviceId: {$eq: deviceId},
@@ -47,17 +47,73 @@ export const userDeviceMongoRepository = {
         })
 
         return deletedInfo.deletedCount === 1
-    },
-    async findByDeviceId(deviceId: string): Promise<UserDeviceDBType | null> {
+    }
+    async findByDeviceId(deviceId: string): Promise<UserDevice | null> {
         return UserDeviceModel.findOne({deviceId})
-    },
-    async findOneByDeviceIdAndIat({deviceId, iat}: findOneByDeviceIdAndIatInputType): Promise<UserDeviceDBType | null> {
+    }
+    async findOneByDeviceIdAndIat({deviceId, iat}: findOneByDeviceIdAndIatInputType): Promise<UserDevice | null> {
         return UserDeviceModel.findOne({
             deviceId,
             iat
         })
     }
 }
+
+export const userDeviceMongoRepository = new UserDeviceMongoRepository()
+
+
+
+
+// export const userDeviceMongoRepository = {
+//     async save(userDevice: UserDeviceDocument): Promise<UserDeviceDocument> {
+//         return userDevice.save()
+//     },
+//     async update({deviceId, iat}: UpdateInputType): Promise<boolean> {
+//         const updatedInfo: UpdateResult<UserDevice> = await UserDeviceModel.updateOne({
+//                 deviceId: deviceId,
+//             },
+//             {
+//                 $set: {iat: iat}
+//             })
+//
+//         return updatedInfo.matchedCount === 1
+//     },
+//     async deleteAllOtherByDeviceIdAndUserId({
+//                                                 deviceId,
+//                                                 userId
+//                                             }: deleteAllOtherByDeviceIdAndUserIdInputType): Promise<void> {
+//         await UserDeviceModel.deleteMany({
+//             deviceId: {$ne: deviceId},
+//             userId: {$eq: userId}
+//         });
+//     },
+//     async deleteOneByDeviceIdAndUserId({deviceId, userId}: deleteOneByDeviceIdAndUserIdInputType): Promise<boolean> {
+//         const deletedInfo: DeleteResult = await UserDeviceModel.deleteOne({
+//             deviceId: {$eq: deviceId},
+//             userId: {$eq: userId}
+//         })
+//
+//         return deletedInfo.deletedCount === 1
+//     },
+//     async deleteOneByDeviceIdAndIAt({deviceId, iat}: deleteOneByDeviceIdAndIAtInputType): Promise<boolean> {
+//         const deletedInfo: DeleteResult = await UserDeviceModel.deleteOne({
+//             deviceId: {$eq: deviceId},
+//             iat: {$eq: iat}
+//         })
+//
+//         return deletedInfo.deletedCount === 1
+//     },
+//     async findByDeviceId(deviceId: string): Promise<UserDevice | null> {
+//         return UserDeviceModel.findOne({deviceId})
+//     },
+//     async findOneByDeviceIdAndIat({deviceId, iat}: findOneByDeviceIdAndIatInputType): Promise<UserDevice | null> {
+//         return UserDeviceModel.findOne({
+//             deviceId,
+//             iat
+//         })
+//     }
+// }
+
 
 
 

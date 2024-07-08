@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import {UserDeviceDBType} from "../db-types/user-devices-db-types";
+import {UserDevice} from "../db-types/user-devices-db-types";
 
-const userDeviceSchema = new mongoose.Schema<UserDeviceDBType>({
+const userDeviceSchema = new mongoose.Schema<UserDevice>({
     userId: {
         type: String,
         maxLength: 50,
@@ -34,4 +34,4 @@ const userDeviceSchema = new mongoose.Schema<UserDeviceDBType>({
     },
 })
 
-export const UserDeviceModel = mongoose.model<UserDeviceDBType>('UserDevice', userDeviceSchema)
+export const UserDeviceModel = mongoose.model<UserDevice>('UserDevice', userDeviceSchema)
