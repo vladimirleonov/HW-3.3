@@ -1,6 +1,6 @@
 import {UserModel} from "../../../db/models/user.model"
 import {DeleteResult, ObjectId, UpdateResult} from "mongodb"
-import {User, UserDocument} from "../../../db/db-types/user-db-types";
+import {PasswordRecovery, User, UserDocument} from "../../../db/db-types/user-db-types";
 
 class UserMongoRepository {
     async save(user: UserDocument): Promise<UserDocument> {
@@ -46,13 +46,13 @@ class UserMongoRepository {
         )
         return updatedInfo.matchedCount === 1
     }
-    async updatePasswordRecoveryInfo(id: string, confirmationCode: string, expirationDate: string): Promise<boolean> {
+    async updatePasswordRecoveryInfo(userId: string, passwordRecoveryDTO: PasswordRecovery): Promise<boolean> {
         const updatedInfo: UpdateResult<User> = await UserModel.updateOne(
-            {_id: new ObjectId(id)},
+            {_id: new ObjectId(userId)},
             {
                 $set: {
-                    ['passwordRecovery.recoveryCode']: confirmationCode,
-                    ['passwordRecovery.expirationDate']: expirationDate
+                    ['passwordRecovery.recoveryCode']: passwordRecoveryDTO.recoveryCode,
+                    ['passwordRecovery.expirationDate']: passwordRecoveryDTO.expirationDate
                 }
             }
         )

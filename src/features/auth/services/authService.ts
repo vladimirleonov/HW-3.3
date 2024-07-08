@@ -2,12 +2,12 @@ import {UserModel} from "../../../db/models/user.model"
 import {jwtAdapter} from "../../../common/adapters/jwt.adapter"
 import {Result, ResultStatus} from "../../../common/types/result"
 import {cryptoAdapter} from "../../../common/adapters/crypto.adapter"
-import {userMongoRepository} from "../../users/repository/userMongoRepository";
-import {ObjectId, WithId} from "mongodb";
-import {randomUUID} from "node:crypto";
-import {add} from "date-fns";
-import {nodemailerAdapter} from "../../../common/adapters/nodemailer.adapter";
-import {registrationEmailTemplate} from "../../../common/email-templates/registrationEmailTemplate";
+import {userMongoRepository} from "../../users/repository/userMongoRepository"
+import {ObjectId, WithId} from "mongodb"
+import {randomUUID} from "node:crypto"
+import {add} from "date-fns"
+import {nodemailerAdapter} from "../../../common/adapters/nodemailer.adapter"
+import {registrationEmailTemplate} from "../../../common/email-templates/registrationEmailTemplate"
 import {
     LoginInputServiceType,
     LogoutInputServiceType,
@@ -17,17 +17,18 @@ import {
     RegistrationEmailResendingInputServiceType,
     RegistrationInputServiceType,
     RegistrationPasswordRecoveryInputServiceType,
-} from "../types/inputTypes/authInputServiceTypes";
-import {LoginOutputServiceType, RefreshTokenOutputServiceType} from "../types/outputTypes/authOutputServiceTypes";
-import {JwtPayload} from "jsonwebtoken";
-import {userDeviceMongoRepository} from "../../security/repository/userDeviceMongoRepository";
-import {UserDeviceModel} from "../../../db/models/devices.model";
-import {unixToISOString} from "../../../common/helpers/unixToISOString";
-import {passwordRecoveryEmailTemplate} from "../../../common/email-templates/passwordRecoveryEmailTemplate";
-import {EmailConfirmation, PasswordRecovery, User, UserDocument} from "../../../db/db-types/user-db-types";
-import {UserDeviceDBType, UserDeviceDocument} from "../../../db/db-types/user-devices-db-types";
+} from "../types/inputTypes/authInputServiceTypes"
+import {LoginOutputServiceType, RefreshTokenOutputServiceType} from "../types/outputTypes/authOutputServiceTypes"
+import {JwtPayload} from "jsonwebtoken"
+import {userDeviceMongoRepository} from "../../security/repository/userDeviceMongoRepository"
+import {UserDeviceModel} from "../../../db/models/devices.model"
+import {unixToISOString} from "../../../common/helpers/unixToISOString"
+import {passwordRecoveryEmailTemplate} from "../../../common/email-templates/passwordRecoveryEmailTemplate"
+import {EmailConfirmation, PasswordRecovery, User, UserDocument} from "../../../db/db-types/user-db-types"
+import {UserDevice, UserDeviceDocument} from "../../../db/db-types/user-devices-db-types"
 
 class AuthService {
+    // +
     async registration(input: RegistrationInputServiceType): Promise<Result> {
         const userByEmail: WithId<User> | null = await userMongoRepository.findUserByEmail(input.email)
         if (userByEmail) {
@@ -73,7 +74,6 @@ class AuthService {
         const UserDocument: UserDocument = new UserModel(userData)
 
         await userMongoRepository.save(UserDocument)
-        //await userMongoRepository.create(newUser)
 
         nodemailerAdapter.sendEmail(
             userData.email,
@@ -86,6 +86,7 @@ class AuthService {
             data: null,
         }
     }
+    // +
     async registrationPasswordRecovery(input: RegistrationPasswordRecoveryInputServiceType): Promise<Result> {
         const existingUser: WithId<User> | null = await userMongoRepository.findUserByEmail(input.email)
         if (!existingUser) {
@@ -99,17 +100,23 @@ class AuthService {
             }
         }
 
-        const newRecoveryCode: string = randomUUID();
-        const newExpirationDate: string = add(new Date(), {
+        const recoveryCode: string = randomUUID()
+        const expirationDate: string = add(new Date(), {
             hours: 1,
             minutes: 30,
         }).toISOString()
 
-        await userMongoRepository.updatePasswordRecoveryInfo(existingUser._id.toString(), newRecoveryCode, newExpirationDate)
+        const passwordRecoveryDTO: PasswordRecovery = new PasswordRecovery(
+            recoveryCode,
+            expirationDate
+        )
+
+        const userId: string = existingUser._id.toString()
+        await userMongoRepository.updatePasswordRecoveryInfo(userId, passwordRecoveryDTO)
 
         await nodemailerAdapter.sendEmail(
             input.email,
-            passwordRecoveryEmailTemplate(newRecoveryCode),
+            passwordRecoveryEmailTemplate(passwordRecoveryDTO.recoveryCode),
             'Password Recovery'
         )
 
@@ -118,6 +125,7 @@ class AuthService {
             data: null
         }
     }
+    // +
     async setNewPassword(input: NewPasswordInputServiceType): Promise<Result> {
         const user: UserDocument | null = await userMongoRepository.findUserByRecoveryCode(input.recoveryCode)
         if (!user) {
@@ -140,11 +148,11 @@ class AuthService {
         }
 
         const saltRounds: number = 10
-        const newPasswordHash: string = await cryptoAdapter.createHash(input.newPassword, saltRounds)
+        const passwordHash: string = await cryptoAdapter.createHash(input.newPassword, saltRounds)
 
-        user.password = newPasswordHash
-        user.passwordRecovery.recoveryCode = ''; // set '' after successful update
-        user.passwordRecovery.expirationDate = ''; // set '' after successful update
+        user.password = passwordHash
+        user.passwordRecovery.recoveryCode = '' // set '' after successful update
+        user.passwordRecovery.expirationDate = '' // set '' after successful update
         await userMongoRepository.save(user)
 
         return {
@@ -152,6 +160,7 @@ class AuthService {
             data: null
         }
     }
+    // +
     async confirmRegistration(input: RegistrationConfirmationInputServiceType): Promise<Result> {
         const existingUser: WithId<User> | null = await userMongoRepository.findUserByConfirmationCode(input.code)
         if (!existingUser) {
@@ -179,13 +188,15 @@ class AuthService {
         }
 
         const isConfirmed: boolean = true
-        await userMongoRepository.updateIsConfirmed(existingUser._id.toString(), isConfirmed)
+        const userId: string = existingUser._id.toString()
+        await userMongoRepository.updateIsConfirmed(userId, isConfirmed)
 
         return {
             status: ResultStatus.Success,
             data: null
         }
     }
+    // +
     async registrationEmailResending(input: RegistrationEmailResendingInputServiceType): Promise<Result> {
         const existingUser: WithId<User> | null = await userMongoRepository.findUserByEmail(input.email)
         if (!existingUser) {
@@ -205,13 +216,14 @@ class AuthService {
         //     }
         // }
 
-        const newConfirmationCode: string = randomUUID();
+        const newConfirmationCode: string = randomUUID()
         const newExpirationDate: string = add(new Date(), {
             hours: 1,
             minutes: 30,
         }).toISOString()
 
-        await userMongoRepository.updateEmailConfirmationInfo(existingUser._id.toString(), newConfirmationCode, newExpirationDate)
+        const userId: string = existingUser._id.toString()
+        await userMongoRepository.updateEmailConfirmationInfo(userId, newConfirmationCode, newExpirationDate)
 
         await nodemailerAdapter.sendEmail(
             input.email,
@@ -224,10 +236,11 @@ class AuthService {
             data: null
         }
     }
+    // +
     async login(input: LoginInputServiceType): Promise<Result<LoginOutputServiceType | null>> {
         if (input.refreshToken) {
             try {
-                jwtAdapter.verifyToken(input.refreshToken);
+                jwtAdapter.verifyToken(input.refreshToken)
                 return {
                     status: ResultStatus.BadRequest,
                     extensions: [{
@@ -235,9 +248,9 @@ class AuthService {
                         message: 'Refresh token is still valid. Logout before logging in again'
                     }],
                     data: null
-                };
+                }
             } catch (err) {
-                // console.log('Invalid refresh token, proceeding with login');
+                // console.log('Invalid refresh token, proceeding with login')
             }
         }
 
@@ -279,18 +292,19 @@ class AuthService {
             const deviceName: string = input.deviceName
             const ip: string = input.ip
 
-            const newUserDevice: UserDeviceDocument = new UserDeviceModel({
-                _id: new ObjectId(),
-                userId: user._id.toString(),
-                deviceId: decodedRefreshToken.deviceId,
-                iat: unixToISOString(iat),
-                deviceName: deviceName,
-                ip: ip,
-                exp: unixToISOString(exp)
-            })
+            const UserDeviceData: UserDevice = new UserDevice(
+                new ObjectId(),
+                user._id.toString(),
+                decodedRefreshToken.deviceId,
+                unixToISOString(iat),
+                deviceName,
+                ip,
+                unixToISOString(exp)
+            )
 
-            //await userDeviceMongoRepository.create(newUserDevice)
-            await userDeviceMongoRepository.save(newUserDevice)
+            const UserDeviceDocument: UserDeviceDocument = new UserDeviceModel(UserDeviceData)
+
+            await userDeviceMongoRepository.save(UserDeviceDocument)
 
             return {
                 status: ResultStatus.Success,
@@ -306,10 +320,11 @@ class AuthService {
             data: null
         }
     }
+    // +
     async refreshToken({deviceId, userId, iat: issuedAt}: RefreshTokenInputServiceType): Promise<Result<
         RefreshTokenOutputServiceType | null
     >> {
-        const device: WithId<UserDeviceDBType> | null = await userDeviceMongoRepository.findOneByDeviceIdAndIat({
+        const device: WithId<UserDevice> | null = await userDeviceMongoRepository.findOneByDeviceIdAndIat({
             deviceId,
             iat: issuedAt
         })
@@ -334,11 +349,8 @@ class AuthService {
         const refreshToken: string = jwtAdapter.generateToken(JwtRefreshTokenPayload, '20h')
 
         const decodedRefreshToken: string | JwtPayload | null = jwtAdapter.decode(refreshToken)
-        console.log("old iat", issuedAt)
         if (decodedRefreshToken) {
             const {iat} = decodedRefreshToken as JwtPayload
-
-            console.log("new iat", unixToISOString(iat))
 
             const issuedAt: string = unixToISOString(iat)
 
@@ -575,7 +587,7 @@ export const authService = new AuthService()
 //         //     }
 //         // }
 
-//         const newConfirmationCode = randomUUID();
+//         const newConfirmationCode = randomUUID()
 //         const newExpirationDate = add(new Date(), {
 //             hours: 1,
 //             minutes: 30,
@@ -596,7 +608,7 @@ export const authService = new AuthService()
 //     async login(input: LoginInputServiceType): Promise<Result<LoginOutputServiceType | null>> {
 //         if (input.refreshToken) {
 //             try {
-//                 jwtAdapter.verifyToken(input.refreshToken);
+//                 jwtAdapter.verifyToken(input.refreshToken)
 //                 return {
 //                     status: ResultStatus.BadRequest,
 //                     extensions: [{
@@ -604,9 +616,9 @@ export const authService = new AuthService()
 //                         message: 'Refresh token is still valid. Logout before logging in again'
 //                     }],
 //                     data: null
-//                 };
+//                 }
 //             } catch (err) {
-//                 // console.log('Invalid refresh token, proceeding with login');
+//                 // console.log('Invalid refresh token, proceeding with login')
 //             }
 //         }
 
