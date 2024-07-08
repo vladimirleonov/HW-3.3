@@ -10,7 +10,7 @@ import {HydratedDocument} from "mongoose";
 //     createdAt: string
 // }>
 
-class PostDbType {
+export class PostDbType {
     constructor(
         public _id: ObjectId,
         public title: string,

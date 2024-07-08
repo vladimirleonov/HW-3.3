@@ -7,7 +7,7 @@ import {Result, ResultStatus} from "../../../common/types/result"
 import {commentMongoQueryRepository} from "../repository/commentMongoQueryRepository"
 import {ErrorsMessagesType} from "../../../common/types/errorMessageType"
 
-export const createCommentController = async (req: Request<PostIdParamType, CommentOutputType, CommentBodyInputType>, res: Response<CommentOutputType | string>) => {
+export const createPostCommentController = async (req: Request<PostIdParamType, CommentOutputType, CommentBodyInputType>, res: Response<CommentOutputType | string>) => {
     try {
         //?
         if (!req.user || !req.user.userId) {
