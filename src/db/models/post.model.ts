@@ -1,12 +1,12 @@
 import mongoose from "mongoose"
-import {PostDbType} from "../db-types/post-db-types";
+import {Post} from "../db-types/post-db-types";
 
 const isValidISOString = (value: string) => {
     const isoRegex: RegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;
     return isoRegex.test(value);
 };
 
-const postSchema = new mongoose.Schema<PostDbType>(
+const postSchema = new mongoose.Schema<Post>(
     {
         title: {
             type: String,
@@ -43,4 +43,4 @@ const postSchema = new mongoose.Schema<PostDbType>(
     }
 )
 
-export const PostModel = mongoose.model<PostDbType>('Post', postSchema)
+export const PostModel = mongoose.model<Post>('Post', postSchema)

@@ -1,4 +1,4 @@
-import {ObjectId, WithId} from "mongodb";
+import {ObjectId} from "mongodb";
 import {HydratedDocument} from "mongoose";
 
 // export type PostDbType = WithId<{
@@ -10,7 +10,7 @@ import {HydratedDocument} from "mongoose";
 //     createdAt: string
 // }>
 
-export class PostDbType {
+export class Post {
     constructor(
         public _id: ObjectId,
         public title: string,
@@ -22,4 +22,4 @@ export class PostDbType {
     ) {}
 }
 
-export type PostDocument = HydratedDocument<PostDbType>
+export type PostDocument = HydratedDocument<Post>

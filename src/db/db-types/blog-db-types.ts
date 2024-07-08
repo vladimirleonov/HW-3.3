@@ -9,7 +9,7 @@ import {HydratedDocument} from "mongoose";
 //     isMembership: boolean
 // }>
 
-export class BlogDBType {
+export class Blog {
     constructor(
         public _id: ObjectId,
         public name: string,
@@ -20,4 +20,4 @@ export class BlogDBType {
     ) {}
 }
 
-export type BlogDocument = HydratedDocument<BlogDBType>
+export type BlogDocument = HydratedDocument<Blog>

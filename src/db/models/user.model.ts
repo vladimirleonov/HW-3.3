@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import {EmailConfirmation, PasswordRecovery, UserDbType} from "../db-types/user-db-types";
+import {EmailConfirmation, PasswordRecovery, User} from "../db-types/user-db-types";
 
 const isValidISOString = (value: string) => {
     const isoRegex: RegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;
@@ -40,7 +40,7 @@ const passwordRecoverySchema = new mongoose.Schema<PasswordRecovery>({
     }
 }, { _id: false })
 
-const userSchema = new mongoose.Schema<UserDbType>({
+const userSchema = new mongoose.Schema<User>({
     login: {
         type: String,
         minlength: 3,
@@ -76,4 +76,4 @@ const userSchema = new mongoose.Schema<UserDbType>({
     },
 })
 
-export const UserModel = mongoose.model<UserDbType>('User', userSchema)
+export const UserModel = mongoose.model<User>('User', userSchema)

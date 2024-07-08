@@ -1,12 +1,12 @@
 import * as mongoose from "mongoose"
-import {BlogDBType} from "../db-types/blog-db-types";
+import {Blog} from "../db-types/blog-db-types";
 
 const isValidISOString = (value: string) => {
     const isoRegex: RegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;
     return isoRegex.test(value);
 };
 
-const blogSchema = new mongoose.Schema<BlogDBType>(
+const blogSchema = new mongoose.Schema<Blog>(
     {
         name: {
             type: String,
@@ -39,4 +39,4 @@ const blogSchema = new mongoose.Schema<BlogDBType>(
     },
 );
 
-export const BlogModel = mongoose.model<BlogDBType>('Blog', blogSchema)
+export const BlogModel = mongoose.model<Blog>('Blog', blogSchema)
