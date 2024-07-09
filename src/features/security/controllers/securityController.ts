@@ -2,11 +2,19 @@ import {Request, Response} from "express";
 import {GetDeviceSessionsOutputControllerType} from "../types/outputTypes/securityOutputControllersTypes";
 import {HTTP_CODES} from "../../../settings";
 import {findAllForOutputType} from "../../auth/types/outputTypes/userDeviceOutputMongoQueryRepositoryTypes";
-import {userDeviceMongoQueryRepository} from "../repository/userDeviceMongoQueryRepository";
+import {
+    UserDeviceMongoQueryRepository
+} from "../repository/userDeviceMongoQueryRepository";
 import {Result, ResultStatus} from "../../../common/types/result";
-import {securityService} from "../services/securityService";
+import {SecurityService} from "../services/securityService";
 
 class SecurityController {
+    securityService: SecurityService
+    userDeviceMongoQueryRepository: UserDeviceMongoQueryRepository
+    constructor() {
+        this.securityService = new SecurityService()
+        this.userDeviceMongoQueryRepository = new UserDeviceMongoQueryRepository()
+    }
     async getUserDeviceSessions (req: Request, res: Response<GetDeviceSessionsOutputControllerType[]>) {
         try {
             const userId: string | undefined = req.device?.userId
@@ -15,7 +23,7 @@ class SecurityController {
                 return
             }
 
-            const userSessions: findAllForOutputType[] = await userDeviceMongoQueryRepository.findAllForOutput(userId)
+            const userSessions: findAllForOutputType[] = await this.userDeviceMongoQueryRepository.findAllForOutput(userId)
             res.status(HTTP_CODES.OK).send(userSessions)
         } catch (err) {
             console.error("getDeviceSessionsController", err)
@@ -31,7 +39,7 @@ class SecurityController {
                 return
             }
 
-            const result: Result = await securityService.terminateAllOtherDeviceSessions({deviceId, userId})
+            const result: Result = await this.securityService.terminateAllOtherDeviceSessions({deviceId, userId})
             if (result.status === ResultStatus.Success) {
                 res.status(HTTP_CODES.NO_CONTENT).send()
                 return
@@ -50,7 +58,7 @@ class SecurityController {
                 return
             }
 
-            const result: Result = await securityService.terminateDeviceSession({deviceId, userId})
+            const result: Result = await this.securityService.terminateDeviceSession({deviceId, userId})
             if (result.status === ResultStatus.NotFound) {
                 res.status(HTTP_CODES.NOT_FOUND).send()
                 return

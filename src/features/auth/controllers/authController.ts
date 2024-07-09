@@ -18,9 +18,13 @@ import {getIpAddress} from "../../../common/helpers/getIpAddress";
 import {getDeviceName} from "../../../common/helpers/getDeviceName";
 import {LoginOutputServiceType, RefreshTokenOutputServiceType} from "../types/outputTypes/authOutputServiceTypes";
 import {AuthenticatedUserOutputType} from "../../users/input-output-types/user-types";
-import {userMongoQueryRepository} from "../../users/repository/userMongoQueryRepository";
+import {UserMongoQueryRepository} from "../../users/repository/userMongoQueryRepository";
 
 class AuthController {
+    userMongoQueryRepository: UserMongoQueryRepository
+    constructor() {
+        this.userMongoQueryRepository = new UserMongoQueryRepository()
+    }
     async registration (req: Request<{}, {}, RegistrationInputControllerType>, res: Response) {
         try {
             const result: Result = await authService.registration(req.body)
@@ -171,7 +175,7 @@ class AuthController {
                 return
             }
 
-            const user: AuthenticatedUserOutputType | null = await userMongoQueryRepository.findAuthenticatedUserById(req.user.userId)
+            const user: AuthenticatedUserOutputType | null = await this.userMongoQueryRepository.findAuthenticatedUserById(req.user.userId)
             if (!user) {
                 res.status(HTTP_CODES.UNAUTHORIZED).send()
                 return

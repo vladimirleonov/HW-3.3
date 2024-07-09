@@ -2,7 +2,7 @@ import {UserDeviceModel} from "../../../db/models/devices.model"
 import {findAllForOutputType} from "../../auth/types/outputTypes/userDeviceOutputMongoQueryRepositoryTypes"
 import {UserDevice} from "../../../db/db-types/user-devices-db-types";
 
-class UserDeviceMongoQueryRepository {
+export class UserDeviceMongoQueryRepository {
     async findAllForOutput(userId: string): Promise<findAllForOutputType[]> {
         const userSessions: UserDevice[] = await UserDeviceModel.find({
             userId: userId
@@ -20,7 +20,7 @@ class UserDeviceMongoQueryRepository {
     }
 }
 
-export const userDeviceMongoQueryRepository: UserDeviceMongoQueryRepository = new UserDeviceMongoQueryRepository()
+// export const userDeviceMongoQueryRepository: UserDeviceMongoQueryRepository = new UserDeviceMongoQueryRepository()
 
 
 

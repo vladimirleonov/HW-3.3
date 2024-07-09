@@ -3,7 +3,7 @@ import {DeleteResult, ObjectId, UpdateResult} from "mongodb"
 import {CommentBodyInputType} from "../input-output-types/comment-types"
 import {Comment, CommentDocument} from "../../../db/db-types/comment-db-types";
 
-class CommentMongoRepository {
+export class CommentMongoRepository {
     async save(comment: CommentDocument): Promise<CommentDocument> {
         return comment.save()
     }
@@ -28,4 +28,4 @@ class CommentMongoRepository {
     }
 }
 
-export const commentMongoRepository: CommentMongoRepository = new CommentMongoRepository()
+// export const commentMongoRepository: CommentMongoRepository = new CommentMongoRepository()

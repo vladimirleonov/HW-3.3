@@ -1,6 +1,8 @@
-import {userDeviceMongoRepository} from "../repository/userDeviceMongoRepository"
+import {UserDeviceMongoRepository} from "../repository/userDeviceMongoRepository"
 import {Result, ResultStatus} from "../../../common/types/result"
-import {apiAccessLogsMongoRepository} from "../../auth/repository/apiAccessLogsMongoRepository"
+import {
+    ApiAccessLogsMongoRepository
+} from "../../auth/repository/apiAccessLogsMongoRepository"
 import {
     CheckRateLimitInputServiceType,
     TerminateAllOtherDeviceSessionsInputServiceType,
@@ -10,19 +12,25 @@ import { ApiAccessLogModel } from "../../../db/models/apiAccessLog.model"
 import {UserDevice} from "../../../db/db-types/user-devices-db-types";
 import {ApiAccessLogDocument} from "../../../db/db-types/api-access-log-db-types";
 
-export const securityService = {
+export class SecurityService {
+    userDeviceMongoRepository: UserDeviceMongoRepository
+    apiAccessLogsMongoRepository: ApiAccessLogsMongoRepository
+    constructor() {
+        this.userDeviceMongoRepository = new UserDeviceMongoRepository()
+        this.apiAccessLogsMongoRepository = new ApiAccessLogsMongoRepository()
+    }
     async terminateAllOtherDeviceSessions({
                                             deviceId,
                                             userId
                                         }: TerminateAllOtherDeviceSessionsInputServiceType): Promise<Result> {
-        await userDeviceMongoRepository.deleteAllOtherByDeviceIdAndUserId({deviceId, userId})
+        await this.userDeviceMongoRepository.deleteAllOtherByDeviceIdAndUserId({deviceId, userId})
         return {
             status: ResultStatus.Success,
             data: null
         }
-    },
+    }
     async terminateDeviceSession({deviceId, userId}: TerminateDeviceSessionInputServiceType): Promise<Result> {
-        const device: UserDevice | null = await userDeviceMongoRepository.findByDeviceId(deviceId)
+        const device: UserDevice | null = await this.userDeviceMongoRepository.findByDeviceId(deviceId)
         if (!device) {
             return {
                 status: ResultStatus.NotFound,
@@ -39,15 +47,15 @@ export const securityService = {
             }
         }
 
-        await userDeviceMongoRepository.deleteOneByDeviceIdAndUserId({deviceId, userId})
+        await this.userDeviceMongoRepository.deleteOneByDeviceIdAndUserId({deviceId, userId})
 
         return {
             status: ResultStatus.Success,
             data: null
         }
-    },
+    }
     async checkRateLimit({ip, originUrl}: CheckRateLimitInputServiceType): Promise<Result> {
-        const accessLogsCount: number = await apiAccessLogsMongoRepository.countApiAccessLogsByIpAndOriginUrl({
+        const accessLogsCount: number = await this.apiAccessLogsMongoRepository.countApiAccessLogsByIpAndOriginUrl({
             ip,
             originUrl
         })
@@ -66,7 +74,7 @@ export const securityService = {
             date: new Date(),
         })
 
-        await apiAccessLogsMongoRepository.save(newApiAccessLog)
+        await this.apiAccessLogsMongoRepository.save(newApiAccessLog)
         //await apiAccessLogsMongoRepository.createApiAccessLog({ip, originUrl})
 
         return {

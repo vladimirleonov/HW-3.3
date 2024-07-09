@@ -1,4 +1,4 @@
-import {userMongoRepository} from "../repository/userMongoRepository"
+import {UserMongoRepository} from "../repository/userMongoRepository"
 import {UserModel} from "../../../db/models/user.model"
 import {UserBodyInputType} from "../input-output-types/user-types"
 import {ObjectId, WithId} from "mongodb"
@@ -8,14 +8,18 @@ import {randomUUID} from "node:crypto"
 import {add} from "date-fns"
 import {EmailConfirmation, PasswordRecovery, User, UserDocument} from "../../../db/db-types/user-db-types";
 
-export const userService = {
+export class UserService {
+    userMongoRepository: UserMongoRepository
+    constructor() {
+        this.userMongoRepository = new UserMongoRepository()
+    }
     async createUser(input: UserBodyInputType): Promise<Result<string | null>> {
 
         const {login, email, password}: UserBodyInputType = input
 
         const [foundUserByLogin, foundUserByEmail]: [WithId<User> | null, WithId<User> | null] = await Promise.all([
-            userMongoRepository.findUserByField('login', login),
-            userMongoRepository.findUserByField('email', email)
+            this.userMongoRepository.findUserByField('login', login),
+            this.userMongoRepository.findUserByField('email', email)
         ])
 
         if (foundUserByLogin) {
@@ -55,15 +59,15 @@ export const userService = {
         )
 
         const userDocument: UserDocument = new UserModel(userData)
-        const createdUser: UserDocument = await userMongoRepository.save(userDocument)
+        const createdUser: UserDocument = await this.userMongoRepository.save(userDocument)
 
         return {
             status: ResultStatus.Success,
             data: createdUser._id.toString()
         }
-    },
+    }
     async deleteUser(id: string): Promise<Result<boolean>> {
-        const isDeleted: boolean = await userMongoRepository.delete(id)
+        const isDeleted: boolean = await this.userMongoRepository.delete(id)
         if (isDeleted) {
             return {
                 status: ResultStatus.Success,

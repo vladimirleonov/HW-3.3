@@ -8,7 +8,7 @@ import {commentController} from "./controllers/commentController";
 
 export const commentsRouter = Router()
 
-commentsRouter.get('/:id', commentController.getComment)
-commentsRouter.put('/:commentId', authMiddleware, commentBodyValidator, inputCheckErrorsMiddleware, commentController.updateComment)
-commentsRouter.put('/:commentId/like-status', authMiddleware, commentIdParamValidator, likeBodyValidator, inputCheckErrorsMiddleware, commentController.updateLikeStatus)
-commentsRouter.delete('/:commentId', authMiddleware, commentController.deleteComment)
+commentsRouter.get('/:id', commentController.getComment.bind(commentController))
+commentsRouter.put('/:commentId', authMiddleware, commentBodyValidator, inputCheckErrorsMiddleware, commentController.updateComment.bind(commentController))
+commentsRouter.put('/:commentId/like-status', authMiddleware, commentIdParamValidator, likeBodyValidator, inputCheckErrorsMiddleware, commentController.updateLikeStatus.bind(commentController))
+commentsRouter.delete('/:commentId', authMiddleware, commentController.deleteComment.bind(commentController))

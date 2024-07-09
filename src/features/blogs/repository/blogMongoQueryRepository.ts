@@ -2,9 +2,9 @@ import {BlogsPaginationOutputType, BlogOutputType} from "../input-output-types/b
 import {ObjectId} from "mongodb"
 import {SanitizedBlogsQueryParamsType} from "../helpers/sanitizeBlogsQueryParams"
 import {BlogModel} from "../../../db/models/blog.model";
-import {BlogDBType} from "../../../db/db-types/blog-db-types";
+import {Blog} from "../../../db/db-types/blog-db-types";
 
-class BlogMongoQueryRepository {
+export class BlogMongoQueryRepository {
     async findAllForOutput(query: SanitizedBlogsQueryParamsType): Promise<BlogsPaginationOutputType> {
         const searchFilter = query.searchNameTerm
             ? {name: {$regex: query.searchNameTerm, $options: 'i'}}
@@ -14,7 +14,7 @@ class BlogMongoQueryRepository {
             ...searchFilter
         }
 
-        const blogs: BlogDBType[] = await BlogModel
+        const blogs: Blog[] = await BlogModel
             .find(filter)
             .sort({ [query.sortBy]: query.sortDirection === 'asc' ? 1 : -1 })
             .skip((query.pageNumber - 1) * query.pageSize)
@@ -27,14 +27,14 @@ class BlogMongoQueryRepository {
             page: query.pageNumber,
             pageSize: query.pageSize,
             totalCount,
-            items: blogs.map((blog: BlogDBType) => this.mapToOutput(blog))
+            items: blogs.map((blog: Blog) => this.mapToOutput(blog))
         }
     }
     async findForOutputById(id: string): Promise<BlogOutputType | null> {
-        const blog: BlogDBType | null = await BlogModel.findOne({_id: new ObjectId(id)})
+        const blog: Blog | null = await BlogModel.findOne({_id: new ObjectId(id)})
         return blog ? this.mapToOutput(blog) : null
     }
-    mapToOutput({_id, name, description, websiteUrl, createdAt, isMembership, ...rest}: BlogDBType): BlogOutputType {
+    mapToOutput({_id, name, description, websiteUrl, createdAt, isMembership, ...rest}: Blog): BlogOutputType {
         return {
             id: _id.toString(),
             name,
@@ -46,7 +46,7 @@ class BlogMongoQueryRepository {
     }
 }
 
-export const blogMongoQueryRepository: BlogMongoQueryRepository = new BlogMongoQueryRepository()
+// export const blogMongoQueryRepository: BlogMongoQueryRepository = new BlogMongoQueryRepository()
 
 
 

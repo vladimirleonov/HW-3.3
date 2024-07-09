@@ -5,7 +5,7 @@ import {getTenSecondsAgo} from "../../../common/helpers/getTenSecondsAgo";
 import { ApiAccessLogModel } from "../../../db/models/apiAccessLog.model";
 import {ApiAccessLogDocument} from "../../../db/db-types/api-access-log-db-types";
 
-class ApiAccessLogsMongoRepository {
+export class ApiAccessLogsMongoRepository {
     async save(apiAccessLog: ApiAccessLogDocument) {
         return apiAccessLog.save()
     }
@@ -25,7 +25,7 @@ class ApiAccessLogsMongoRepository {
     }
 }
 
-export const apiAccessLogsMongoRepository: ApiAccessLogsMongoRepository = new ApiAccessLogsMongoRepository()
+// export const apiAccessLogsMongoRepository: ApiAccessLogsMongoRepository = new ApiAccessLogsMongoRepository()
 
 
 // export const apiAccessLogsMongoRepository = {

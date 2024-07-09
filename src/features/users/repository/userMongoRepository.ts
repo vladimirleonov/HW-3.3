@@ -2,7 +2,7 @@ import {UserModel} from "../../../db/models/user.model"
 import {DeleteResult, ObjectId, UpdateResult} from "mongodb"
 import {PasswordRecovery, User, UserDocument} from "../../../db/db-types/user-db-types";
 
-class UserMongoRepository {
+export class UserMongoRepository {
     async save(user: UserDocument): Promise<UserDocument> {
         return user.save()
     }
@@ -64,7 +64,7 @@ class UserMongoRepository {
     }
 }
 
-export const userMongoRepository = new UserMongoRepository()
+// export const userMongoRepository = new UserMongoRepository()
 
 
 // export const userMongoRepository = {

@@ -1,12 +1,12 @@
 import {db} from "../../../db/mongoose-db-connection"
 
-class TestingRepository {
+export class TestingRepository {
     async deleteAllData(): Promise<boolean> {
         return db.drop()
     }
 }
 
-export const testingRepository: TestingRepository = new TestingRepository()
+// export const testingRepository: TestingRepository = new TestingRepository()
 
 
 

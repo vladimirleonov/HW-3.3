@@ -13,13 +13,13 @@ import {blogsController} from "./controllers/blogsController";
 
 export const blogsRouter: Router = Router()
 
-blogsRouter.get('/', queryBlogsParamsValidator, inputCheckErrorsMiddleware, blogsController.getBlogs)
-blogsRouter.get('/:id', idParamValidator, inputCheckErrorsMiddleware, blogsController.getBlog)
-blogsRouter.get('/:blogId/posts', blogIdParamValidator, queryBlogPostsParamsValidator, inputCheckErrorsMiddleware, blogsController.getBlogPosts)
-blogsRouter.post('/', blogBodyValidator, basicAuthMiddleware, inputCheckErrorsMiddleware, blogsController.createBlog)
-blogsRouter.post('/:blogId/posts', blogIdParamValidator, BlogPostBodyValidator, basicAuthMiddleware, inputCheckErrorsMiddleware, blogsController.createPostForBlog)
-blogsRouter.put('/:id', idParamValidator, blogBodyValidator, basicAuthMiddleware, inputCheckErrorsMiddleware, blogsController.updateBlog)
-blogsRouter.delete('/:id', idParamValidator, basicAuthMiddleware, inputCheckErrorsMiddleware, blogsController.deleteBlog)
+blogsRouter.get('/', queryBlogsParamsValidator, inputCheckErrorsMiddleware, blogsController.getBlogs.bind(blogsController))
+blogsRouter.get('/:id', idParamValidator, inputCheckErrorsMiddleware, blogsController.getBlog.bind(blogsController))
+blogsRouter.get('/:blogId/posts', blogIdParamValidator, queryBlogPostsParamsValidator, inputCheckErrorsMiddleware, blogsController.getBlogPosts.bind(blogsController))
+blogsRouter.post('/', blogBodyValidator, basicAuthMiddleware, inputCheckErrorsMiddleware, blogsController.createBlog.bind(blogsController))
+blogsRouter.post('/:blogId/posts', blogIdParamValidator, BlogPostBodyValidator, basicAuthMiddleware, inputCheckErrorsMiddleware, blogsController.createPostForBlog.bind(blogsController))
+blogsRouter.put('/:id', idParamValidator, blogBodyValidator, basicAuthMiddleware, inputCheckErrorsMiddleware, blogsController.updateBlog.bind(blogsController))
+blogsRouter.delete('/:id', idParamValidator, basicAuthMiddleware, inputCheckErrorsMiddleware, blogsController.deleteBlog.bind(blogsController))
 
 
 // blogsRouter.get('/', queryBlogsParamsValidator, inputCheckErrorsMiddleware, getBlogsController)

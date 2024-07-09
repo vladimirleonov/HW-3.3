@@ -7,11 +7,11 @@ import {
 } from "../input-output-types/blog-types";
 import {Result, ResultStatus} from "../../../common/types/result";
 import {blogService} from "../services/blogService";
-import {blogMongoQueryRepository} from "../repository/blogMongoQueryRepository";
+import {BlogMongoQueryRepository} from "../repository/blogMongoQueryRepository";
 import {HTTP_CODES} from "../../../settings";
 import {BlogPostInputType, PostOutputType, PostPaginationOutputType} from "../../posts/input-output-types/post-types";
-import {postService} from "../../posts/services/postService";
-import {postMongoQueryRepository} from "../../posts/repository/postMongoQueryRepository";
+import {PostService} from "../../posts/services/postService";
+import {PostMongoQueryRepository} from "../../posts/repository/postMongoQueryRepository";
 import {IdParamInputType} from "../../../common/input-output-types/common-types";
 import {
     SanitizedDefaultQueryParamsType,
@@ -20,10 +20,18 @@ import {
 import {sanitizeBlogsQueryParams, SanitizedBlogsQueryParamsType} from "../helpers/sanitizeBlogsQueryParams";
 
 class BlogsController {
+    blogMongoQueryRepository: BlogMongoQueryRepository
+    postMongoQueryRepository: PostMongoQueryRepository
+    postService: PostService
+    constructor() {
+        this.blogMongoQueryRepository = new BlogMongoQueryRepository()
+        this.postMongoQueryRepository = new PostMongoQueryRepository()
+        this.postService = new PostService()
+    }
     async getBlogs (req: Request<{}, BlogsPaginationOutputType, {}, BlogsQueryParamsInputType>, res: Response<BlogsPaginationOutputType>) {
         try {
             const sanitizedQuery: SanitizedBlogsQueryParamsType = sanitizeBlogsQueryParams(req.query)
-            const blogs: BlogsPaginationOutputType = await blogMongoQueryRepository.findAllForOutput(sanitizedQuery)
+            const blogs: BlogsPaginationOutputType = await this.blogMongoQueryRepository.findAllForOutput(sanitizedQuery)
 
             res.status(HTTP_CODES.OK).send(blogs)
         } catch (err) {
@@ -33,7 +41,7 @@ class BlogsController {
     }
     async getBlog (req: Request<IdParamInputType>, res: Response) {
         try {
-            const blog: BlogOutputType | null = await blogMongoQueryRepository.findForOutputById(req.params.id)
+            const blog: BlogOutputType | null = await this.blogMongoQueryRepository.findForOutputById(req.params.id)
             if (!blog) {
                 res.status(HTTP_CODES.NOT_FOUND).send()
                 return
@@ -48,7 +56,7 @@ class BlogsController {
     async getBlogPosts (req: Request<BlogIdParamInputType, PostPaginationOutputType, {}, BlogsQueryParamsInputType>, res: Response<PostPaginationOutputType>) {
         try {
             const sanitizedQuery: SanitizedDefaultQueryParamsType = sanitizeDefaultQueryParams(req.query)
-            const posts: PostPaginationOutputType = await postMongoQueryRepository.findAllForOutput(sanitizedQuery, req.params.blogId)
+            const posts: PostPaginationOutputType = await this.postMongoQueryRepository.findAllForOutput(sanitizedQuery, req.params.blogId)
             res.status(HTTP_CODES.OK).send(posts)
         } catch (err) {
             res.status(HTTP_CODES.INTERNAL_SERVER_ERROR)
@@ -58,7 +66,7 @@ class BlogsController {
         try {
             const result: Result<string> = await blogService.createBlog(req.body)
 
-            const blog: BlogOutputType | null = await blogMongoQueryRepository.findForOutputById(result.data)
+            const blog: BlogOutputType | null = await this.blogMongoQueryRepository.findForOutputById(result.data)
             if (!blog) {
                 // error if just created blog not found
                 res.status(HTTP_CODES.INTERNAL_SERVER_ERROR).send('something went wrong');
@@ -74,12 +82,12 @@ class BlogsController {
     }
     async createPostForBlog (req: Request<BlogIdParamInputType, PostOutputType, BlogPostInputType>, res: Response<PostOutputType | string>) {
         try {
-            const result: Result<string | null> = await postService.createBlogPost(req.body, req.params.blogId)
+            const result: Result<string | null> = await this.postService.createBlogPost(req.body, req.params.blogId)
             if (result.status === ResultStatus.NotFound) {
                 res.status(HTTP_CODES.NOT_FOUND)
             }
 
-            const post: PostOutputType | null = await postMongoQueryRepository.findForOutputById(result.data!)
+            const post: PostOutputType | null = await this.postMongoQueryRepository.findForOutputById(result.data!)
             //?
             if(!post) {
                 //error if just created post not found

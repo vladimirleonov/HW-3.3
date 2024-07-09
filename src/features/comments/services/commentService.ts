@@ -1,18 +1,26 @@
-import {postMongoRepository} from "../../posts/repository/postMongoRepository"
+import {PostMongoRepository} from "../../posts/repository/postMongoRepository"
 import {Result, ResultStatus} from "../../../common/types/result"
 import {CommentModel} from "../../../db/models/comment.model"
 import {ObjectId, WithId} from "mongodb"
 import {CommentBodyInputType} from "../input-output-types/comment-types"
-import {userMongoRepository} from "../../users/repository/userMongoRepository"
-import {commentMongoRepository} from "../repository/commentMongoRepository"
-import {Comment, CommentDocument, LikeStatus, Like, CommentatorInfo} from "../../../db/db-types/comment-db-types";
-import {PostDbType} from "../../../db/db-types/post-db-types";
+import {UserMongoRepository} from "../../users/repository/userMongoRepository"
+import {CommentMongoRepository} from "../repository/commentMongoRepository"
+import {Comment, CommentDocument, LikeStatus, Like} from "../../../db/db-types/comment-db-types";
+import {Post} from "../../../db/db-types/post-db-types";
 import {UserDocument} from "../../../db/db-types/user-db-types";
 import {LikeBodyInputServiceType} from "../input-output-types/comment-like-types";
 
-export const commentService = {
+export class CommentService {
+    commentMongoRepository: CommentMongoRepository
+    postMongoRepository: PostMongoRepository
+    userMongoRepository: UserMongoRepository
+    constructor() {
+        this.commentMongoRepository = new CommentMongoRepository()
+        this.postMongoRepository = new PostMongoRepository()
+        this.userMongoRepository = new UserMongoRepository()
+    }
     async createComment(postId: string, input: CommentBodyInputType, userId: string): Promise<Result<string | null>> {
-        const post: WithId<PostDbType> | null = await postMongoRepository.findById(postId)
+        const post: WithId<Post> | null = await this.postMongoRepository.findById(postId)
         if (!post) {
             return {
                 status: ResultStatus.NotFound,
@@ -21,8 +29,8 @@ export const commentService = {
             }
         }
 
-        const user: UserDocument | null = await userMongoRepository.findUserById(userId)
-        const userLogin = user!.login
+        const user: UserDocument | null = await this.userMongoRepository.findUserById(userId)
+        const userLogin: string = user!.login
         if (!user) {
             return {
                 status: ResultStatus.Unauthorized,
@@ -45,26 +53,17 @@ export const commentService = {
             new Date().toISOString()
         )
 
-        const newComment: CommentDocument = new CommentModel({
-            _id: new ObjectId(),
-            postId: new ObjectId(postId),
-            content: input.content,
-            commentatorInfo: {
-                userId: userId,
-                userLogin: user.login
-            },
-            createdAt: new Date().toISOString()
-        })
+        const CommentDocument: CommentDocument = new CommentModel(commentData)
 
-        const createdComment: CommentDocument = await commentMongoRepository.save(newComment)
+        const createdComment: CommentDocument = await this.commentMongoRepository.save(CommentDocument)
 
         return {
             status: ResultStatus.Success,
             data: createdComment._id.toString()
         }
-    },
+    }
     async updateComment(id: string, input: CommentBodyInputType, userId: string): Promise<Result> {
-        const comment: CommentDocument | null = await commentMongoRepository.findById(id)
+        const comment: CommentDocument | null = await this.commentMongoRepository.findById(id)
         if (!comment) {
             return {
                 status: ResultStatus.NotFound,
@@ -81,7 +80,7 @@ export const commentService = {
             }
         }
 
-        const isUpdated: boolean = await commentMongoRepository.update(id, input)
+        const isUpdated: boolean = await this.commentMongoRepository.update(id, input)
         //? check !isUpdated
         if (!isUpdated) {
             return {
@@ -93,7 +92,7 @@ export const commentService = {
             status: ResultStatus.Success,
             data: null
         }
-    },
+    }
     async updateLikeStatus(input: LikeBodyInputServiceType): Promise<Result> {
         // console.log("input", input)
         // input {
@@ -101,7 +100,7 @@ export const commentService = {
         //         likeStatus: 'Like',
         //         userId: '6687d6ab73799f48aa5d87ba'
         // }
-        const comment: CommentDocument | null = await commentMongoRepository.findById(input.commentId)
+        const comment: CommentDocument | null = await this.commentMongoRepository.findById(input.commentId)
         // console.log("comment", comment)
         // postId: new ObjectId('6687d6feb7dec08d74da8d33'),
         //         content: 'contentcontentcontentcontent3',
@@ -134,79 +133,71 @@ export const commentService = {
                 }
             }
             // input.likeStatus = (LikeStatus.Like || LikeStatus.Dislike)
-            const likeToAdd: Like = {
-                createdAt: new Date().toISOString(),
-                status: input.likeStatus as LikeStatus,
-                authorId: input.userId,
-            }
+            const likeToAdd: Like = new Like(
+                new Date().toISOString(),
+                input.likeStatus as LikeStatus,
+                input.userId
+            )
             comment.likes.push(likeToAdd)
             // for input.likeStatus = LikeStatus.Like
-            if (input.likeStatus === LikeStatus.Like) {
-                console.log("!userLike && Like")
-                comment.likesCount += 1
+            if (input.likeStatus === LikeStatus.Like) comment.likesCount += 1
             // for input.likeStatus = LikeStatus.Dislike
-            } else if (input.likeStatus === LikeStatus.Dislike) {
-                console.log("!userLike && Dislike")
-                comment.dislikesCount += 1
-            }
+            if (input.likeStatus === LikeStatus.Dislike) comment.dislikesCount += 1
 
-        // LikeStatus the same
-        } else if (userLike && userLike.status === input.likeStatus) {
+            await this.commentMongoRepository.save(comment)
+            return {
+                status: ResultStatus.Success,
+                data: null
+            }
+        }
+        // Existing like with same status
+        if (userLike.status === input.likeStatus) {
             console.log("nothing change")
             return {
                 status: ResultStatus.Success,
                 data: null
             }
-        // None
-        } else if (userLike && input.likeStatus === LikeStatus.None) {
+        }
+        // Existing like with status None
+        if (input.likeStatus === LikeStatus.None) {
             console.log("None")
             comment.likes = comment.likes.filter((like: Like) => like.authorId !== input.userId)
             // was dislike
-            if (userLike.status === LikeStatus.Dislike) {
-                console.log("was dislike")
-                comment.dislikesCount -= 1
+            if (userLike.status === LikeStatus.Dislike) comment.dislikesCount -= 1
             // was like
-            } else if (userLike.status === LikeStatus.Like) {
-                console.log("was like")
-                comment.likesCount -= 1
-            }
-        // Like
-        } else if (userLike && input.likeStatus === LikeStatus.Like) {
+            if (userLike.status === LikeStatus.Like) comment.likesCount -= 1
+        }
+        // Existing like with different status Like
+        if (input.likeStatus === LikeStatus.Like) {
             console.log("Like")
             // was dislike
-            if (userLike.status === LikeStatus.Dislike) {
-                console.log("was dislike")
-                comment.dislikesCount -= 1
-            }
+            if (userLike.status === LikeStatus.Dislike) comment.dislikesCount -= 1
             comment.likesCount += 1
 
             userLike.status = input.likeStatus
             userLike.createdAt = new Date().toISOString()
-        // Dislike
-        } else if (userLike && input.likeStatus === LikeStatus.Dislike) {
+        }
+        // Existing like with different status Dislike
+        if (input.likeStatus === LikeStatus.Dislike) {
             console.log("Dislike")
             // was like
-            if (userLike.status === LikeStatus.Like) {
-                console.log("was like")
-                console.log("before comment.likesCount", comment.likesCount)
-                comment.likesCount -= 1
-                console.log("after comment.likesCount", comment.likesCount)
-            }
+            if (userLike.status === LikeStatus.Like) comment.likesCount -= 1
             comment.dislikesCount += 1
 
             userLike.status = input.likeStatus
             userLike.createdAt = new Date().toISOString()
         }
-        const res = await commentMongoRepository.save(comment)
+
+        const res = await this.commentMongoRepository.save(comment)
         console.log("like-status res", res)
 
         return {
             status: ResultStatus.Success,
             data: null
         }
-    },
+    }
     async deleteComment(id: string, userId: string): Promise<Result> {
-        const comment: WithId<Comment> | null = await commentMongoRepository.findById(id)
+        const comment: WithId<Comment> | null = await this.commentMongoRepository.findById(id)
         if (!comment) {
             return {
                 status: ResultStatus.NotFound,
@@ -223,7 +214,7 @@ export const commentService = {
             }
         }
 
-        const isDeleted: boolean = await commentMongoRepository.deleteOne(id)
+        const isDeleted: boolean = await this.commentMongoRepository.deleteOne(id)
         if (!isDeleted) {
             return {
                 status: ResultStatus.InternalError,
@@ -241,7 +232,7 @@ export const commentService = {
 
 // export const commentService = {
 //     async createComment(postId: string, input: CommentBodyInputType, userId: string): Promise<Result<string | null>> {
-//         const post: PostDbType | null = await postMongoRepository.findById(postId)
+//         const post: Post | null = await postMongoRepository.findById(postId)
 //         if (!post) {
 //             return {
 //                 status: ResultStatus.NotFound,

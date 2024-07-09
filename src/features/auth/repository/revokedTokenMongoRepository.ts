@@ -1,9 +1,9 @@
 import {
     RevokedTokenModel
 } from "../../../db/models/revokedToken.model"
-import {RevokedTokenDbType, RevokedTokenDocument} from "../../../db/db-types/revokedToken-db-types";
+import {RevokedTokenDocument} from "../../../db/db-types/revokedToken-db-types";
 
-class RevokedTokenMongoRepository {
+export class RevokedTokenMongoRepository {
     async(newRevokedToken: RevokedTokenDocument): Promise<RevokedTokenDocument> {
       return newRevokedToken.save()
     }
@@ -12,7 +12,7 @@ class RevokedTokenMongoRepository {
     // }
 }
 
-export const revokedTokenMongoRepository: RevokedTokenMongoRepository = new RevokedTokenMongoRepository()
+// export const revokedTokenMongoRepository: RevokedTokenMongoRepository = new RevokedTokenMongoRepository()
 
 
 // export const revokedTokenMongoRepository = {

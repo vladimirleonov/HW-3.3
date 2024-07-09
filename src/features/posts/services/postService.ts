@@ -1,17 +1,25 @@
-import {postMongoRepository} from "../repository/postMongoRepository"
+import {PostMongoRepository} from "../repository/postMongoRepository"
 import {ObjectId} from "mongodb"
 import {BlogPostInputType, PostBodyInputType} from "../input-output-types/post-types"
 import {PostModel} from "../../../db/models/post.model"
-import {blogMongoRepository} from "../../blogs/repository/blogMongoRepository"
+import {BlogMongoRepository} from "../../blogs/repository/blogMongoRepository"
 import {Result, ResultStatus} from "../../../common/types/result"
-import {commentMongoRepository} from "../../comments/repository/commentMongoRepository"
+import {CommentMongoRepository} from "../../comments/repository/commentMongoRepository"
 import { WithId } from "mongodb"
-import {BlogDBType, BlogDocument} from "../../../db/db-types/blog-db-types";
-import {PostDbType, PostDocument} from "../../../db/db-types/post-db-types";
+import {Blog, BlogDocument} from "../../../db/db-types/blog-db-types";
+import {Post, PostDocument} from "../../../db/db-types/post-db-types";
 
-class PostService {
+export class PostService {
+    postMongoRepository: PostMongoRepository
+    blogMongoRepository: BlogMongoRepository
+    commentMongoRepository: CommentMongoRepository
+    constructor() {
+        this.postMongoRepository = new PostMongoRepository()
+        this.blogMongoRepository = new BlogMongoRepository()
+        this.commentMongoRepository = new CommentMongoRepository()
+    }
     async createPost({blogId, ...restInput}: PostBodyInputType): Promise<Result<string | null>> {
-        const blog: WithId<BlogDBType> | null = await blogMongoRepository.findById(blogId)
+        const blog: WithId<Blog> | null = await this.blogMongoRepository.findById(blogId)
         if (!blog) {
             return {
                 status: ResultStatus.NotFound,
@@ -20,7 +28,7 @@ class PostService {
             }
         }
 
-        const postData: PostDbType = new PostDbType(
+        const postData: Post = new Post(
             new ObjectId(),
             restInput.title,
             restInput.shortDescription,
@@ -32,7 +40,7 @@ class PostService {
 
         const postDocument: PostDocument = new PostModel(postData)
 
-        const createdPost: PostDocument = await postMongoRepository.save(postDocument)
+        const createdPost: PostDocument = await this.postMongoRepository.save(postDocument)
 
         return {
             status: ResultStatus.Success,
@@ -40,7 +48,7 @@ class PostService {
         }
     }
     async createBlogPost(input: BlogPostInputType, blogId: string): Promise<Result<string | null>> {
-        const blog: BlogDocument | null = await blogMongoRepository.findById(blogId)
+        const blog: BlogDocument | null = await this.blogMongoRepository.findById(blogId)
         if (!blog) {
             return {
                 status: ResultStatus.NotFound,
@@ -49,7 +57,7 @@ class PostService {
             }
         }
 
-        const postData: PostDbType = new PostDbType(
+        const postData: Post = new Post(
             new ObjectId(),
             input.title,
             input.shortDescription,
@@ -61,7 +69,7 @@ class PostService {
 
         const postDocument: PostDocument = new PostModel(postData)
 
-        const createdPost: PostDocument = await postMongoRepository.save(postDocument)
+        const createdPost: PostDocument = await this.postMongoRepository.save(postDocument)
 
         return {
             status: ResultStatus.Success,
@@ -69,7 +77,7 @@ class PostService {
         }
     }
     async deletePost(postId: string): Promise<Result<boolean | null>> {
-        const isDeleted: boolean = await postMongoRepository.delete(postId)
+        const isDeleted: boolean = await this.postMongoRepository.delete(postId)
         if (!isDeleted) {
             return {
                 status: ResultStatus.NotFound,
@@ -77,7 +85,7 @@ class PostService {
                 data: null
             }
         } else {
-            await commentMongoRepository.deleteMany(postId)
+            await this.commentMongoRepository.deleteMany(postId)
 
             return {
                 status: ResultStatus.Success,
@@ -86,7 +94,7 @@ class PostService {
         }
     }
     async updatePost(postId: string, input: PostBodyInputType): Promise<Result<boolean | null>> {
-        const isUpdated: boolean = await postMongoRepository.update(postId, input)
+        const isUpdated: boolean = await this.postMongoRepository.update(postId, input)
         if (!isUpdated) {
             return {
                 status: ResultStatus.NotFound,
@@ -102,12 +110,12 @@ class PostService {
     }
 }
 
-export const postService: PostService = new PostService()
+// export const postService: PostService = new PostService()
 
 
 // export const postService = {
 //     async createPost({blogId, ...restInput}: PostBodyInputType): Promise<Result<string | null>> {
-//         const blog: WithId<BlogDBType> | null = await blogMongoRepository.findById(blogId)
+//         const blog: WithId<Blog> | null = await blogMongoRepository.findById(blogId)
 //         if (!blog) {
 //             return {
 //                 status: ResultStatus.NotFound,
@@ -198,7 +206,7 @@ export const postService: PostService = new PostService()
 
 // export const postService = {
 //     async createPost({blogId, ...restInput}: PostBodyInputType): Promise<Result<string | null>> {
-//         const blog: BlogDBType | null = await blogMongoRepository.findById(blogId)
+//         const blog: Blog | null = await blogMongoRepository.findById(blogId)
 //         if (!blog) {
 //             return {
 //                 status: ResultStatus.NotFound,
@@ -207,7 +215,7 @@ export const postService: PostService = new PostService()
 //             }
 //         }
 
-//         const newPost: PostDbType = {
+//         const newPost: Post = {
 //             _id: new ObjectId(),
 //             ...restInput,
 //             blogId: new ObjectId(blogId),
@@ -223,7 +231,7 @@ export const postService: PostService = new PostService()
 //         }
 //     },
 //     async createBlogPost(input: BlogPostInputType, blogId: string): Promise<Result<string | null>> {
-//         const blog: BlogDBType | null = await blogMongoRepository.findById(blogId)
+//         const blog: Blog | null = await blogMongoRepository.findById(blogId)
 //         if (!blog) {
 //             return {
 //                 status: ResultStatus.NotFound,
@@ -232,7 +240,7 @@ export const postService: PostService = new PostService()
 //             }
 //         }
 
-//         const newPost: PostDbType = {
+//         const newPost: Post = {
 //             _id: new ObjectId(),
 //             ...input,
 //             blogId: new ObjectId(blogId),

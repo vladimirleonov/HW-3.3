@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from "express";
 import {getIpAddress} from "../helpers/getIpAddress";
 import {Result, ResultStatus} from "../types/result";
-import {securityService} from "../../features/security/services/securityService";
+import {SecurityService} from "../../features/security/services/securityService";
 import {HTTP_CODES} from "../../settings";
 
 export const rateLimitMiddleware = async (req: Request, res: Response, next: NextFunction) => {
@@ -9,6 +9,7 @@ export const rateLimitMiddleware = async (req: Request, res: Response, next: Nex
     const originUrl: string = req.originalUrl
 
     try {
+        const securityService: SecurityService = new SecurityService()
         const result: Result = await securityService.checkRateLimit({ip, originUrl})
         if (result.status === ResultStatus.TooManyRequests) {
             res.status(HTTP_CODES.TOO_MANY_REQUESTS).send()

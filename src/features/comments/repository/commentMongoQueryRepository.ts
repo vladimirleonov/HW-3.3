@@ -4,7 +4,7 @@ import {ObjectId} from "mongodb"
 import {SanitizedDefaultQueryParamsType} from "../../../common/helpers/queryParamsSanitizer"
 import {Comment, CommentDocument, LikeStatus} from "../../../db/db-types/comment-db-types";
 
-class CommentMongoQueryRepository {
+export class CommentMongoQueryRepository {
     async findAllPostCommentsForOutput(query: SanitizedDefaultQueryParamsType, postId: string, userId: string): Promise<CommentsPaginationOutputType> {
         const byId = postId ? {postId: new ObjectId(postId)} : {}
 
@@ -67,7 +67,7 @@ class CommentMongoQueryRepository {
     }
 }
 
-export const commentMongoQueryRepository = new CommentMongoQueryRepository()
+// export const commentMongoQueryRepository = new CommentMongoQueryRepository()
 
 
 

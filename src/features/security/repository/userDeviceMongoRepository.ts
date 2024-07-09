@@ -9,7 +9,7 @@ import {
 } from "../../auth/types/inputTypes/userDeviceInputMongoRepositoryTypes";
 import {UserDevice, UserDeviceDocument} from "../../../db/db-types/user-devices-db-types";
 
-class UserDeviceMongoRepository {
+export class UserDeviceMongoRepository {
     async save(userDevice: UserDeviceDocument): Promise<UserDeviceDocument> {
         return userDevice.save()
     }
@@ -59,7 +59,7 @@ class UserDeviceMongoRepository {
     }
 }
 
-export const userDeviceMongoRepository = new UserDeviceMongoRepository()
+// export const userDeviceMongoRepository = new UserDeviceMongoRepository()
 
 
 

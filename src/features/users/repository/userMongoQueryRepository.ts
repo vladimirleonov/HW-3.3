@@ -8,7 +8,7 @@ import {UserModel} from "../../../db/models/user.model"
 import {ObjectId} from "mongodb"
 import {User} from "../../../db/db-types/user-db-types";
 
-class UserMongoQueryRepository {
+export class UserMongoQueryRepository {
     async findAllForOutput(query: SanitizedUsersQueryParamsType): Promise<UserPaginationOutputType> {
         const searchLoginFilter = query.searchLoginTerm
             ? {login: {$regex: query.searchLoginTerm, $options: 'i'}}
@@ -62,7 +62,7 @@ class UserMongoQueryRepository {
     }
 }
 
-export const userMongoQueryRepository = new UserMongoQueryRepository()
+// export const userMongoQueryRepository = new UserMongoQueryRepository()
 
 
 

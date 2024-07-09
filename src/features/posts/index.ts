@@ -12,10 +12,10 @@ import {commentController} from "../comments/controllers/commentController";
 
 export const postsRouter = Router()
 
-postsRouter.get('/', queryPostsParamsValidator, inputCheckErrorsMiddleware, postsController.getPosts)
-postsRouter.get('/:id', idParamValidator, inputCheckErrorsMiddleware, postsController.getPost)
-postsRouter.post('/', postBodyValidator, basicAuthMiddleware, inputCheckErrorsMiddleware, postsController.createPost)
-postsRouter.get('/:postId/comments', queryPostCommentsParamsValidator, inputCheckErrorsMiddleware, commentController.getPostComments)
-postsRouter.post('/:postId/comments', commentBodyValidator, authMiddleware, inputCheckErrorsMiddleware, commentController.createPostComment)
-postsRouter.put('/:id', idParamValidator, postBodyValidator, basicAuthMiddleware, inputCheckErrorsMiddleware, postsController.updatePost)
-postsRouter.delete('/:id', idParamValidator, basicAuthMiddleware, inputCheckErrorsMiddleware, postsController.deletePost)
+postsRouter.get('/', queryPostsParamsValidator, inputCheckErrorsMiddleware, postsController.getPosts.bind(postsController))
+postsRouter.get('/:id', idParamValidator, inputCheckErrorsMiddleware, postsController.getPost.bind(postsController))
+postsRouter.post('/', postBodyValidator, basicAuthMiddleware, inputCheckErrorsMiddleware, postsController.createPost.bind(postsController))
+postsRouter.get('/:postId/comments', queryPostCommentsParamsValidator, inputCheckErrorsMiddleware, commentController.getPostComments.bind(commentController))
+postsRouter.post('/:postId/comments', commentBodyValidator, authMiddleware, inputCheckErrorsMiddleware, commentController.createPostComment.bind(commentController))
+postsRouter.put('/:id', idParamValidator, postBodyValidator, basicAuthMiddleware, inputCheckErrorsMiddleware, postsController.updatePost.bind(postsController))
+postsRouter.delete('/:id', idParamValidator, basicAuthMiddleware, inputCheckErrorsMiddleware, postsController.deletePost.bind(postsController))

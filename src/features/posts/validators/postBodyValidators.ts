@@ -1,9 +1,9 @@
 import {body} from "express-validator"
-import {blogMongoRepository} from "../../blogs/repository/blogMongoRepository"
+import {BlogMongoRepository} from "../../blogs/repository/blogMongoRepository"
 import {BlogDocument} from "../../../db/db-types/blog-db-types";
 
 export const validateBlogId = async (blogId: string) => {
-    const blog: BlogDocument | null = await blogMongoRepository.findById(blogId) //check count
+    const blog: BlogDocument | null = await new BlogMongoRepository().findById(blogId) //check count
     if (!blog) {
         throw new Error('invalid blogId')
     }

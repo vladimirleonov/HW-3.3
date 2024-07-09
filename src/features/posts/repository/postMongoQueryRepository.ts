@@ -3,9 +3,9 @@ import {ObjectId} from "mongodb"
 
 import {SanitizedDefaultQueryParamsType} from "../../../common/helpers/queryParamsSanitizer"
 import { PostModel } from "../../../db/models/post.model"
-import {PostDbType} from "../../../db/db-types/post-db-types";
+import {Post} from "../../../db/db-types/post-db-types";
 
-class PostMongoQueryRepository {
+export class PostMongoQueryRepository {
     async findAllForOutput(query: SanitizedDefaultQueryParamsType, blogId?: string): Promise<PostPaginationOutputType> {
         const byId = blogId ? {blogId: new ObjectId(blogId)} : {}
 
@@ -13,7 +13,7 @@ class PostMongoQueryRepository {
             ...byId
         }
 
-        const posts: PostDbType[] = await PostModel
+        const posts: Post[] = await PostModel
             .find(filter)
             .sort({ [query.sortBy]: query.sortDirection === 'asc' ? 1 : -1 })
             .skip((query.pageNumber - 1) * query.pageSize)
@@ -27,15 +27,15 @@ class PostMongoQueryRepository {
             page: query.pageNumber,
             pageSize: query.pageSize,
             totalCount,
-            items: posts.map((post: PostDbType) => this.mapToOutput(post))
+            items: posts.map((post: Post) => this.mapToOutput(post))
         }
     }
     async findForOutputById(id: string): Promise<PostOutputType | null> {
-        const post: PostDbType | null = await PostModel
+        const post: Post | null = await PostModel
             .findOne({_id: new ObjectId(id)})
         return post ? this.mapToOutput(post) : null
     }
-    mapToOutput({_id, blogId, title, shortDescription, content, blogName, createdAt, ...rest}: PostDbType): PostOutputType {
+    mapToOutput({_id, blogId, title, shortDescription, content, blogName, createdAt, ...rest}: Post): PostOutputType {
         return {
             id: _id.toString(),
             title,
@@ -48,7 +48,7 @@ class PostMongoQueryRepository {
     }
 }
 
-export const postMongoQueryRepository: PostMongoQueryRepository = new PostMongoQueryRepository()
+// export const postMongoQueryRepository: PostMongoQueryRepository = new PostMongoQueryRepository()
 
 
 

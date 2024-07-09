@@ -1,7 +1,7 @@
-import {BlogDBType} from "../../db/db-types/blog-db-types";
+import {Blog} from "../../db/db-types/blog-db-types";
 
 export type DefaultQueryParamsInputType = {
-    sortBy?: keyof BlogDBType,
+    sortBy?: keyof Blog,
     sortDirection?: 'asc' | 'desc',
     pageNumber?: number,
     pageSize?: number

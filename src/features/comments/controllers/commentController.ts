@@ -12,14 +12,22 @@ import {
     SanitizedDefaultQueryParamsType,
     sanitizeDefaultQueryParams
 } from "../../../common/helpers/queryParamsSanitizer"
-import {postMongoQueryRepository} from "../../posts/repository/postMongoQueryRepository"
+import {PostMongoQueryRepository} from "../../posts/repository/postMongoQueryRepository"
 import {HTTP_CODES} from "../../../settings"
-import {commentMongoQueryRepository} from "../repository/commentMongoQueryRepository"
+import {CommentMongoQueryRepository} from "../repository/commentMongoQueryRepository"
 import {IdParamInputType} from "../../../common/input-output-types/common-types"
-import {commentService} from "../services/commentService"
+import {CommentService} from "../services/commentService"
 import {LikeBodyInputControllerType} from "../input-output-types/comment-like-types"
 
 class CommentController {
+    commentMongoQueryRepository: CommentMongoQueryRepository
+    postMongoQueryRepository: PostMongoQueryRepository
+    commentService: CommentService
+    constructor() {
+        this.commentMongoQueryRepository = new CommentMongoQueryRepository()
+        this.postMongoQueryRepository = new PostMongoQueryRepository()
+        this.commentService = new CommentService()
+    }
     async getPostComments (req: Request<PostIdParamType, CommentsPaginationOutputType>, res: Response<CommentsPaginationOutputType>) {
         let userId = null
         if (req.headers.authorization) {
@@ -33,13 +41,13 @@ class CommentController {
         const sanitizedQuery: SanitizedDefaultQueryParamsType = sanitizeDefaultQueryParams(req.query)
 
         //? in service
-        const post: PostOutputType | null  = await postMongoQueryRepository.findForOutputById(req.params.postId)
+        const post: PostOutputType | null  = await this.postMongoQueryRepository.findForOutputById(req.params.postId)
         if (!post) {
             res.status(HTTP_CODES.NOT_FOUND).send()
             return
         }
 
-        const comments: CommentsPaginationOutputType = await commentMongoQueryRepository.findAllPostCommentsForOutput(sanitizedQuery, req.params.postId, userId)
+        const comments: CommentsPaginationOutputType = await this.commentMongoQueryRepository.findAllPostCommentsForOutput(sanitizedQuery, req.params.postId, userId)
 
         res.status(HTTP_CODES.OK).send(comments)
     }
@@ -54,7 +62,7 @@ class CommentController {
             }
             console.log("userId", userId)
 
-            const comment: CommentOutputType | null = await commentMongoQueryRepository.findForOutputById({userId: userId, commentId: req.params.id})
+            const comment: CommentOutputType | null = await this.commentMongoQueryRepository.findForOutputById({userId: userId, commentId: req.params.id})
             if (!comment) {
                 res.status(HTTP_CODES.NOT_FOUND).send()
                 return
@@ -74,7 +82,7 @@ class CommentController {
                 return
             }
 
-            const result: Result<string | null> = await commentService.createComment(req.params.postId, req.body, req.user.userId)
+            const result: Result<string | null> = await this.commentService.createComment(req.params.postId, req.body, req.user.userId)
             if (result.status === ResultStatus.NotFound) {
                 res.status(HTTP_CODES.NOT_FOUND).send()
                 return
@@ -85,7 +93,7 @@ class CommentController {
                 return
             }
 
-            const comment: CommentOutputType | null = await commentMongoQueryRepository.findForOutputById({commentId: result.data!, userId: req.user.userId})
+            const comment: CommentOutputType | null = await this.commentMongoQueryRepository.findForOutputById({commentId: result.data!, userId: req.user.userId})
             //?
             if(!comment) {
                 //error if just created comment not found
@@ -107,7 +115,7 @@ class CommentController {
                 return
             }
 
-            const result: Result = await commentService.updateComment(req.params.commentId, req.body, req.user.userId)
+            const result: Result = await this.commentService.updateComment(req.params.commentId, req.body, req.user.userId)
 
             if (result.status === ResultStatus.NotFound) {
                 res.status(HTTP_CODES.NOT_FOUND).send()
@@ -136,7 +144,7 @@ class CommentController {
                 userId: req.user.userId
             }
 
-            const result: Result = await commentService.updateLikeStatus(dto)
+            const result: Result = await this.commentService.updateLikeStatus(dto)
             if (result.status === ResultStatus.NotFound) {
                 res.status(HTTP_CODES.NOT_FOUND).send()
                 return
@@ -156,7 +164,7 @@ class CommentController {
                 return
             }
 
-            const result: Result<boolean | null> = await commentService.deleteComment(req.params.commentId, req.user.userId)
+            const result: Result<boolean | null> = await this.commentService.deleteComment(req.params.commentId, req.user.userId)
             if (result.status === ResultStatus.NotFound) {
                 res.status(HTTP_CODES.NOT_FOUND).send()
                 return
