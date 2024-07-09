@@ -6,7 +6,7 @@ import {
     RegistrationInputControllerType, RegistrationPasswordRecoveryInputControllerType
 } from "../types/inputTypes/authInputControllersTypes";
 import {Result, ResultStatus} from "../../../common/types/result";
-import {authService} from "../services/authService";
+import {AuthService} from "../services/authService";
 import {HTTP_CODES} from "../../../settings";
 import {
     AuthMeUserOutputControllerType,
@@ -22,8 +22,10 @@ import {UserMongoQueryRepository} from "../../users/repository/userMongoQueryRep
 
 class AuthController {
     userMongoQueryRepository: UserMongoQueryRepository
+    authService: AuthService
     constructor() {
         this.userMongoQueryRepository = new UserMongoQueryRepository()
+        this.authService = new AuthService()
     }
     async registration (req: Request<{}, {}, RegistrationInputControllerType>, res: Response) {
         try {

@@ -5,7 +5,7 @@ import {Result, ResultStatus} from "../../../common/types/result"
 import {Blog, BlogDocument} from "../../../db/db-types/blog-db-types";
 import {ObjectId} from "mongodb";
 
-class BlogService {
+export class BlogService {
     blogMongoRepository: BlogMongoRepository
     constructor() {
         this.blogMongoRepository = new BlogMongoRepository()
@@ -61,7 +61,7 @@ class BlogService {
     }
 }
 
-export const blogService: BlogService = new BlogService()
+// export const blogService: BlogService = new BlogService()
 
 
 

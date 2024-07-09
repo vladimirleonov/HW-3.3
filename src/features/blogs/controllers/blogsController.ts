@@ -6,7 +6,7 @@ import {
     BlogsQueryParamsInputType
 } from "../input-output-types/blog-types";
 import {Result, ResultStatus} from "../../../common/types/result";
-import {blogService} from "../services/blogService";
+import {BlogService} from "../services/blogService";
 import {BlogMongoQueryRepository} from "../repository/blogMongoQueryRepository";
 import {HTTP_CODES} from "../../../settings";
 import {BlogPostInputType, PostOutputType, PostPaginationOutputType} from "../../posts/input-output-types/post-types";
@@ -23,10 +23,12 @@ class BlogsController {
     blogMongoQueryRepository: BlogMongoQueryRepository
     postMongoQueryRepository: PostMongoQueryRepository
     postService: PostService
+    blogService: BlogService
     constructor() {
         this.blogMongoQueryRepository = new BlogMongoQueryRepository()
         this.postMongoQueryRepository = new PostMongoQueryRepository()
         this.postService = new PostService()
+        this.blogService = new BlogService()
     }
     async getBlogs (req: Request<{}, BlogsPaginationOutputType, {}, BlogsQueryParamsInputType>, res: Response<BlogsPaginationOutputType>) {
         try {
@@ -64,7 +66,7 @@ class BlogsController {
     }
     async createBlog (req: Request<{}, BlogOutputType, BlogBodyInputType>, res: Response<BlogOutputType | string>) {
         try {
-            const result: Result<string> = await blogService.createBlog(req.body)
+            const result: Result<string> = await this.blogService.createBlog(req.body)
 
             const blog: BlogOutputType | null = await this.blogMongoQueryRepository.findForOutputById(result.data)
             if (!blog) {
@@ -103,7 +105,7 @@ class BlogsController {
     }
     async updateBlog (req: Request<IdParamInputType, BlogOutputType, BlogBodyInputType>, res: Response<BlogOutputType>) {
         try {
-            const result: Result<boolean> = await blogService.updateBlog(req.params.id, req.body)
+            const result: Result<boolean> = await this.blogService.updateBlog(req.params.id, req.body)
 
             if (result.status === ResultStatus.NotFound) {
                 res.status(HTTP_CODES.NOT_FOUND).send()
@@ -117,7 +119,7 @@ class BlogsController {
     }
     async deleteBlog (req: Request<IdParamInputType>, res: Response) {
         try {
-            const deletedInfo: Result<boolean> = await blogService.deleteBlog(req.params.id)
+            const deletedInfo: Result<boolean> = await this.blogService.deleteBlog(req.params.id)
 
             if (deletedInfo.status === ResultStatus.NotFound) {
                 res.status(HTTP_CODES.NOT_FOUND).send()

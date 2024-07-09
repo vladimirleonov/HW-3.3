@@ -1,5 +1,5 @@
 import {Router} from "express"
-import {testingController} from "./controllers/deleteTestingController"
+import {testingController} from "./controllers/testingController"
 
 export const testingRouter: Router = Router()
 
