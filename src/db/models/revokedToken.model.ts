@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import {RevokedToken} from "../db-types/refreshToken-db-types";
+import {RevokedToken} from "../db-types/revokedToken-db-types";
 
 const revokedTokenSchema = new mongoose.Schema<RevokedToken>(
     {

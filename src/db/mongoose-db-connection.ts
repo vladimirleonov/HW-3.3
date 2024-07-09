@@ -3,7 +3,7 @@ import {BlogModel} from "./models/blog.model"
 import {CommentModel} from "./models/comment.model";
 import {PostModel} from "./models/post.model";
 import {UserModel} from "./models/user.model";
-import {RevokedTokenModel} from "./models/refreshToken.model"
+import {RevokedTokenModel} from "./models/revokedToken.model"
 import mongoose from 'mongoose';
 import {UserDeviceModel} from "./models/devices.model";
 
